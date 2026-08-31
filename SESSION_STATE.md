@@ -105,3 +105,49 @@ Git commits this update (local repo, all previous state preserved):
 - (pending commit) examples: add yop_microbial_growth + opt_lignin_figure2,
   fix System parameter-passing bug, update README/SESSION_STATE.
 
+## Update 3 (2026-08-31): remaining YOP benchmark ports (5 more examples)
+
+Added 5 more MATLAB->eco_opt ports across two new subdirs, each analytically
+or physically validated (not just regression-tracked):
+
+1. examples/xuezhong_wang/ (Wang, X. "Solving optimal control problems
+   with MATLAB")
+   - bryson_denham_fixed_tf.py (ex.1): min-energy double integrator, fixed
+     tf. Closed-form LQ solution derived (costate affine in t -> control
+     affine in t): a*(t)=-4.5t+5.5, J*=7.75. eco_opt matches to <5e-3 at
+     100 intervals.
+   - double_integrator_nonneg_control.py (ex.2): a>=0 constrained double
+     integrator. Trivial global optimum found: constant-velocity coast
+     (u*=0) exactly satisfies all boundary conditions -> J*=0. eco_opt
+     confirms J~1e-15.
+   - plot_xuezhong_wang.py -> figs/xuezhong_wang_ex{1,2}.png (visually
+     verified: ex1 control closely tracks analytic line).
+   - README.md + tests/test_xuezhong_wang.py (2 tests, both pass).
+
+2. examples/lenhart_workman/ (Lenhart & Workman "Optimal Control Applied
+   to Biological Models")
+   - linear_bangbang_ex17_2.py (ex.17.2): bang-bang control, analytic
+     Pontryagin switch time t_switch=2-ln(2.5)~=1.0837 derived and
+     matched by eco_opt (~1.07 at 30 intervals).
+   - lq_tracking_ex17_3.py (ex.17.3): smooth LQ tracking (filename says
+     "bangbang" but problem is smooth), regression-tracked J=0.53333.
+   - min_time_trolley_ex20_4.py (ex.20.4): minimum-time double-integrator
+     stop. Analytic tf*=2*sqrt(x0)=6.32456 (matches MATLAB script's own
+     in-code comment) -- eco_opt matches to 6 decimal places, bang-bang
+     control confirmed (u: -1 -> +1 with one switch).
+   - plot_lenhart_workman.py -> figs/lenhart_workman_ex{17_2,17_3,20_4}.png
+     (all 3 visually verified: bang-bang switch, min-time trolley
+     trajectory, LQ tracking vs t^2 reference).
+   - README.md + tests/test_lenhart_workman.py (3 tests, all pass).
+
+Full pytest count now 19/19 passing (was 14). README.md updated with both
+new subdirs listed under "Ecology/publication examples". All 4 originally
+requested OptLignin/YOP-benchmark subfolders' example scripts are now
+fully ported: yop_microbial_growth, opt_lignin_figure2, xuezhong_wang,
+lenhart_workman.
+
+Git commits this update:
+- (pending commit) examples: add xuezhong_wang + lenhart_workman ports,
+  figures, READMEs, tests.
+
+
