@@ -62,3 +62,46 @@ tolerance here).
 
 Remaining per AGENT.md: "remaining cases under pages/benchmark" beyond
 goddard_benchmark.zip -- not yet investigated this session.
+
+## Update 2 (2026-08-31): OptLignin examples
+
+Added two new publication-derived examples per user request, each in its own
+subdir under examples/ with its own README:
+
+1. examples/yop_microbial_growth/ -- Manzoni et al. 2022 microbial growth
+   OCP (free tf), port of examples/OptLignin/YOP benchmark/Manzoni et al.
+   2022/{GrowthModel.m,yop_opt.m,YOP_microbial_growth.m}. Files:
+   microbial_growth.py, plot_microbial_growth.py, README.md. Figures:
+   figs/microbial_growth_states_control.png, _phase_portrait.png. Test:
+   tests/test_yop_microbial_growth.py. Objective regression value
+   0.15184969799373915, tf 1.5181904140431468. Visually verified: C decays
+   0->0 smoothly (resource exhaustion drives free tf), u/G decline
+   monotonically -- physically sensible.
+
+2. examples/opt_lignin_figure2/ -- OptLignin Figure 2 litter-decomposition
+   OCP (fixed tf=2000d), port of
+   examples/OptLignin/OptLignin1.0/opt_con.m + Figure2.m. Files:
+   lignin_decomposition.py, plot_figure2.py, README.md. Figure:
+   figs/opt_lignin_figure2.png (2x4 sweep over vh_max/ro/ARC0/mo,
+   reproducing the paper's Figure 2 layout). Test:
+   tests/test_opt_lignin_figure2.py (baseline regression 0.16281350935527988
+   + mass-balance sanity + a second parameter-variant convergence check).
+   Visually verified: control vo stays ~0 early, ramps mid-horizon, tapers
+   near tf -- matches paper's "delayed ligninolytic activity onset" story.
+
+PACKAGE FIX (not example-specific): eco_opt.System previously only passed
+`p` (parameters) to the model callback when algebraics>0; models with
+parameters>0 but algebraics=0 (the opt_lignin_figure2 case, mirroring Yop's
+`sys.p(1)` pinned-parameter pattern) never received `p`, making
+parameterized models impossible to build. Fixed in src/eco_opt/system.py
+(the nz==0 branch now calls model(t,x,u,p) when np>0). Verified: full
+pytest suite (14/14) still green after the fix, including all previously
+passing examples/benchmarks.
+
+Full pytest count now 14/14 passing (was 11). README.md updated with links
+to both new example dirs under "Ecology/publication examples".
+
+Git commits this update (local repo, all previous state preserved):
+- (pending commit) examples: add yop_microbial_growth + opt_lignin_figure2,
+  fix System parameter-passing bug, update README/SESSION_STATE.
+

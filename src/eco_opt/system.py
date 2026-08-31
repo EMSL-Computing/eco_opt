@@ -105,7 +105,15 @@ class System:
                 y = Namespace()
             self.dz = dz
         else:
-            result = model(self.t, self.x, self.u)
+            # Models declaring parameters but no algebraics still need access
+            # to `p` (e.g. Yop's `sys.p(1)` pattern for pinned/fixed
+            # parameters classified as box-equality constraints). Try the
+            # 4-arg (t, x, u, p) signature first, falling back to the plain
+            # 3-arg (t, x, u) signature used by parameter-free models.
+            try:
+                result = model(self.t, self.x, self.u, self.p) if self.np else model(self.t, self.x, self.u)
+            except TypeError:
+                result = model(self.t, self.x, self.u)
             if isinstance(result, tuple) and len(result) == 3:
                 dx, dz, y = result
                 self.dz = dz
