@@ -172,6 +172,7 @@ def plant_soil_microbe_nested(t, state, u, params=PARAMS):
         rootN_uptake_norm=rootN_uptake_norm,
         exu_uptake=exu_uptake, SOM_uptake=SOM_uptake,
         micro_turnover=micro_turnover, root_turnover=root_turnover,
+        phiN=phiN, phiC=phiC,
     )
     return dx, y
 
