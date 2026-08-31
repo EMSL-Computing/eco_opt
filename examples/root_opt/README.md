@@ -57,9 +57,25 @@ the MATLAB original). We validate:
 
 ```bash
 python plant_soil_nitrogen_allocation.py   # base scenario, prints summary
-python plot_root_opt.py                    # writes figs/root_opt_scenarios.png
+python plot_root_opt.py                    # writes figs/root_opt_scenarios.png (custom summary figure)
+python reproduce_matlab_figures.py         # writes figs/Figure2_revised.png and figs/Figure3.png,
+                                            # matching the *exact* layout/labels/colors of
+                                            # external/root_opt/Figure2_and_3.m's exported figures
 pytest ../../tests/test_root_opt.py -q
 ```
+
+`reproduce_matlab_figures.py` mirrors `Figure2_and_3.m` panel-for-panel:
+same 5x3 (Figure2_revised) / 4x1 (Figure3) tiled layout, panel order and
+(A)-(J)/(A)-(D) labels, `copper(3)` 3-scenario color palette, axis
+labels (Anet, G_L/A_net, S/A_net, G_R/S_net, E/S_net time series +
+cumulative bars; root N uptake/growth/exudation rate/net mineralisation
+in Figure3), dashed reference lines (0.2/0.8 thresholds,
+min/max_exudation bounds), hidden x-tick labels on non-bottom rows, and
+the same solver settings as the MATLAB script (`control_intervals=100`).
+`plot_root_opt.py` is a separate, simpler custom summary figure (states +
+controls + objective bar) kept for quick sanity-checking during
+development.
+
 
 ## Notes / simplifications vs. the MATLAB original
 
