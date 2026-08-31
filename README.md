@@ -129,6 +129,11 @@ degree-5 Legendre collocation — matching Yop's exact configuration.
   Phytologist), nested control structure, port of
   `external/root_opt/solve_ocp_nested.m` + `params_base_condition.m`.
   See its own README (N-limitation scenario comparison validation).
+* `examples/lindh_2016_flowering/` — bang-bang flowering-time OCP
+  (exponential/logistic/WBE growth), reproducing the central result of
+  Lindh et al. (2016) New Phytologist that growth constraints flip the
+  direction of the optimal flowering-time response to productivity. See
+  `literature/Lindh_et_al_2016_summary.md` and its own README.
 
 ## Tests
 
