@@ -105,6 +105,18 @@ Reproduces the Goddard rocket maximum-ascent, free-final-time benchmark
 (`yoptimization/pages/benchmark/goddard_benchmark.md`), 59 control intervals,
 degree-5 Legendre collocation — matching Yop's exact configuration.
 
+### Ecology/publication examples
+
+* `examples/yop_microbial_growth/` — microbial growth optimization for a
+  finite food source (Manzoni et al. 2022), free terminal time, port of
+  `examples/OptLignin/YOP benchmark/Manzoni et al. 2022/`. See its own
+  README for problem statement, run instructions, and validation.
+* `examples/opt_lignin_figure2/` — optimal ligninolytic activity during
+  litter decomposition (Chakrawal et al. 2024, OptLignin Figure 2), fixed
+  terminal time, parameterized model, port of
+  `examples/OptLignin/OptLignin1.0/opt_con.m` + `Figure2.m`. See its own
+  README for problem statement, run instructions, and validation.
+
 ## Tests
 
 ```bash
