@@ -150,4 +150,48 @@ Git commits this update:
 - (pending commit) examples: add xuezhong_wang + lenhart_workman ports,
   figures, READMEs, tests.
 
+## Update 4 (2026-08-31): root_opt example (9-state plant C-N allocation)
+
+Ported the largest/most complex MATLAB model in the repo:
+external/root_opt/ (Chakrawal, Mooney & Colombi 2025/2026, New
+Phytologist, "Modelling belowground plant acclimation to low soil
+nitrogen"). This is a full 9-state / 2-control ecological OCP with a
+nested (hierarchical) control structure -- exudation modeled as a
+*fraction* of net root C assimilation rather than an independent rate,
+which avoids artificial bang-bang competition between root growth and
+exudation.
+
+New dir: examples/root_opt/
+- plant_soil_nitrogen_allocation.py: 1:1 port of
+  solve_ocp_nested.m + params_base_condition.m dynamics (same equations,
+  parameters, bounds, initial conditions). build_ocp()/solve() construct
+  the eco_opt Ocp. Base scenario converges (Solve_Succeeded) at
+  control_intervals=50, degree=3, legendre; objective (cumulative leaf
+  growth) = 499.50491065884506 gC/m2 over 120 d. leafC 50->549.5,
+  rootC 75->303.1, inorgN 20->8.1 (net N depletion, physically sensible).
+- plot_root_opt.py: reproduces Figure2_and_3.m's 3-scenario comparison
+  (base / low mineral N (inorgN=7.5) / high SOM C:N (SOMN=SOMC/20)) ->
+  figs/root_opt_scenarios.png. Visually verified: N-limited scenarios show
+  lower cumulative leaf growth (273.3, 302.8 vs base 499.5) and higher
+  exudation-fraction control (more time at the 0.5 upper bound) --
+  matches the paper's N-limitation/exudation-investment narrative.
+- README.md: problem statement, validation approach, and explicit note
+  on what's NOT ported (Figure_4/5/6's large parameter sweeps using
+  pre-computed .mat caches -- out of scope for a single example script).
+- tests/test_root_opt.py: 2 tests (regression + mass-balance/boundary
+  sanity on base scenario; N-limitation direction check comparing low-N
+  vs base objective). Both pass (~49s runtime, this is the slowest test
+  in the suite -- solves 2 full 9-state OCPs).
+
+Full pytest count now 21/21 passing (was 19), full suite runtime ~62s.
+README.md updated with root_opt listed under "Ecology/publication
+examples". Scope note: only the base 3-scenario comparison was ported,
+not the full Figure_4/5/6 parameter-sweep studies (see root_opt/README.md
+"Notes / simplifications").
+
+Git commits this update:
+- (pending commit) examples: add root_opt (9-state plant C-N allocation)
+  port with figures, README, tests.
+
+
 

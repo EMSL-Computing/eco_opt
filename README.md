@@ -124,6 +124,11 @@ degree-5 Legendre collocation — matching Yop's exact configuration.
   objective; LQ tracking; minimum-time stop), port of Lenhart & Workman
   "Optimal Control Applied to Biological Models". See its own README
   (analytic Pontryagin switching time / minimum time references).
+* `examples/root_opt/` — 9-state/2-control plant carbon-nitrogen
+  allocation model (Chakrawal, Mooney & Colombi 2025/2026, New
+  Phytologist), nested control structure, port of
+  `external/root_opt/solve_ocp_nested.m` + `params_base_condition.m`.
+  See its own README (N-limitation scenario comparison validation).
 
 ## Tests
 
