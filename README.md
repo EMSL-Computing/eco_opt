@@ -116,6 +116,14 @@ degree-5 Legendre collocation — matching Yop's exact configuration.
   terminal time, parameterized model, port of
   `examples/OptLignin/OptLignin1.0/opt_con.m` + `Figure2.m`. See its own
   README for problem statement, run instructions, and validation.
+* `examples/xuezhong_wang/` — two double-integrator examples (min-energy
+  fixed-tf; nonneg-control), port of Wang, X. "Solving optimal control
+  problems with MATLAB". See its own README (analytic LQ reference for
+  ex.1; trivial zero-control optimum for ex.2).
+* `examples/lenhart_workman/` — three examples (bang-bang linear
+  objective; LQ tracking; minimum-time stop), port of Lenhart & Workman
+  "Optimal Control Applied to Biological Models". See its own README
+  (analytic Pontryagin switching time / minimum time references).
 
 ## Tests
 
