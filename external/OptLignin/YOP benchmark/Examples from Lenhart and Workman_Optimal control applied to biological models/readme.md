@@ -1,1 +1,0 @@
-Scripts are provided that solve selected examples from Lenhart, S., Workman, J.T., 2007. Optimal control applied to biological models, 1st Edition. ed. Chapman and Hall/CRC, using YOP. 

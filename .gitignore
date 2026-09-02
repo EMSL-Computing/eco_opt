@@ -4,7 +4,4 @@ __pycache__/
 *.egg-info/
 build/
 dist/
-yoptimization/
-yop-master/
-work/
-manuscript/
+.venv/

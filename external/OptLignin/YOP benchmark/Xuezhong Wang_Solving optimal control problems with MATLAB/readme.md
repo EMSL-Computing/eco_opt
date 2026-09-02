@@ -1,1 +1,0 @@
-Two script are provided that solve the examples from Wang, X. Solving optimal control problems with MATLAB — Indirect methods 21, using YOP. 
