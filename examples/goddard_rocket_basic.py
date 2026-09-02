@@ -1,9 +1,6 @@
-"""Goddard rocket, maximum ascent, basic/original (non-dimensional) variant.
+"""Goddard rocket, maximum ascent, nondimensional variant.
 
-Direct translation of the MATLAB Yop example in
-``yoptimization/pages/examples/goddardRocket/goddardRocket.md`` (PROPT
-manual example 43 / the classic nondimensionalized Goddard problem, distinct
-from the free-tf ``goddard_benchmark.py`` which uses dimensional units).
+Distinct from the free-tf ``goddard_benchmark.py`` (dimensional units).
 
 Parameters: m0=1, mf=0.6, h0=1, g0=1, D0=0.5*620=310, c=0.5, beta=500,
 Tmax=3.5. Free final time. controlIntervals=100.

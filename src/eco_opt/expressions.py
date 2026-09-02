@@ -1,11 +1,8 @@
-"""Timepoint-wrapped expressions: eco_opt's equivalent of Yop's t_0()/t_f().
+"""Timepoint-wrapped expressions: ``t_0(expr)`` and ``t_f(expr)``.
 
-Yop constraints can wrap a signal expression with ``t_0(expr)`` or ``t_f(expr)``
-to indicate the constraint only applies at the initial or final time of the
-horizon, rather than along the whole trajectory (a "path" constraint). This
-module reproduces that wrapper as a lightweight Python object so ``Ocp.st``
-can classify constraints exactly like ``YopOcp.parseConstraints`` /
-``YopBoxConstraint`` do in MATLAB.
+Wrapping a signal with ``t_0`` or ``t_f`` marks a constraint as applying
+only at the initial or final time, rather than along the whole trajectory
+(a path constraint). ``Ocp.st`` uses that mark to classify constraints.
 """
 
 from __future__ import annotations
@@ -16,11 +13,7 @@ __all__ = ["TimepointExpression", "t_0", "t_f"]
 
 
 class TimepointExpression:
-    """Wraps a CasADi expression to mark it as evaluated at t0 or tf.
-
-    Mirrors Yop's ``t_0(expr)`` / ``t_f(expr)`` helpers used inside ``ocp.st``
-    and ``ocp.min``/``ocp.max`` to select boundary values of a signal.
-    """
+    """Wraps a CasADi expression to mark it as evaluated at t0 or tf."""
 
     __slots__ = ("expr", "point")
 
@@ -50,10 +43,10 @@ class TimepointExpression:
 
 
 def t_0(expr):
-    """Value of ``expr`` at the initial time of the horizon (Yop's t_0)."""
+    """Value of ``expr`` at the initial time of the horizon."""
     return TimepointExpression(expr, "0")
 
 
 def t_f(expr):
-    """Value of ``expr`` at the final time of the horizon (Yop's t_f)."""
+    """Value of ``expr`` at the final time of the horizon."""
     return TimepointExpression(expr, "f")

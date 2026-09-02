@@ -1,10 +1,8 @@
-"""Isoperimetric constraint problem (PROPT manual example 54).
+"""Isoperimetric constraint problem.
 
-Direct translation of
-``yoptimization/pages/examples/isoConstraint/isoConstraint.md``. Exercises
-a model with no ``y`` signal tree, an auxiliary integral state enforcing an
-isoperimetric constraint (int_0^1 u^2 dt = 10) as a fixed box_final value,
-and a bare Lagrange objective term.
+Exercises a model with no ``y`` signal tree, an auxiliary integral state
+enforcing an isoperimetric constraint (int_0^1 u^2 dt = 10) as a fixed
+box_final value, and a bare Lagrange objective term.
 
 No external reference value found for this exact problem instance; we
 report eco_opt's own converged objective and add it as a fixed-value

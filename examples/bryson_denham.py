@@ -1,11 +1,9 @@
 """Bryson-Denham problem: minimum-energy control with a state path constraint.
 
-Direct translation of ``yoptimization/pages/examples/bryson/brysonDenham.md``
-(Bryson & Ho, Applied Optimal Control, 1975). Exercises:
+Bryson & Ho, Applied Optimal Control, 1975. Exercises:
 * a Lagrange (running-cost) objective term,
 * a fully-fixed final time (t_f(time) == 1, i.e. lb=ub=1),
-* a single-sided path constraint (position <= 1/9, no lower bound), which
-  is the core `_unpack_tuple` fix for 3-tuples with '<='/'>=' only.
+* a single-sided path constraint (position <= 1/9, no lower bound).
 
 Reference / analytic solution
 ------------------------------

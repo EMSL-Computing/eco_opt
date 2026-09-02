@@ -1,11 +1,5 @@
 """Least-squares tracking problem, free terminal state (Lenhart & Workman,
-ex. 17.3).
-
-Direct translation of
-``examples/OptLignin/YOP benchmark/Examples from Lenhart and
-Workman_Optimal control applied to biological models/
-BangBangControl_lenhart_ex17_3.m`` (despite the filename, this is a smooth
-LQ-tracking problem, not bang-bang).
+ex. 17.3). Smooth LQ tracking, not bang-bang.
 
 Problem::
 

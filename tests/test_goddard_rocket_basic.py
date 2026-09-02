@@ -13,11 +13,10 @@ def test_goddard_rocket_basic_physical_sanity_and_convergence():
 
     # Reference literature value (Petit et al. IFAC 2008 indirect BVP shoot,
     # same nondimensional Goddard parameter set): h(T) = 1.01283692.
-    # NOTE: the MATLAB Yop source's drag law is D0*exp(-beta*h) (no h0
-    # offset), which differs slightly from the COPS/Petit convention
-    # D0*exp(-beta*(h-h0)/h0); this explains the ~1-2% gap from the
-    # literature value. We use a generous tolerance here and rely primarily
-    # on the grid-refinement convergence check below as correctness evidence.
+    # Drag law here is D0*exp(-beta*h) (no h0 offset), which differs
+    # slightly from the COPS/Petit convention D0*exp(-beta*(h-h0)/h0);
+    # this explains the ~1-2% gap from the literature value. We use a
+    # generous tolerance and rely primarily on grid-refinement below.
     rel_err = abs(sol.objective - REFERENCE_HEIGHT) / REFERENCE_HEIGHT
     assert rel_err < 0.03, f"objective={sol.objective} vs reference {REFERENCE_HEIGHT}"
 

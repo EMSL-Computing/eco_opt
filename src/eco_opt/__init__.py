@@ -1,6 +1,6 @@
-"""eco_opt: a Python reimplementation of the MATLAB Yop optimal-control package.
+"""eco_opt: optimal control for process-based models, built on CasADi.
 
-Built on CasADi, ``eco_opt`` mirrors the Yop modelling workflow:
+This package is a Python implementation of the Yop modelling workflow:
 
     sys = eco_opt.System(states=3, controls=1, model=my_model)
     time = sys.t

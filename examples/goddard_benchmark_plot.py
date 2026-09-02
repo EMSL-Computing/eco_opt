@@ -1,10 +1,4 @@
-"""Generate comparison figures: eco_opt vs. reference Yop/CasADi/PROPT data
-for the Goddard rocket free-final-time benchmark.
-
-Reproduces the state/control comparison plots shown on the MATLAB Yop
-benchmark page (goddard_benchmark.md: states_goddard_diff.svg,
-control_goddard_diff.svg) but generated from eco_opt's own solve plus the
-actual reference .mat data, not just re-displaying the MATLAB docs images.
+"""Generate comparison figures for the Goddard rocket free-final-time problem.
 
 Run:  python examples/goddard_benchmark_plot.py
 Output: figs/goddard_states_comparison.png, figs/goddard_control_comparison.png
@@ -45,7 +39,7 @@ def main():
     labels = ["velocity [m/s]", "height [m]", "mass [kg]"]
     for i, ax in enumerate(axes):
         ax.plot(sol.time, sol.x[:, i], "o-", color="C0", ms=3, label="eco_opt")
-        ax.plot(yop_t, yop_x[:, i], "x--", color="C1", ms=5, label="Yop (MATLAB, reference)")
+        ax.plot(yop_t, yop_x[:, i], "x--", color="C1", ms=5, label="reference")
         if casadi_ref is not None:
             try:
                 ax.plot(casadi_ref["casadi_t"].ravel(), casadi_ref["casadi_x"][:, i],
@@ -72,7 +66,7 @@ def main():
     fig, ax = plt.subplots(figsize=(7, 4))
     ax.step(sol.time_intervals, np.append(sol.u[:, 0], sol.u[-1, 0]), where="post",
             color="C0", label="eco_opt")
-    ax.step(yop_t, yop_u, where="post", color="C1", linestyle="--", label="Yop (MATLAB, reference)")
+    ax.step(yop_t, yop_u, where="post", color="C1", linestyle="--", label="reference")
     ax.set_xlabel("time [s]")
     ax.set_ylabel("fuel mass flow F (control)")
     ax.set_title("Goddard rocket (free tf): eco_opt vs. reference control")

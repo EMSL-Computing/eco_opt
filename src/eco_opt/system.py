@@ -1,9 +1,8 @@
-"""System definitions: eco_opt's equivalent of Yop's ``YopSystem``.
+"""System definitions: states, controls, and named signals.
 
 A :class:`System` bundles a symbolic time variable, state/control/algebraic/
 parameter vectors, and a user-supplied ``model`` callback that returns the
-dynamics ``dx`` and a nested namespace of named signals ``y`` (mirroring
-Yop's ``sys.y.rocket.velocity`` style access), e.g.::
+dynamics ``dx`` and a nested namespace of named signals ``y``, e.g.::
 
     def goddard_model(t, x, u):
         v, h, m = x[0], x[1], x[2]
@@ -29,9 +28,8 @@ __all__ = ["System", "Namespace"]
 class Namespace:
     """A simple attribute-holding namespace, used for the ``y`` signal tree.
 
-    Equivalent to Yop's MATLAB struct-of-structs ``y.rocket.velocity``
-    pattern: any keyword/attribute becomes an accessible field, and nesting
-    is achieved by assigning further ``Namespace`` instances.
+    Any keyword/attribute becomes an accessible field; nesting is achieved
+    by assigning further ``Namespace`` instances.
     """
 
     def __init__(self, **kwargs):
@@ -45,8 +43,6 @@ class Namespace:
 
 class System:
     """Symbolic OCP system: states/controls/algebraics/parameters + model.
-
-    Equivalent of MATLAB's ``YopSystem('states', n, 'controls', m, 'model', @f)``.
 
     Parameters
     ----------
@@ -88,10 +84,8 @@ class System:
         self._model = model
 
         # Evaluate the model symbolically once to build dx, alg residual, and y.
-        # `y` is optional: models may return a bare dx (or dx, dz) with no
-        # signal tree, e.g. MATLAB Yop examples that only call
-        # ``sys.set('ode', xdot)`` without building a `y` struct. In that
-        # case we default to an empty Namespace so `sys.y` always exists.
+        # `y` is optional: models may return a bare dx (or dx, dz). Default
+        # to an empty Namespace so `sys.y` always exists.
         if self.nz:
             result = model(self.t, self.x, self.u, self.z, self.p)
             if isinstance(result, tuple) and len(result) == 3:
@@ -105,11 +99,8 @@ class System:
                 y = Namespace()
             self.dz = dz
         else:
-            # Models declaring parameters but no algebraics still need access
-            # to `p` (e.g. Yop's `sys.p(1)` pattern for pinned/fixed
-            # parameters classified as box-equality constraints). Try the
-            # 4-arg (t, x, u, p) signature first, falling back to the plain
-            # 3-arg (t, x, u) signature used by parameter-free models.
+            # Models declaring parameters but no algebraics still receive `p`.
+            # Try (t, x, u, p) first, then (t, x, u) for parameter-free models.
             try:
                 result = model(self.t, self.x, self.u, self.p) if self.np else model(self.t, self.x, self.u)
             except TypeError:

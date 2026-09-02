@@ -1,13 +1,4 @@
-"""Generate state/control/growth-rate comparison figures for the microbial
-growth example (eco_opt vs. the MATLAB indirect_bvp4c.m reference figures,
-where available).
-
-Reproduces the four-panel Figure 1 style plot from
-``examples/OptLignin/YOP benchmark/Manzoni et al. 2022/indirect_bvp4c_Fig1.png``
-(C(t), lambda-analog N/A here since eco_opt direct collocation has no
-explicit costate, u_opt(t), G_opt(t)) plus the phase-portrait style Figure 2
-(C vs G, C vs u, u vs G) from ``indirect_bvp4c_Fig2.png`` -- generated purely
-from eco_opt's own converged solution.
+"""State/control and phase-portrait figures for the microbial growth example.
 
 Run:  python examples/yop_microbial_growth/plot_microbial_growth.py
 Output: figs/microbial_growth_states_control.png,

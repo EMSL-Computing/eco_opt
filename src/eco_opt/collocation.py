@@ -1,8 +1,6 @@
 """Radau/Legendre orthogonal collocation coefficients.
 
-Direct port of Yop's ``YopCollocationCoefficients`` (see
-``yop-master/OptimalControl/NLP/YopCollocationCoefficients.m``), itself the
-same construction as CasADi's official ``direct_collocation`` example: given
+Same construction as CasADi's official ``direct_collocation`` example: given
 a polynomial degree ``d`` and a point selection (``'legendre'`` or
 ``'radau'``), builds
 

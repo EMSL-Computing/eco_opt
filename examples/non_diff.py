@@ -1,17 +1,12 @@
-"""Nondifferentiable system (PROPT manual example 72).
+"""Nondifferentiable system with a discontinuous pulse forcing term.
 
-Direct translation of ``yoptimization/pages/examples/nonDiff/nonDiff.md``.
 Exercises: model with no ``y`` signal tree; fixed final time (t_f(t)==2);
-CasADi ``if_else`` to model a discontinuous pulse forcing term; radau
-collocation with polynomial degree 3; and the new ``initial_guess`` dict
-mechanism (mirrors MATLAB's ``YopInitialGuess('signals', [t;x;u],
-'signalValues', [0;0;0;0;-5])``: here we set the control's constant guess
-to -5, matching the MATLAB source).
+CasADi ``if_else``; radau collocation with polynomial degree 3; control
+initial guess of -5.
 
-No .mat/external reference available; this problem is explicitly framed by
-the MATLAB docs as numerically delicate (nondifferentiable forcing). We
-report eco_opt's own converged objective as a regression-tracked value and
-sanity-check convergence + trajectory shape.
+No closed-form objective is available; this problem is numerically
+delicate (nondifferentiable forcing). The converged objective is
+regression-tracked.
 """
 
 import casadi as cs
@@ -63,7 +58,7 @@ def solve(control_intervals=100, polynomial_degree=3):
 
 # Regression-tracked value: no external reference available; computed with
 # eco_opt at control_intervals=100, polynomial_degree=3, radau collocation,
-# initial_guess={u: -5.0} (matching MATLAB's YopInitialGuess signalValues).
+# initial_guess={u: -5.0}
 REGRESSION_OBJECTIVE = 58.06949994233442
 
 

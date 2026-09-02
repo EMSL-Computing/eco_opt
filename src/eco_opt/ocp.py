@@ -1,9 +1,8 @@
 """Optimal control problem definition and direct-collocation transcription.
 
-Mirrors MATLAB Yop's ``YopOcp`` (min/max objective, ``st()`` constraints with
-t_0()/t_f() timepoint wrapping and box/path/initial/final classification) and
-``YopDirectCollocation`` (Radau/Legendre orthogonal collocation on finite
-elements, matching CasADi's canonical direct-collocation formulation).
+Declare an objective with ``min``/``max``, constraints with ``st()``
+(including ``t_0``/``t_f`` timepoint wrapping and box/path/initial/final
+classification), and solve by Radau or Legendre orthogonal collocation.
 """
 
 from __future__ import annotations
@@ -24,7 +23,7 @@ __all__ = ["Ocp"]
 class Ocp:
     """Optimal control problem: objective + constraints + solve.
 
-    Usage (mirrors Yop)::
+    Usage::
 
         ocp = Ocp()
         ocp.max(t_f(sig.height))
@@ -87,14 +86,10 @@ class Ocp:
         f = cs.Function("f", [sys.t, sys.x, sys.u, sys.p], [sys.dx])
 
         # -- initial-guess resolution -----------------------------------------
-        # Yop's default parses each state/control component to a constant
-        # guess of 1.0 across the whole horizon (see YopOcp.parseInitialGuess:
-        # values.State = ones(...), values.Control = ones(...)). We match that
-        # default for Yop fidelity. `initial_guess` may override individual
-        # components: a dict mapping a symbolic expression (sys.x[i], sys.u[i],
-        # or sys.t) to a constant numeric value applied at every node of that
-        # component, mirroring MATLAB's `YopInitialGuess('signals', [...],
-        # 'signalValues', [...])` pattern.
+        # Default constant guess of 1.0 for each state/control/parameter
+        # component. `initial_guess` may override individual components: a
+        # dict mapping a symbolic expression (sys.x[i], sys.u[i], or sys.t)
+        # to a constant numeric value applied at every node of that component.
         x_guess = [1.0] * nx
         u_guess = [1.0] * nu
         p_guess = [1.0] * npar
@@ -107,9 +102,7 @@ class Ocp:
                 elif ui is not None:
                     u_guess[ui] = float(val)
                 elif cs.is_equal(sys.t, key, 1):
-                    # time guess is not directly used (T0/Tf come from bounds
-                    # / tf_guess); accepted for MATLAB-signature parity but
-                    # otherwise a no-op.
+                    # time guess is not used (T0/Tf come from bounds / tf_guess).
                     pass
                 else:
                     raise ValueError(f"initial_guess key {key!r} is not a component of system {sys!r}")

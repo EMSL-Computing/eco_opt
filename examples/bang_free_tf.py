@@ -1,9 +1,6 @@
 """Bang-bang minimum-time double integrator, free final time.
 
-Direct translation of the MATLAB Yop example in
-``yoptimization/pages/examples/bangFreeTf/bangFreeTf.md`` (PROPT manual
-example 10). Exercises the "model with no y signal tree" core fix: the
-model here returns a bare ``dx`` (no Namespace).
+The model returns a bare ``dx`` (no Namespace).
 
 Analytic reference (asymmetric bang-bang double integrator):
     xdot1 = x2, xdot2 = u,  u in [-2, 1]
