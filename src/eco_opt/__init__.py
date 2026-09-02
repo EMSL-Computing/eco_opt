@@ -9,7 +9,7 @@ Built on CasADi, ``eco_opt`` mirrors the Yop modelling workflow:
     ocp = eco_opt.Ocp()
     ocp.max(eco_opt.t_f(sig.height))
     ocp.st(
-        systems=sys,
+        system=sys,
         constraints=[
             (0, '==', eco_opt.t_0(time)),
             (0, '==', eco_opt.t_0(sig.velocity)),
@@ -18,10 +18,10 @@ Built on CasADi, ``eco_opt`` mirrors the Yop modelling workflow:
     )
     sol = ocp.solve(control_intervals=60)
 
-See ``eco_opt.ocp.Ocp`` and ``eco_opt.system.System`` for the full API.
+See ``Ocp`` and ``System`` for the full API.
 """
 
-from .system import System
+from .system import System, Namespace
 from .expressions import t_0, t_f, TimepointExpression
 from .ocp import Ocp
 from .results import OcpResults
@@ -33,6 +33,7 @@ __all__ = [
     "t_0",
     "t_f",
     "TimepointExpression",
+    "Namespace",
 ]
 
 __version__ = "0.1.0"

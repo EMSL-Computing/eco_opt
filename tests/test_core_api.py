@@ -11,6 +11,7 @@ def test_import_public_api():
     assert hasattr(eco_opt, "t_0")
     assert hasattr(eco_opt, "t_f")
     assert hasattr(eco_opt, "TimepointExpression")
+    assert hasattr(eco_opt, "Namespace")
 
 
 def test_system_construction():
