@@ -1,7 +1,5 @@
-"""Reproduce (a Python/eco_opt analogue of) OptLignin's Figure 2: sensitivity
-of the optimal decomposition trajectory to four parameters (vh_max, ro,
-ARC0, mo), each swept over two values (base and 2x/3x), following
-``examples/OptLignin/OptLignin1.0/Figure2.m``.
+"""Sensitivity of the optimal decomposition trajectory to four parameters
+(vh_max, ro, ARC0, mo), each swept over two values (base and 2x/3x).
 
 For each of 4 parameters x 2 values, solves the lignin decomposition OCP
 (``lignin_decomposition.py``) and plots the resulting CT/CT(0), Co/Co(0)
@@ -23,7 +21,7 @@ import lignin_decomposition as ld
 HERE = os.path.dirname(os.path.abspath(__file__))
 FIG_DIR = os.path.join(HERE, "figs")
 
-# Sweep values, matching Figure2.m's ARC0/vh/ro/mo two-point sweeps.
+# Sweep values: ARC0 / vh / ro / mo two-point sweeps.
 VH = [ld.VH_LOOP, ld.VH_LOOP * 3]
 RO = [ld.RO_LOOP, ld.RO_LOOP * 2]
 ARC0 = [ld.ARC0_LOOP, ld.ARC0_LOOP * 2]

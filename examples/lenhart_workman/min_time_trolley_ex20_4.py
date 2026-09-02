@@ -1,11 +1,6 @@
 """Minimum-time trolley stop, free terminal time (Lenhart & Workman,
 ex. 20.4).
 
-Direct translation of
-``examples/OptLignin/YOP benchmark/Examples from Lenhart and
-Workman_Optimal control applied to biological models/
-Free Terminal Time Problems_ex20_4.m``.
-
 Problem::
 
     minimize   tf
@@ -27,11 +22,6 @@ covers a distance x0/2 starting/ending at rest under constant
     tf* = 2*sqrt(x0)
 
 For x0=10: ``tf* = 2*sqrt(10) ~= 6.32456``.
-
-(This matches the MATLAB script's own in-code comment
-``disp("analytical terminal time is " + num2str(2*x0^0.5))`` -- i.e. the
-formula the original authors intended, given the ``{-1,'<=',accel,
-'<=',1}`` bound actually enforced in that script.)
 """
 
 import math

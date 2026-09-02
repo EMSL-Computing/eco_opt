@@ -1,10 +1,5 @@
 """Minimum-energy double integrator, fixed final time (Xuezhong Wang, ex. 1).
 
-Direct translation of
-``examples/OptLignin/YOP benchmark/Xuezhong Wang_Solving optimal control
-problems with MATLAB/Xuezhong_Wang_ex_1.m`` (Wang, X., "Solving optimal
-control problems with MATLAB -- Indirect methods", 21).
-
 Problem::
 
     minimize   int_0^2 0.5*a^2 dt

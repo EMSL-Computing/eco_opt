@@ -1,6 +1,5 @@
-"""Reproduce (a Python/eco_opt analogue of) root_opt's Figure 2/3: compare
-three scenarios (base, low mineral N, high SOM C:N) over the 120-day
-growing season, mirroring ``external/root_opt/Figure2_and_3.m``.
+"""Compare three scenarios (base, low mineral N, high SOM C:N) over a
+120-day growing season.
 """
 import copy
 import os

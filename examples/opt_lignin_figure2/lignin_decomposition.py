@@ -1,10 +1,6 @@
 """Optimal ligninolytic activity during litter decomposition
 (Chakrawal et al. 2024, OptLignin, https://doi.org/10.5281/zenodo.10553503).
 
-Direct Python/eco_opt translation of the MATLAB Yop model in
-``examples/OptLignin/OptLignin1.0/opt_con.m`` (used to produce Figure 2 of
-the paper via ``Figure2.m``).
-
 Problem (fixed terminal time)::
 
     maximize   int_0^TT G dt
@@ -28,13 +24,8 @@ carbon fraction of it, ``vo`` the control (rate of investment in
 lignin-degrading -- "aromatic-targeting" -- enzymes), maximizing cumulative
 microbial growth ``G`` over a fixed decomposition horizon ``TT``.
 
-eco_opt currently has no ``System(parameters=...)`` box-equality shortcut in
-public examples yet, so parameters here are represented the same way Yop
-does it internally: as symbolic ``sys.p`` components pinned via a box
-equality constraint (``{value, '==', param}``), exactly mirroring
-``opt_con.m``'s ``ocp.Parameter(1:3).setBound(par)`` pattern (each solve gets
-its own fresh, fully-parameterized NLP rather than reusing/re-parameterizing
-one, since eco_opt's ``Ocp`` is solve-once).
+Fixed kinetic parameters are symbolic ``sys.p`` components pinned by
+box-equality constraints. Each solve builds a fresh NLP.
 
 Reference
 ---------
@@ -53,7 +44,7 @@ import casadi as cs
 import eco_opt
 from eco_opt.system import Namespace
 
-# g-function parameters (Chakrawal et al. 2024, "exp" scenario in set_up.m)
+# g-function parameters (Chakrawal et al. 2024, "exp" scenario)
 A = 0.1537
 B = 2.0
 
@@ -63,7 +54,7 @@ def g_kernel(L, a=A, b=B):
 
 
 def emax_fun(CN0):
-    """Maximum growth efficiency as a function of litter C:N ratio (set_up.m)."""
+    """Maximum growth efficiency as a function of litter C:N ratio."""
     return cs.fmin(6.25 * CN0 ** -0.77, 0.4)
 
 
@@ -86,7 +77,7 @@ def lignin_model(t, x, u, p):
     return dx, y
 
 
-# Baseline parameters (Figure2.m defaults, CN0=50)
+# Baseline parameters (CN0=50)
 CN0_BASELINE = 50.0
 EMAX = float(6.25 * CN0_BASELINE ** -0.77 if 6.25 * CN0_BASELINE ** -0.77 < 0.4 else 0.4)
 VOMAX = 0.1

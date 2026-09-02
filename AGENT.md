@@ -3,7 +3,8 @@
 Installable Python package for posing process-based ecological ODE models
 as constrained optimal-control problems (CasADi + direct collocation).
 
-Historical Yop-port specification: `docs/yop_port_spec.md`.
+`eco_opt` is a Python implementation of the Yop modelling workflow.
+See `docs/LINEAGE.md`.
 
 ## Environment
 
@@ -18,23 +19,24 @@ This git repo is the **package only**. Sibling trees under
 
 - `eco_opt/` — this package (this git)
 - `manuscript/` — MEE Applications paper (separate git)
-- `reference/` — MATLAB Yop / OptLignin / literature (not in this git)
+- `reference/` — source papers and original models (not in this git)
 
 ## Package rules
 
-- Package name is `eco_opt` (not `yop`).
+- Package name is `eco_opt`.
 - Must remain `pip install`-able: `import eco_opt` and `pytest` after install.
-- No MATLAB at runtime.
 - Public API only through `eco_opt` (`System`, `Ocp`, `OcpResults`, `t_0`,
   `t_f`, `Namespace`). Do not teach users to import internal modules.
 - Do not hard-code example-specific solutions into the library.
-- Prefer general fixes over benchmark patches.
+- Do not cite MATLAB class names, `.m` paths, or Yop internals in library
+  code, examples, or tests. Lineage belongs only in `docs/LINEAGE.md`
+  and the one-line note in the package README / `__init__.py`.
 
 ## Manuscript rules
 
 Edit the paper in `../manuscript/`, not here. No file paths in the paper.
 This paper introduces `eco_opt`: name and version it; do not cite it as a
-prior publication. Cite Yop, CasADi, IPOPT, and the four source papers.
+prior publication.
 
 ## Tests
 

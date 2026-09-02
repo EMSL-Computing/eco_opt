@@ -1,10 +1,7 @@
-"""Optimal-control solution results: eco_opt's equivalent of Yop's ``YopOcpResults``.
+"""Optimal-control solution results.
 
-Provides retrieval of the objective value, final time, solver status, and
-named-signal trajectories, plus a ``.signal(name_or_expr)`` sampling helper
-that plays the role of MATLAB's ``sol.plot(time, signal)`` /
-``sol.stairs(time, signal)`` (a Pythonic callable/array-based equivalent
-rather than a plotting call, documented in the README).
+Provides the objective value, final time, solver status, named-signal
+trajectories, and ``.signal(expr)`` sampling on the solution grid.
 """
 
 from __future__ import annotations
@@ -115,7 +112,7 @@ class OcpResults:
         self.time_nodes = np.array(t_nodes)
         self.x_nodes = np.array(x_nodes)  # shape (num_nodes, nx)
 
-        # Piecewise-constant control grid (per Yop: u constant on each interval)
+        # Piecewise-constant control grid (u constant on each interval)
         self.time_intervals = np.array([t0_val + k * h for k in range(N)] + [tf_val])
         self.u_intervals = np.array(u_vals) if u_vals else np.zeros((0, sys.nu))
 
@@ -146,10 +143,9 @@ class OcpResults:
     def signal(self, expr_or_index, kind: str = "state") -> np.ndarray:
         """Retrieve a named/derived signal sampled on the coarse time grid.
 
-        Equivalent to Yop's ``sol.plot(time, signal)`` / ``sol.stairs(...)``:
-        pass a symbolic expression built from ``sys.x``/``sys.u`` components
-        (e.g. ``sys.y.rocket.velocity``) and get back a numeric array aligned
-        with ``self.time`` (states) or ``self.time_intervals[:-1]`` (controls).
+        Pass a symbolic expression built from ``sys.x``/``sys.u`` (e.g.
+        ``sys.y.rocket.velocity``) and get a numeric array aligned with
+        ``self.time`` (states) or ``self.time_intervals[:-1]`` (controls).
         """
         if isinstance(expr_or_index, int):
             return self.state(expr_or_index) if kind == "state" else self.control(expr_or_index)

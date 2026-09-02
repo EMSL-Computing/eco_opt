@@ -1,10 +1,5 @@
 """Linear objective, bang-bang control (Lenhart & Workman, ex. 17.2).
 
-Direct translation of
-``examples/OptLignin/YOP benchmark/Examples from Lenhart and
-Workman_Optimal control applied to biological models/
-BangBangControl_lenhart_ex17_2.m``.
-
 Problem::
 
     maximize   int_0^2 (2*x - 3*u) dt

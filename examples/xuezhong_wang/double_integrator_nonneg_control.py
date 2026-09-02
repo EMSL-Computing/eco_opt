@@ -1,10 +1,6 @@
 """Minimum-energy double integrator with nonnegative control, fixed final
 time (Xuezhong Wang, ex. 2).
 
-Direct translation of
-``examples/OptLignin/YOP benchmark/Xuezhong Wang_Solving optimal control
-problems with MATLAB/Xuezhong_Wang_ex_2.m``.
-
 Problem::
 
     minimize   int_0^2 0.5*a^2 dt
@@ -21,7 +17,7 @@ in ``bryson_denham_fixed_tf.py``) would need
 problem and no simple closed form is asserted. We instead validate:
   * feasibility: x(0)=1, v(0)=1, x(tf)=3, v(tf)>=0 (within solver tol),
   * physical sign constraint: u(t) >= 0 for all t (bang/singular arcs
-    only ever accelerate, matching "a >= 0" in the MATLAB model),
+    only ever accelerate),
   * a regression-tracked objective value for future comparisons.
 """
 

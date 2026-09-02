@@ -1,9 +1,6 @@
 """Constraint classification helpers.
 
-Mirrors Yop's ``YopBoxConstraint`` / ``YopPathConstraint`` /
-``YopInitialConstraint`` / ``YopFinalConstraint`` predicates
-(``Constraints/*.m``): a constraint tuple such as
-``(0, '==', t_0(x))`` is classified based on
+A constraint tuple such as ``(0, '==', t_0(x))`` is classified based on
 
 * whether the middle operand is wrapped in ``t_0(...)``/``t_f(...)``
   (boundary) or bare (applies along the whole horizon => "path"), and
@@ -55,7 +52,7 @@ def is_bare_variable(system, expr) -> bool:
 
 @dataclass
 class ParsedConstraint:
-    """A single normalized constraint after unpacking a Yop-style tuple.
+    """A single normalized constraint after unpacking a constraint tuple.
 
     kind: one of 'box', 'box_initial', 'box_final', 'path', 'initial', 'final'
     lb, ub: numeric bounds (float, possibly +/-inf)
@@ -71,7 +68,7 @@ class ParsedConstraint:
 
 
 def _unpack_tuple(t):
-    """Unpack a Yop-style constraint tuple into (lb, mid, ub).
+    """Unpack a constraint tuple into (lb, mid, ub).
 
     Supported forms:
         (lb, '<=', mid, '<=', ub)
@@ -99,11 +96,9 @@ def _unpack_tuple(t):
             else:
                 raise ValueError(f"cannot classify equality constraint {t}: need one numeric side")
         elif op in ("<=", ">="):
-            # single-sided inequality: e.g. {1/9 '>=' trolley.position} means
-            # trolley.position <= 1/9 (upper bound only, lb stays -inf), or
-            # {expr '<=' bound} meaning expr <= bound. Exactly one side must
-            # be numeric; the numeric side + operator direction determines
-            # whether it's an upper or lower bound on the expression.
+            # single-sided inequality. Exactly one side must be numeric;
+            # the numeric side and operator direction determine whether it
+            # is an upper or lower bound on the expression.
             if isinstance(a, (int, float)) and not isinstance(b, (int, float)):
                 num, expr = float(a), b
                 # a op b  =>  num op expr

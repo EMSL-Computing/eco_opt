@@ -5,9 +5,6 @@ Brannstrom & Jonzen (2016), *Constrained growth flips the direction of
 optimal phenological responses among annual plants*, New Phytologist
 209:1591-1599, doi:10.1111/nph.13706.
 
-Full paper summary and the key insight being reproduced:
-`../../literature/Lindh_et_al_2016_summary.md`.
-
 ## Problem
 
 Optimal allocation of biomass production `F(V)` between vegetative

@@ -4,12 +4,9 @@ acclimation to low soil nitrogen", New Phytologist,
 https://doi.org/10.1111/nph.71210; code DOI
 https://doi.org/10.5281/zenodo.17872549).
 
-Direct Python/eco_opt translation of the MATLAB Yop model in
-``external/root_opt/solve_ocp_nested.m`` + ``params_base_condition.m``
-(nested/hierarchical control structure: exudation is a *fraction* of net
-root carbon assimilation rather than an independent absolute rate, which
-avoids artificial competition between root growth and exudation and
-avoids bang-bang control).
+Nested/hierarchical control: exudation is a *fraction* of net root
+carbon assimilation rather than an independent absolute rate, which
+avoids artificial competition between root growth and exudation.
 
 Problem (fixed terminal time, "base" scenario)::
 
@@ -38,7 +35,7 @@ import eco_opt
 from eco_opt.system import Namespace
 
 # ---------------------------------------------------------------------------
-# Parameters (params_base_condition.m, "base" scenario)
+# Parameters ("base" scenario)
 # ---------------------------------------------------------------------------
 PARAMS = dict(
     a=600 / 365,          # max nitrogen productivity gC/gN.d
@@ -71,7 +68,7 @@ PARAMS = dict(
     max_exudation=0.5,
 )
 
-# Initial state (params_base_condition.m, "base" scenario)
+# Initial state ("base" scenario)
 _LEAFC0 = 50.0
 _ROOTC0 = 1.5 * _LEAFC0
 _CNSOM0 = 10.0
@@ -93,7 +90,7 @@ STATE_INIT = dict(
 def plant_soil_microbe_nested(t, state, u, params=PARAMS):
     """9-state plant-soil-microbe C/N dynamics, nested control structure.
 
-    State order (matches MATLAB ``solve_ocp_nested.m``):
+    State order:
         0 leafC, 1 rootC, 2 exuC, 3 SOMC, 4 micC,
         5 rootN, 6 SOMN, 7 micN, 8 inorgN
     Control order: 0 rootCSupply [gC/m2/d], 1 exu_fraction [-]
@@ -227,7 +224,7 @@ def build_ocp(terminal_time=120.0, state_init=STATE_INIT, params=PARAMS):
 def solve(terminal_time=120.0, state_init=STATE_INIT, params=PARAMS,
           control_intervals=50, polynomial_degree=3):
     ocp, sys = build_ocp(terminal_time=terminal_time, state_init=state_init, params=params)
-    # Reasonable initial guesses matching the MATLAB "cold start" scale
+    # Reasonable initial guesses matching the cold-start scale
     # (states in the hundreds/thousands, controls O(0.1-1)) help ipopt
     # converge in far fewer iterations than the package default of 1.0
     # everywhere.

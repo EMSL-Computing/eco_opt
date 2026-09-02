@@ -1,9 +1,5 @@
 """Goddard rocket, maximum ascent, free final time.
 
-Direct Python/eco_opt translation of the MATLAB Yop benchmark in
-``yoptimization/pages/benchmark/goddard_benchmark.md`` (and the equivalent
-example in ``pages/examples/goddardRocket/goddardRocketFreeTf.md``).
-
 Run directly:  python examples/goddard_benchmark.py
 """
 

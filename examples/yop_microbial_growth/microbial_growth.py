@@ -1,9 +1,5 @@
-"""Microbial growth optimization for a finite food source (Manzoni et al. 2022).
-
-Direct Python/eco_opt translation of the MATLAB Yop model in
-``examples/OptLignin/YOP benchmark/Manzoni et al. 2022/{GrowthModel.m,
-yop_opt.m, YOP_microbial_growth.m}`` (Chakrawal/Manzoni,
-https://doi.org/10.3389/fevo.2023.1094269).
+"""Microbial growth optimization for a finite food source
+(Manzoni, Chakrawal & Ledder 2023, https://doi.org/10.3389/fevo.2023.1094269).
 
 Problem (free terminal time)::
 
@@ -19,16 +15,9 @@ rate ``gamma``.
 
 Reference
 ---------
-No closed-form objective is given in the paper; the MATLAB script instead
-solves the *same* problem three ways (forward-backward sweep, ``bvp4c``
-indirect shooting via Pontryagin's maximum principle, and the Yop/CasADi
-direct-collocation solve reproduced here, ``indirect_bvp4c.m`` /
-``indirect_forward_backward_sweep.m`` / ``YOP_microbial_growth.m``) and
-cross-checks them against one another. The indirect (``bvp4c``) costate
-equations derive a stationarity condition ``dH/du = 0`` on the Hamiltonian
-``H = G(u) + p*(-u - gamma*C + mu*G(u))`` that is costate- (hence
-time-) dependent, so the optimal control here is a smooth trajectory over
-the horizon, not a constant singular arc.
+No closed-form objective is given in the paper. The Hamiltonian
+stationarity condition is costate- (hence time-) dependent, so the
+optimal control is a smooth trajectory, not a constant singular arc.
 
 We validate physically instead of against a closed-form number:
 * the free terminal time must be driven by resource exhaustion, i.e.
@@ -43,7 +32,7 @@ import casadi as cs
 import eco_opt
 from eco_opt.system import Namespace
 
-# Parameters (see YOP_microbial_growth.m, k=0 baseline case)
+# Parameters (k=0 baseline case)
 BETA = 0.5
 GAMMA = 0.5
 R = 0.1

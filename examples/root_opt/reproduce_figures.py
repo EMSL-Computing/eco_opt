@@ -1,20 +1,10 @@
-"""Reproduce (as closely as matplotlib allows) the two MATLAB figures that
-are actually exported by ``external/root_opt/Figure2_and_3.m``:
+"""Allocation and N-flux figures for the three nitrogen scenarios.
 
   * Figure2_revised.png -- 5x3 tiled layout, panels (A)-(J): Anet time
-    series + cumulative bar, then leaf/root/exudation growth-rate RATIOS
-    (G_L/A_net, S/A_net, G_R/S_net, E/S_net) time series + cumulative bars,
+    series + cumulative bar, then leaf/root/exudation growth-rate ratios
     for the 3 scenarios (base / low min. N / high SOM C:N).
   * Figure3.png -- 4x1 tiled layout, panels (A)-(D): root N uptake rate,
-    root growth rate, root exudation rate, net N mineralisation (phiN)
-    time series for the 3 scenarios.
-
-Matches (as closely as matplotlib/GridSpec allow): panel layout and
-span, panel order, axis labels (incl. italic/subscript via mathtext),
-copper(3) 3-color scenario palette, line widths, grid/box on every
-axes, axis limits, (A)-(J)/(A)-(D) panel titles top-left, legend on the
-first axes, and hidden x-tick labels on non-bottom rows -- i.e. the
-same *figure*, not just the same data, as ``Figure2_and_3.m`` produces.
+    root growth rate, root exudation rate, net N mineralisation (phiN).
 """
 import os
 import sys as _sys
@@ -31,12 +21,12 @@ FIGDIR = os.path.join(os.path.dirname(__file__), "figs")
 os.makedirs(FIGDIR, exist_ok=True)
 
 SCENARIOS = ["base", "low min. N", "high SOM C:N"]
-# matplotlib ships the same 'copper' colormap MATLAB's copper(3) uses.
+# Three-scenario copper palette.
 COLORS = matplotlib.colormaps["copper"](np.linspace(0, 1, 3))
 
 
 def run_scenarios(terminal_time=120.0, control_intervals=100, polynomial_degree=3):
-    """Solve the 3 scenarios (matches MATLAB's control_intervals=100)."""
+    """Solve the 3 scenarios."""
     results = {}
     results["base"] = m.solve(terminal_time=terminal_time,
                                control_intervals=control_intervals,
@@ -57,8 +47,7 @@ def run_scenarios(terminal_time=120.0, control_intervals=100, polynomial_degree=
 
 
 def _signals(sol, sys):
-    """Sample every derived variable used by the two figures on the coarse
-    (interval-boundary) time grid, matching MATLAB's per-row-of-df access."""
+    """Sample derived variables on the coarse (interval-boundary) time grid."""
     y = sys.y
     out = {"time": sol.time}
     for name in ["Anet", "leaf_growth_rate", "rootCSupply", "root_growth_rate",

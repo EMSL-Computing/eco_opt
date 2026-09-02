@@ -2,18 +2,18 @@
 
 Python package for posing process-based ecological ODE models as
 constrained optimal-control problems. Built on CasADi and direct
-orthogonal collocation; modelling grammar follows the MATLAB toolbox
-[Yop](https://yoptimization.com).
+orthogonal collocation.
+
+`eco_opt` is a Python implementation of the [Yop](https://yoptimization.com)
+modelling workflow.
 
 This directory is the **package git**. The MEE manuscript is
-`../manuscript/` (separate git). MATLAB/Yop sources are `../reference/`.
+`../manuscript/` (separate git).
 
 ## Status
 
 Version 0.1.0. Public API: `System`, `Ocp`, `OcpResults`, `t_0`, `t_f`,
-`Namespace`. Goddard free-final-time benchmark matches the archived Yop
-reference to near machine precision. Ecological examples live under
-`examples/` with regression tests.
+`Namespace`.
 
 Not yet implemented: algebraic states (DAEs), multi-phase problems,
 automatic scaling.
@@ -34,8 +34,8 @@ automatic scaling.
 ## Cite
 
 Until the MEE Applications article is published, cite this software by
-name and version (`eco_opt` 0.1.0). Also cite Yop, CasADi, and IPOPT.
-After publication, that article is the preferred citation.
+name and version (`eco_opt` 0.1.0). Also cite CasADi and IPOPT. After
+publication, that article is the preferred citation.
 
 ## License
 
