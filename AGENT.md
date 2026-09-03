@@ -26,7 +26,7 @@ filesystem paths in the paper.
   `closed_loop`, `SimulationResults`, `ClosedLoopResults`,
   `control_from_solution`). Do not teach users to import internal
   modules. Single-phase bound/parameter sweeps: `Ocp.build`,
-  `Ocp.set_constraints`, `Ocp.optimize`. Index-1 algebraics:
+  `Ocp.set_constraints`, `Ocp.optimize`. Algebraics:
   `System(algebraics=n)`, model returns `(dx, dz, y)`. Open-loop
   replay: `ocp.simulate(sol)` or `eco_opt.simulate(sys, x0, t, u)`.
   Closed loop (shrinking/receding horizon):

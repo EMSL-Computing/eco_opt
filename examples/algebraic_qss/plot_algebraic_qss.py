@@ -38,7 +38,7 @@ def _plot_pair(name, sol_ode, sol_dae, M_of):
     axes[2].grid(alpha=0.3)
 
     fig.suptitle(
-        f"{name}: reduced ODE vs index-1 DAE\n"
+        f"{name}: reduced ODE vs DAE\n"
         f"J_ode={sol_ode.objective:.5f}, J_dae={sol_dae.objective:.5f}",
         fontsize=11,
     )

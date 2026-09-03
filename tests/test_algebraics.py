@@ -1,4 +1,4 @@
-"""Index-1 algebraics: reduced ODE vs DAE on the QSS microbe toys."""
+"""Algebraic states: reduced ODE vs DAE on the QSS microbe toys."""
 import os
 import sys as _sys
 
