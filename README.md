@@ -40,6 +40,10 @@ See the [Install](docs/install.md) page for IPOPT notes.
 
 ## Documentation
 
+Hosted on Read the Docs: <https://eco-opt.readthedocs.io/>
+
+Locally:
+
 ```bash
 pip install -e ".[docs]"
 mkdocs serve
