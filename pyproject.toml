@@ -16,7 +16,7 @@ dependencies = [
 
 [project.optional-dependencies]
 test = ["pytest>=7.0"]
-docs = ["mkdocs>=1.5,<2", "mkdocs-material>=9"]
+docs = ["mkdocs>=1.5,<2", "mkdocs-material>=9", "pymdown-extensions>=10"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

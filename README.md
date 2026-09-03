@@ -41,13 +41,30 @@ See the [Install](docs/install.md) page for IPOPT notes.
 ## Documentation
 
 Hosted on Read the Docs: <https://eco-opt.readthedocs.io/>
+(live after the repo is public and the RTD project is imported).
 
-Locally:
+The docs are MkDocs Material. They do not import CasADi; a docs-only
+install is enough to preview pages, math, and example write-ups.
+
+From the package root:
 
 ```bash
 pip install -e ".[docs]"
 mkdocs serve
 ```
+
+Then open http://127.0.0.1:8000 (Ctrl+C to stop). Edits under `docs/`
+reload in the browser.
+
+To write a static copy (same as RTD) without serving:
+
+```bash
+mkdocs build
+```
+
+Output is `site/` (gitignored). Open `site/index.html` in a browser.
+`pip install -r docs/requirements.txt` is the RTD-only equivalent if
+you do not want an editable package install.
 
 Start at [First solve](docs/first-solve.md) (Goddard rocket), then
 [Posing a problem](docs/posing.md) and
