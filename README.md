@@ -94,7 +94,7 @@ bucket.
 **Traditional OCP problems:** dimensional and nondimensional Goddard,
 Goddard landing, bang-bang free horizon, Bryson–Denham, isoperimetric
 constraint, nondifferentiable pulse, brachistochrone, Van der Pol,
-Lenhart–Workman, Wang double integrator.
+Lenhart–Workman examples and labs, Wang double integrator.
 
 **Numerical features:** quasi-steady microbes as an algebraic
 closure (`algebraic_qss`). Multi-phase and open vs closed loop are

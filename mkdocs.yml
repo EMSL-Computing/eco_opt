@@ -56,6 +56,7 @@ nav:
           - Brachistochrone: examples/brachistochrone.md
           - Van der Pol: examples/van_der_pol.md
           - Lenhart and Workman: examples/lenhart_workman.md
+          - Lenhart and Workman labs: examples/lenhart_workman_labs.md
           - Double integrator (Wang): examples/xuezhong_wang.md
       - Numerical features:
           - Quasi-steady microbes: examples/algebraic_qss.md

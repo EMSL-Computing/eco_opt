@@ -62,6 +62,7 @@ collocation against closed forms or an archive.
 | [brachistochrone](brachistochrone.md) | Minimum-time cycloid |
 | [van_der_pol](van_der_pol.md) | Forced oscillator, running cost |
 | [lenhart_workman](lenhart_workman.md) | Three textbook OCPs |
+| [lenhart_workman_labs](lenhart_workman_labs.md) | Book labs, posed in eco_opt |
 | [xuezhong_wang](xuezhong_wang.md) | Fixed-time double integrator |
 
 ## Numerical features
