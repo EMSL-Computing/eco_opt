@@ -1,6 +1,12 @@
+import os
+import sys as _sys
+
 import numpy as np
 
-from examples.bang_free_tf import solve, ANALYTIC_TF, ANALYTIC_SWITCH_TIME
+HERE = os.path.dirname(__file__)
+_sys.path.insert(0, os.path.join(HERE, "..", "examples", "bang_free_tf"))
+
+from bang_free_tf import solve, ANALYTIC_TF, ANALYTIC_SWITCH_TIME
 
 
 def test_bang_free_tf_matches_analytic_min_time():

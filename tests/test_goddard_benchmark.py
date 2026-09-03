@@ -33,13 +33,13 @@ scipy_io = pytest.importorskip("scipy.io")
 import sys as _sys
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-EXAMPLES_DIR = os.path.join(HERE, "examples")
+EXAMPLE_DIR = os.path.join(HERE, "examples", "goddard_benchmark")
 REFERENCE_MAT = os.path.join(HERE, "work", "goddard_benchmark", "yop_goddard.mat")
 
 
 def _load_example():
-    if EXAMPLES_DIR not in _sys.path:
-        _sys.path.insert(0, EXAMPLES_DIR)
+    if EXAMPLE_DIR not in _sys.path:
+        _sys.path.insert(0, EXAMPLE_DIR)
     import goddard_benchmark as gb
 
     return gb

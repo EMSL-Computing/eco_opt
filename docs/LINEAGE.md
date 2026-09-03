@@ -1,6 +1,6 @@
 # Lineage
 
-`eco_opt` is a Python implementation of the [Yop](https://yoptimization.com)
+`eco_opt` is a Python implementation of the [Yop](https://www.yoptimization.com)
 optimal-control modelling workflow, built on CasADi.
 
 That is the only software lineage that belongs in this package. Do not

@@ -1,4 +1,10 @@
-from examples.bryson_denham import solve, ANALYTIC_OBJECTIVE, ANALYTIC_MAX_POSITION
+import os
+import sys as _sys
+
+HERE = os.path.dirname(__file__)
+_sys.path.insert(0, os.path.join(HERE, "..", "examples", "bryson_denham"))
+
+from bryson_denham import solve, ANALYTIC_OBJECTIVE, ANALYTIC_MAX_POSITION
 
 
 def test_bryson_denham_matches_analytic_solution():

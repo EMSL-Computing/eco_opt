@@ -87,16 +87,22 @@ class System:
         # `y` is optional: models may return a bare dx (or dx, dz). Default
         # to an empty Namespace so `sys.y` always exists.
         if self.nz:
-            result = model(self.t, self.x, self.u, self.z, self.p)
+            try:
+                result = model(self.t, self.x, self.u, self.z, self.p)
+            except TypeError:
+                result = model(self.t, self.x, self.u, self.z)
             if isinstance(result, tuple) and len(result) == 3:
                 dx, dz, y = result
             elif isinstance(result, tuple) and len(result) == 2:
                 dx, dz = result
                 y = Namespace()
             else:
-                dx = result
-                dz = None
-                y = Namespace()
+                raise ValueError(
+                    "algebraic models must return (dx, dz) or (dx, dz, y); "
+                    "dz is the residual 0 = g(t,x,u,z,p)"
+                )
+            if dz is None:
+                raise ValueError("algebraic models must return a residual dz with nz rows")
             self.dz = dz
         else:
             # Models declaring parameters but no algebraics still receive `p`.
@@ -129,6 +135,18 @@ class System:
     def control_index(self, expr) -> Optional[int]:
         for i in range(self.nu):
             if cs.is_equal(self.u[i], expr, 1):
+                return i
+        return None
+
+    def parameter_index(self, expr) -> Optional[int]:
+        for i in range(self.np):
+            if cs.is_equal(self.p[i], expr, 1):
+                return i
+        return None
+
+    def algebraic_index(self, expr) -> Optional[int]:
+        for i in range(self.nz):
+            if cs.is_equal(self.z[i], expr, 1):
                 return i
         return None
 

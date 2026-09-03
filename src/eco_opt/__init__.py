@@ -24,16 +24,31 @@ See ``Ocp`` and ``System`` for the full API.
 from .system import System, Namespace
 from .expressions import t_0, t_f, TimepointExpression
 from .ocp import Ocp
-from .results import OcpResults
+from .results import OcpResults, PhaseTrajectory
+from .phase import Phase
+from .simulate import (
+    simulate,
+    closed_loop,
+    SimulationResults,
+    ClosedLoopResults,
+    control_from_solution,
+)
 
 __all__ = [
     "System",
     "Ocp",
     "OcpResults",
+    "Phase",
+    "PhaseTrajectory",
     "t_0",
     "t_f",
     "TimepointExpression",
     "Namespace",
+    "simulate",
+    "closed_loop",
+    "SimulationResults",
+    "ClosedLoopResults",
+    "control_from_solution",
 ]
 
 __version__ = "0.1.0"

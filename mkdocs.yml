@@ -1,0 +1,61 @@
+site_name: eco_opt
+site_description: Optimal control for process-based ecological models
+exclude_docs: |
+  LINEAGE.md
+theme:
+  name: material
+  palette:
+    primary: teal
+    accent: teal
+  features:
+    - navigation.sections
+    - navigation.footer
+    - navigation.top
+    - content.code.copy
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.arithmatex:
+      generic: true
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+nav:
+  - Home: index.md
+  - Install: install.md
+  - First solve: first-solve.md
+  - Posing a problem: posing.md
+  - Troubleshooting: troubleshooting.md
+  - Examples:
+      - Overview: examples/index.md
+      - Ecological models:
+          - Microbial growth: examples/microbial_growth.md
+          - Ligninolytic investment: examples/opt_lignin.md
+          - Plant–soil C and N: examples/root_opt.md
+          - Cohen and King allocation: examples/cohen_king_roughgarden.md
+          - Iwasa shoot–root–fruit: examples/iwasa_roughgarden_shoot_root.md
+          - Lindh flowering: examples/lindh_2016_flowering.md
+          - Multi-phase Cohen: examples/multiphase_cohen.md
+          - Shallow lake: examples/shallow_lake.md
+          - Greenhouse climate: examples/greenhouse.md
+          - Irrigation bucket: examples/irrigation_bucket.md
+      - Traditional OCP problems:
+          - Goddard (dimensional): examples/goddard_benchmark.md
+          - Goddard (nondimensional): examples/goddard_rocket_basic.md
+          - Goddard landing: examples/multiphase_goddard_landing.md
+          - Bang-bang free horizon: examples/bang_free_tf.md
+          - Bryson–Denham: examples/bryson_denham.md
+          - Isoperimetric constraint: examples/iso_constraint.md
+          - Nondifferentiable pulse: examples/non_diff.md
+          - Brachistochrone: examples/brachistochrone.md
+          - Van der Pol: examples/van_der_pol.md
+          - Lenhart and Workman: examples/lenhart_workman.md
+          - Double integrator (Wang): examples/xuezhong_wang.md
+      - Numerical features:
+          - Quasi-steady microbes: examples/algebraic_qss.md
+  - API: api.md
+  - Cite: cite.md

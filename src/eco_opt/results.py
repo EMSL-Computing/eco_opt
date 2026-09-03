@@ -11,7 +11,44 @@ from typing import List, Optional
 import numpy as np
 import casadi as cs
 
-__all__ = ["OcpResults"]
+__all__ = ["OcpResults", "PhaseTrajectory"]
+
+
+class PhaseTrajectory:
+    """State/control trajectories on one phase of a (possibly multi-phase) OCP."""
+
+    def __init__(self, sys, t0, tf, time, x, u, time_intervals, N, d, tau=None, z=None):
+        self.sys = sys
+        self.t0 = float(t0)
+        self.tf = float(tf)
+        self.time = np.asarray(time)
+        self.x = np.asarray(x)
+        self.u = np.asarray(u)
+        nz = getattr(sys, "nz", 0)
+        n_t = self.x.shape[0] if self.x.ndim else 0
+        self.z = np.asarray(z) if z is not None else np.zeros((n_t, nz))
+        self.time_intervals = np.asarray(time_intervals)
+        self.N = int(N)
+        self.d = int(d)
+        self.tau = np.asarray(tau) if tau is not None else np.zeros(0)
+
+    def signal(self, expr):
+        fn = cs.Function("sig", [self.sys.t, self.sys.x, self.sys.u, self.sys.z], [expr])
+        out = []
+        for k in range(self.N):
+            u_k = self.u[k] if self.u.size else np.zeros(self.sys.nu)
+            z_k = self.z[k] if self.z.size else np.zeros(self.sys.nz)
+            out.append(float(fn(self.time[k], self.x[k], u_k, z_k)))
+        u_last = self.u[-1] if self.u.size else np.zeros(self.sys.nu)
+        z_last = self.z[-1] if self.z.size else np.zeros(self.sys.nz)
+        out.append(float(fn(self.time[-1], self.x[-1], u_last, z_last)))
+        return np.array(out)
+
+    def __repr__(self):
+        return (
+            f"PhaseTrajectory(sys={self.sys.name!r}, t0={self.t0!r}, "
+            f"tf={self.tf!r}, N={self.N})"
+        )
 
 
 class OcpResults:
@@ -37,6 +74,8 @@ class OcpResults:
         Xc_all: List[List],
         w,
         objective_sense: Optional[str],
+        Z_all=None,
+        Zc_all=None,
     ):
         self.sys = sys
         self.stats = stats
@@ -49,6 +88,8 @@ class OcpResults:
         # Rebuild a numeric-lookup function from the symbolic decomposition:
         # extract each symbol's slice from the flat w vector via a CasADi
         # Function (robust against however variables were interleaved).
+        nz = int(getattr(sys, "nz", 0))
+        use_z = bool(nz and Z_all)
         all_syms = []
         if npar:
             all_syms.append(Pk_sym)
@@ -56,9 +97,15 @@ class OcpResults:
         all_syms.append(X_all[0])
         for k in range(N):
             all_syms.append(U_all[k])
+            if use_z:
+                all_syms.append(Z_all[k])
             for j in range(d):
                 all_syms.append(Xc_all[k][j])
+                if use_z and Zc_all:
+                    all_syms.append(Zc_all[k][j])
             all_syms.append(X_all[k + 1])
+        if use_z:
+            all_syms.append(Z_all[N])
 
         extract_fn = cs.Function("extract", [w], all_syms)
         vals = extract_fn(w_opt)
@@ -79,13 +126,23 @@ class OcpResults:
         u_vals = []
         xc_vals = []  # xc_vals[k][j]
         x_vals = [x0_val]
+        z_vals = []
+        zc_vals = []
         for k in range(N):
             u_vals.append(vals[idx]); idx += 1
+            if use_z:
+                z_vals.append(vals[idx]); idx += 1
             xj = []
+            zj = []
             for j in range(d):
                 xj.append(vals[idx]); idx += 1
+                if use_z and Zc_all:
+                    zj.append(vals[idx]); idx += 1
             xc_vals.append(xj)
+            zc_vals.append(zj)
             x_vals.append(vals[idx]); idx += 1
+        if use_z:
+            z_vals.append(vals[idx]); idx += 1
 
         self.p = p_val
         self.t0 = t0_val
@@ -121,6 +178,65 @@ class OcpResults:
         self.time = np.array([t0_val + k * h for k in range(N)] + [tf_val])
         self.x = np.array(x_vals)  # shape (N+1, nx)
         self.u = self.u_intervals  # shape (N, nu), piecewise-constant
+        if use_z:
+            self.z = np.array(z_vals)  # shape (N+1, nz) at interval boundaries
+        else:
+            self.z = np.zeros((N + 1, 0))
+        self.phases = [self]
+        self.switch_times = np.zeros(0)
+
+    @classmethod
+    def from_phases(cls, phase_trajs, stats, objective, objective_sense):
+        """Assemble a multi-phase result. ``.phases`` holds each stage;
+        ``.t0``/``.tf``/``.objective`` are the overall problem; ``.time``
+        and ``.x`` are concatenated when every phase has the same ``nx``.
+        """
+        obj = cls.__new__(cls)
+        obj.stats = stats
+        obj.objective_sense = objective_sense
+        obj.objective = float(objective)
+        obj.phases = list(phase_trajs)
+        obj.t0 = float(phase_trajs[0].t0)
+        obj.tf = float(phase_trajs[-1].tf)
+        obj.sys = phase_trajs[-1].sys
+        obj.N = int(sum(p.N for p in phase_trajs))
+        obj.d = int(phase_trajs[0].d)
+        obj.tau = phase_trajs[0].tau
+        obj.p = np.zeros(0)
+        obj.switch_times = np.array([p.tf for p in phase_trajs[:-1]], dtype=float)
+        same_nx = len({p.x.shape[1] if p.x.ndim == 2 else 0 for p in phase_trajs}) == 1
+        if same_nx:
+            times = [phase_trajs[0].time]
+            xs = [phase_trajs[0].x]
+            us = [phase_trajs[0].u]
+            tints = [phase_trajs[0].time_intervals]
+            for p in phase_trajs[1:]:
+                times.append(p.time[1:])
+                xs.append(p.x[1:])
+                us.append(p.u)
+                tints.append(p.time_intervals[1:])
+            obj.time = np.concatenate(times)
+            obj.x = np.concatenate(xs, axis=0)
+            obj.u = np.concatenate(us, axis=0) if us[0].ndim == 2 else np.zeros((0, 0))
+            obj.time_intervals = np.concatenate(tints)
+            zs = [phase_trajs[0].z]
+            for p in phase_trajs[1:]:
+                zs.append(p.z[1:] if getattr(p, "z", None) is not None and p.z.size else p.z)
+            try:
+                obj.z = np.concatenate(zs, axis=0)
+            except ValueError:
+                obj.z = phase_trajs[-1].z
+        else:
+            last = phase_trajs[-1]
+            obj.time = last.time
+            obj.x = last.x
+            obj.u = last.u
+            obj.time_intervals = last.time_intervals
+            obj.z = getattr(last, "z", np.zeros((last.x.shape[0], 0)))
+        obj.time_nodes = obj.time
+        obj.x_nodes = obj.x
+        obj.u_intervals = obj.u
+        return obj
 
     # -- status -------------------------------------------------------------
     @property
@@ -151,14 +267,16 @@ class OcpResults:
             return self.state(expr_or_index) if kind == "state" else self.control(expr_or_index)
 
         expr = expr_or_index
-        fn = cs.Function("sig", [self.sys.t, self.sys.x, self.sys.u], [expr])
+        fn = cs.Function("sig", [self.sys.t, self.sys.x, self.sys.u, self.sys.z], [expr])
         out = []
+        z_traj = getattr(self, "z", np.zeros((self.N + 1, getattr(self.sys, "nz", 0))))
         for k in range(self.N):
             u_k = self.u[k] if self.u.size else np.zeros(self.sys.nu)
-            out.append(float(fn(self.time[k], self.x[k], u_k)))
-        # append terminal value using the last control (piecewise-constant hold)
+            z_k = z_traj[k] if z_traj.size else np.zeros(self.sys.nz)
+            out.append(float(fn(self.time[k], self.x[k], u_k, z_k)))
         u_last = self.u[-1] if self.u.size else np.zeros(self.sys.nu)
-        out.append(float(fn(self.time[-1], self.x[-1], u_last)))
+        z_last = z_traj[-1] if z_traj.size else np.zeros(self.sys.nz)
+        out.append(float(fn(self.time[-1], self.x[-1], u_last, z_last)))
         return np.array(out)
 
     def __repr__(self):
