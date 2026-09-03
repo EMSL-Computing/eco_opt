@@ -1,4 +1,4 @@
-"""Linear QSS microbes: the same OCP as a reduced ODE and as an index-1 DAE.
+"""Linear QSS microbes: the same OCP as a reduced ODE and as a DAE.
 
     max  ∫ M dt
     Cdot = -u

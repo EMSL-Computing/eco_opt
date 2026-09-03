@@ -13,7 +13,7 @@ Public API: `System`, `Ocp`, `OcpResults`, `Phase`, `PhaseTrajectory`,
 `t_0`, `t_f`, `Namespace`, `simulate`, `closed_loop`,
 `SimulationResults`, `ClosedLoopResults`, `control_from_solution`.
 
-Index-1 algebraic states are supported in single-phase collocation
+Algebraic states are supported in single-phase collocation
 (`System(algebraics=...)`, model returns `(dx, dz, y)`). Not yet
 implemented: automatic scaling. Algebraics are not supported in
 multi-phase problems. Multi-phase sequential collocation:
