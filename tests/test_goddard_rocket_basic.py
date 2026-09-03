@@ -1,4 +1,10 @@
-from examples.goddard_rocket_basic import solve, REFERENCE_HEIGHT, MF
+import os
+import sys as _sys
+
+HERE = os.path.dirname(__file__)
+_sys.path.insert(0, os.path.join(HERE, "..", "examples", "goddard_rocket_basic"))
+
+from goddard_rocket_basic import solve, REFERENCE_HEIGHT, MF
 
 
 def test_goddard_rocket_basic_physical_sanity_and_convergence():

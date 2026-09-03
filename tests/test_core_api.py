@@ -12,6 +12,13 @@ def test_import_public_api():
     assert hasattr(eco_opt, "t_f")
     assert hasattr(eco_opt, "TimepointExpression")
     assert hasattr(eco_opt, "Namespace")
+    assert hasattr(eco_opt, "Phase")
+    assert hasattr(eco_opt, "PhaseTrajectory")
+    assert hasattr(eco_opt, "simulate")
+    assert hasattr(eco_opt, "closed_loop")
+    assert hasattr(eco_opt, "SimulationResults")
+    assert hasattr(eco_opt, "ClosedLoopResults")
+    assert hasattr(eco_opt, "control_from_solution")
 
 
 def test_system_construction():

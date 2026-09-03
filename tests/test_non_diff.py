@@ -1,6 +1,12 @@
+import os
+import sys as _sys
+
 import numpy as np
 
-from examples.non_diff import solve, REGRESSION_OBJECTIVE
+HERE = os.path.dirname(__file__)
+_sys.path.insert(0, os.path.join(HERE, "..", "examples", "non_diff"))
+
+from non_diff import solve, REGRESSION_OBJECTIVE
 
 
 def test_non_diff_converges_and_regression():

@@ -4,38 +4,74 @@ Python package for posing process-based ecological ODE models as
 constrained optimal-control problems. Built on CasADi and direct
 orthogonal collocation.
 
-`eco_opt` is a Python implementation of the [Yop](https://yoptimization.com)
-modelling workflow.
+`eco_opt` is a Python implementation of the
+[Yop](https://www.yoptimization.com) modelling workflow.
 
-This directory is the **package git**. The MEE manuscript is
-`../manuscript/` (separate git).
+Version 0.1.0.
 
-## Status
+Public API: `System`, `Ocp`, `OcpResults`, `Phase`, `PhaseTrajectory`,
+`t_0`, `t_f`, `Namespace`, `simulate`, `closed_loop`,
+`SimulationResults`, `ClosedLoopResults`, `control_from_solution`.
 
-Version 0.1.0. Public API: `System`, `Ocp`, `OcpResults`, `t_0`, `t_f`,
-`Namespace`.
-
-Not yet implemented: algebraic states (DAEs), multi-phase problems,
-automatic scaling.
+Index-1 algebraic states are supported in single-phase collocation
+(`System(algebraics=...)`, model returns `(dx, dz, y)`). Not yet
+implemented: automatic scaling. Algebraics are not supported in
+multi-phase problems. Multi-phase sequential collocation:
+`Ocp.st(phases=[...])`. Bound and parameter sweeps on a fixed mesh:
+`ocp.build(...)`, then `set_constraints` / `optimize` (warm start).
+Open-loop replay: `ocp.simulate(sol)`. Closed loop:
+`ocp.closed_loop(x0, dt, t_final=T)` (shrinking horizon by default;
+`horizon='receding'` for a rolling prediction window). If the
+simulated process is the OCP model, shrinking closed loop reprints
+the open-loop tape. The keyword `plant=` is that simulated process
+(control-theory name), not vegetation.
 
 ## Install
 
-```bash
-/home/chak803/miniforge3/envs/llm_env/bin/pip install -e ".[test]"
-```
-
-## Check
+From the package root:
 
 ```bash
-/home/chak803/miniforge3/envs/llm_env/bin/python -c "import eco_opt; print(eco_opt.__all__)"
-/home/chak803/miniforge3/envs/llm_env/bin/python -m pytest -q
+pip install -e ".[test]"
+python -c "import eco_opt; print(eco_opt.__version__, eco_opt.__all__)"
+python -m pytest -q
 ```
+
+See the [Install](docs/install.md) page for IPOPT notes.
+
+## Documentation
+
+```bash
+pip install -e ".[docs]"
+mkdocs serve
+```
+
+Start at [First solve](docs/first-solve.md) (Goddard rocket), then
+[Posing a problem](docs/posing.md) and
+[Examples](docs/examples/index.md).
+
+## Examples
+
+Runnable modules under `examples/`. Documentation pages use the same
+folder names.
+
+**Ecological models:** `microbial_growth`, `opt_lignin`, `root_opt`,
+Cohen–King allocation, Iwasa shoot–root–fruit, Lindh flowering,
+multi-phase Cohen, shallow lake, greenhouse heating, irrigation
+bucket.
+
+**Traditional OCP problems:** dimensional and nondimensional Goddard,
+Goddard landing, bang-bang free horizon, Bryson–Denham, isoperimetric
+constraint, nondifferentiable pulse, brachistochrone, Van der Pol,
+Lenhart–Workman, Wang double integrator.
+
+**Numerical features:** quasi-steady microbes as an algebraic
+closure (`algebraic_qss`). Multi-phase and open vs closed loop are
+demonstrated inside the examples above.
 
 ## Cite
 
-Until the MEE Applications article is published, cite this software by
-name and version (`eco_opt` 0.1.0). Also cite CasADi and IPOPT. After
-publication, that article is the preferred citation.
+Until a journal article is published, cite this software by name and
+version (`eco_opt` 0.1.0). Also cite CasADi, IPOPT, and Yop.
 
 ## License
 

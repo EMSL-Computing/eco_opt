@@ -1,4 +1,10 @@
-from examples.iso_constraint import solve, REGRESSION_OBJECTIVE
+import os
+import sys as _sys
+
+HERE = os.path.dirname(__file__)
+_sys.path.insert(0, os.path.join(HERE, "..", "examples", "iso_constraint"))
+
+from iso_constraint import solve, REGRESSION_OBJECTIVE
 
 
 def test_iso_constraint_satisfies_isoperimetric_constraint_and_regression():
