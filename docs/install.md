@@ -11,7 +11,9 @@ python -c "import eco_opt; print(eco_opt.__version__, eco_opt.__all__)"
 python -m pytest -q
 ```
 
-For this documentation site:
+The documentation is on Read the Docs: <https://eco-opt.readthedocs.io/>.
+
+To preview locally:
 
 ```bash
 pip install -e ".[docs]"

@@ -1,0 +1,4 @@
+# Docs-only install for Read the Docs (no CasADi).
+mkdocs>=1.5,<2
+mkdocs-material>=9
+pymdown-extensions>=10
