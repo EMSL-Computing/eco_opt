@@ -20,6 +20,12 @@ pip install -e ".[docs]"
 mkdocs serve
 ```
 
+Default address is http://127.0.0.1:8000. If that port is taken:
+
+```bash
+mkdocs serve -a 127.0.0.1:8001
+```
+
 If `import casadi` succeeds but `ocp.solve` cannot find IPOPT, install
 IPOPT from the platform package manager and confirm CasADi still
 imports.

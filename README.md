@@ -56,6 +56,17 @@ mkdocs serve
 Then open http://127.0.0.1:8000 (Ctrl+C to stop). Edits under `docs/`
 reload in the browser.
 
+If port 8000 is already in use (`Address already in use` / `Errno 98`),
+bind another port:
+
+```bash
+mkdocs serve -a 127.0.0.1:8001
+```
+
+Open http://127.0.0.1:8001. Any free port works in place of `8001`.
+To preview without a server, use `mkdocs build` below and open
+`site/index.html`.
+
 To write a static copy (same as RTD) without serving:
 
 ```bash
