@@ -28,9 +28,9 @@ the open-loop tape. The keyword `plant=` is that simulated process
 
 ## Install
 
-From the package root:
-
 ```bash
+git clone https://github.com/ArjunChakrawal/eco_opt.git
+cd eco_opt
 pip install -e ".[test]"
 python -c "import eco_opt; print(eco_opt.__version__, eco_opt.__all__)"
 python -m pytest -q

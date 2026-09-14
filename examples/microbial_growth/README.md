@@ -36,18 +36,18 @@ bounds respected; regression-tracked objective and terminal time.
 
 ## Open loop vs closed loop
 
-`open_vs_closed.py` pins \(T=1.5\) (the free-\(T\) optimum is \(\approx 1.52\))
+`open_vs_closed.py` pins $T=1.5$ (the free-$T$ optimum is $\approx 1.52$)
 and compares:
 
-1. One open-loop \(u^*(t)\), replayed on the same \(f\).
-2. Shrinking-horizon closed loop on the same \(f\).
-3. The same \(u^*(t)\) applied to a plant that gets extra C on
-   \([0.4,0.7]\), versus re-planning from the measured \(C\).
+1. One open-loop $u^*(t)$, replayed on the same $f$.
+2. Shrinking-horizon closed loop on the same $f$.
+3. The same $u^*(t)$ applied to a plant that gets extra C on
+   $[0.4,0.7]$, versus re-planning from the measured $C$.
 
-Same plant: the two \(u\) series match and \(\int G=0.152\). Pulsed plant:
-the tape still uses the planned uptake and leaves \(C(T)\approx 0.22\)
-uneaten (\(\int G=0.152\)); closed loop raises \(u\) after the pulse,
-exhausts C, and reaches \(\int G=0.190\).
+Same plant: the two $u$ series match and $\int G=0.152$. Pulsed plant:
+the tape still uses the planned uptake and leaves $C(T)\approx 0.22$
+uneaten ($\int G=0.152$); closed loop raises $u$ after the pulse,
+exhausts C, and reaches $\int G=0.190$.
 
 Figure: `figs/open_vs_closed.png`.
 

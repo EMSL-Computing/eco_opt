@@ -12,16 +12,16 @@ Skiba 1978 and Wagener 2003). Those two ideas are not the same.
 
     ecological tipping point  ≠  Skiba / two NLP locals
 
-The first lives in \(\dot P=f(P,L)\) at constant loading. The second
-lives in the whole OCP (objective + discounting + \(P(0)\)).
+The first lives in $\dot P=f(P,L)$ at constant loading. The second
+lives in the whole OCP (objective + discounting + $P(0)$).
 
 ---
 
 ## Ecology
 
-Phosphorus in the water column \(P\), external loading \(L\) (control):
+Phosphorus in the water column $P$, external loading $L$ (control):
 
-\[
+$$
 \dot P
 =
 \underbrace{L}_{\text{external loading}}
@@ -29,29 +29,29 @@ Phosphorus in the water column \(P\), external loading \(L\) (control):
 \underbrace{b P}_{\text{export / sedimentation}}
 +
 \underbrace{\frac{P^{2}}{1+P^{2}}}_{\text{internal recycling}}.
-\]
+$$
 
 This is the dimensionless recycling used by Mäler et al. (2003), the
-Hill form \(r P^{q}/(m^{q}+P^{q})\) with \(q=2\), \(m=1\), \(r=1\)
-(Carpenter et al. 1999). When \(P\) is small, recycling is weak. When
-\(P\) is large, recycling saturates near 1 and keeps the lake dirty.
+Hill form $r P^{q}/(m^{q}+P^{q})$ with $q=2$, $m=1$, $r=1$
+(Carpenter et al. 1999). When $P$ is small, recycling is weak. When
+$P$ is large, recycling saturates near 1 and keeps the lake dirty.
 
-For \(b=0.52\) and a constant loading in a window
-(\(L\approx 0.02\)–\(0.07\)) there are **three** equilibria:
+For $b=0.52$ and a constant loading in a window
+($L\approx 0.02$–$0.07$) there are **three** equilibria:
 
-\[
+$$
 P_{\mathrm{clear}}\ \text{stable},
 \qquad
 P_{\mathrm{threshold}}\ \text{unstable},
 \qquad
 P_{\mathrm{turbid}}\ \text{stable}.
-\]
+$$
 
-At \(L=0.05\): \(P\approx 0.13\), \(0.58\), \(1.31\).
+At $L=0.05$: $P\approx 0.13$, $0.58$, $1.31$.
 
-Panel (a) of the figure is that hysteresis curve (loading vs \(P\)).
-Raising \(L\) past the upper fold collapses a clear lake to turbid.
-Lowering \(L\) back to the collapse value does **not** restore it: you
+Panel (a) of the figure is that hysteresis curve (loading vs $P$).
+Raising $L$ past the upper fold collapses a clear lake to turbid.
+Lowering $L$ back to the collapse value does **not** restore it: you
 must go below the lower fold (hysteresis).
 
 ---
@@ -62,7 +62,7 @@ Loading is not just “bad”. It stands for economically useful activity
 (agriculture). The canonical planner problem of Mäler, Xepapadeas &
 de Zeeuw (2003) is, on a long finite horizon,
 
-\[
+$$
 \max_{L(\cdot)}
 \int_0^{T} e^{-\rho t}
 \bigl(
@@ -70,46 +70,46 @@ de Zeeuw (2003) is, on a long finite horizon,
 -
 \underbrace{c P^{2}}_{\text{damage from a dirty lake}}
 \bigr)\,\mathrm{d}t.
-\]
+$$
 
 Question: how much loading to allow, given that too much can lock the
 lake in a persistent turbid state?
 
-Defaults here: \(b=0.52\), \(\rho=0.03\), \(c=1\), \(T=80\), \(P(0)=1\),
-\(10^{-3}\le L\le 1.5\).
+Defaults here: $b=0.52$, $\rho=0.03$, $c=1$, $T=80$, $P(0)=1$,
+$10^{-3}\le L\le 1.5$.
 
-**Two constant guesses for the same \(P(0)\)** converge to different
+**Two constant guesses for the same $P(0)$** converge to different
 locals (both `Solve_Succeeded`):
 
-| \(L_{\mathrm{guess}}\) | \(J\) (max) | \(P(T)\) |
+| $L_{\mathrm{guess}}$ | $J$ (max) | $P(T)$ |
 |---|---|---|
-| \(0.05\) | \(\approx -135.22\) | \(\approx 2.00\) (dirtier) |
-| \(0.50\) | \(\approx -132.85\) | \(\approx 1.54\) (cleaner, better \(J\)) |
+| $0.05$ | $\approx -135.22$ | $\approx 2.00$ (dirtier) |
+| $0.50$ | $\approx -132.85$ | $\approx 1.54$ (cleaner, better $J$) |
 
-That is panel (b). It is **not** a time-varying \(L(t)\) seed: a scalar
+That is panel (b). It is **not** a time-varying $L(t)$ seed: a scalar
 high vs low loading is enough. It is the reason this example exists —
 initialization can pick which long-run lake you manage toward.
 
 A true Skiba point (Skiba 1978; Wagener 2003) in the infinite-horizon
-theory is an initial \(P\) where the two values are *equal*. Here the
-two \(J\)s differ, so these are two locals, one better.
+theory is an initial $P$ where the two values are *equal*. Here the
+two $J$s differ, so these are two locals, one better.
 
 ---
 
 ## Restoration (second OCP)
 
-Start turbid (\(P(0)=1.8\)) and require \(P(T)\le P_{\mathrm{clean}}=0.4\),
-while staying close to a desired long-run loading \(L_{\mathrm{desired}}=0.05\)
+Start turbid ($P(0)=1.8$) and require $P(T)\le P_{\mathrm{clean}}=0.4$,
+while staying close to a desired long-run loading $L_{\mathrm{desired}}=0.05$
 (inside the hysteresis window, on the clear branch):
 
-\[
+$$
 \min_{L(\cdot)}\ \int_0^{T} \bigl(L-L_{\mathrm{desired}}\bigr)^{2}\,\mathrm{d}t.
-\]
+$$
 
-Because of hysteresis, holding \(L\equiv L_{\mathrm{desired}}\) from a
-turbid start need not reach \(P_{\mathrm{clean}}\). The solver cuts
+Because of hysteresis, holding $L\equiv L_{\mathrm{desired}}$ from a
+turbid start need not reach $P_{\mathrm{clean}}$. The solver cuts
 loading hard (across the restore fold), then can ease toward
-\(L_{\mathrm{desired}}\). Panel (c). On this mesh a constant guess
+$L_{\mathrm{desired}}$. Panel (c). On this mesh a constant guess
 already finds that path; the ecology is still the tipping point, not
 the seed.
 
