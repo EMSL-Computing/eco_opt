@@ -1,7 +1,7 @@
 # Double-integrator examples
 
-Two problems from Wang, *Solving optimal control problems* (fixed-time
-LQ and nonnegative-control variants).
+Two problems from Wang, X. (n.d.). Solving optimal control problems
+with MATLAB — Indirect methods, 21.
 
 ## ex.1 — minimum-energy double integrator, fixed final time
 
