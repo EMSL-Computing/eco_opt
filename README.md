@@ -109,9 +109,7 @@ demonstrated inside the examples above.
 
 ## Cite
 
-Inventor: Arjun Chakrawal, Environmental Molecular Sciences
-Laboratory, Pacific Northwest National Laboratory, Richland,
-Washington 99354, United States.
+Chakrawal, A., Schwarz, E., Mudunuru, M. K., Leek, V., & Colombi, T. (2026). The eco_opt package: From process models to optimal strategies. Manuscript in preparation.
 
 Cite this software by name and version (`eco_opt` 0.1). Also cite
 CasADi, IPOPT, and Yop.
