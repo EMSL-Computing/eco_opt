@@ -3,8 +3,8 @@
 `ocp.solve` and `ocp.optimize` return an `OcpResults` object (`sol`).
 Arrays are NumPy. Plotting is ordinary matplotlib; `eco_opt` does not
 ship a plot method. matplotlib and scipy are the `[examples]` extra
-(`pip install -e ".[examples]"`; `[test]` includes them). The
-library wheel does not.
+(`python -m pip install -e ".[examples]"`; `[test]` includes them).
+They are not a core dependency.
 
 The [First solve](first-solve.md) script ends at
 `print(sol.success, sol.tf, sol.objective)`. Its comparison figure is
