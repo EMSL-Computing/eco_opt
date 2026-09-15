@@ -1,6 +1,10 @@
 # Cite
 
-Cite this software by name and version (`eco_opt` 0.1.0).
+Inventor: Arjun Chakrawal, Environmental Molecular Sciences
+Laboratory, Pacific Northwest National Laboratory, Richland,
+Washington 99354, United States.
+
+Cite this software by name and version (`eco_opt` 0.1).
 
 Also cite:
 

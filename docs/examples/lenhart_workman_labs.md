@@ -1,21 +1,7 @@
 # Lenhart and Workman labs (`lenhart_workman_labs`)
 
-Thirteen book labs from Lenhart and Workman, *Optimal Control Applied
-to Biological Models* (2007), posed in `eco_opt`. The book’s MATLAB
-forward–backward sweep is not reproduced. Analytic facts from the
-text are used as tests when they exist. Trajectories are **not**
-digitized from printed figures.
-
-**How to audit a lab.** For each lab, independently of the MATLAB
-codes: (1) copy the ODE, objective, bounds, and the numbered default
-case from the PDF; (2) check `max` vs `min` and every sign in \(f\);
-(3) if the book gives a closed form, a switch time, a product
-invariance (\(A/B\), \(Ak\)), or an untreated trajectory, that is a
-test; (4) if the book describes a qualitative shape (front-loaded
-\(u\), terminal rebound, bang–bang), that is a test; (5) replay
-\(u^{*}\) with `ocp.simulate` if you need to confirm the collocation
-tape is an ODE solution. Do not treat agreement with `codeN.m` as
-the source of truth — the book text is.
+These examples are from Lenhart and Workman, *Optimal Control Applied
+to Biological Models* (2007).
 
 ## Lab 1 — Introductory example
 
@@ -186,5 +172,4 @@ python -m pytest ../../tests/test_lenhart_workman_labs.py -q
 ## References
 
 Lenhart and Workman, *Optimal Control Applied to Biological Models*,
-Chapman & Hall/CRC, 2007, Labs 1–13. Trajectories are not compared
-to the book’s printed figures.
+Chapman & Hall/CRC, 2007.

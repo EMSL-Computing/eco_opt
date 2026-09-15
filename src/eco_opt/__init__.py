@@ -51,4 +51,4 @@ __all__ = [
     "control_from_solution",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.1"

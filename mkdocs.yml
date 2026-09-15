@@ -31,6 +31,9 @@ nav:
   - Install: install.md
   - First solve: first-solve.md
   - Posing a problem: posing.md
+  - Transcription: transcription.md
+  - Constraints and time: constraints-and-time.md
+  - Guesses, mesh, scaling: guesses-mesh-scaling.md
   - Troubleshooting: troubleshooting.md
   - Examples:
       - Overview: examples/index.md

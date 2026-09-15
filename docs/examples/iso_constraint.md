@@ -17,7 +17,8 @@ enforced?
 
 **Constraints.** \(x_1(0)=1\), \(x_2(0)=0\), \(x_1(1)=0\),
 \(x_2(1)=10\), \(-4\le u\le 4\). The condition \(x_2(1)=10\) is
-\(\int_0^1 u^2\,\mathrm{d}t=10\).
+\(\int_0^1 u^2\,\mathrm{d}t=10\) (an isoperimetric budget as an
+auxiliary state; see [Constraints and time](../constraints-and-time.md)).
 
 **Horizon.** Fixed, \(T=1\).
 

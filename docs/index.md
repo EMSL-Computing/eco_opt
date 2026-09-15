@@ -3,10 +3,10 @@
 `eco_opt` is a Python package for turning a process-based ODE into a
 constrained optimal-control problem and solving it by direct collocation.
 
-You keep the mass-balance right-hand side you already write. You declare
-which fluxes may vary in time, which performance criterion is being
-tested, and which physiological limits close the problem. The package
-transcribes that statement with CasADi and solves it with IPOPT.
+The mass-balance right-hand side is supplied by the user. Fluxes that
+may vary in time, the performance criterion, and physiological limits
+are declared. The package transcribes that statement with CasADi and
+solves it with IPOPT.
 
 The modelling workflow follows [Yop](https://www.yoptimization.com)
 (Leek, 2016). `eco_opt` is a Python implementation of that workflow, not
@@ -19,9 +19,12 @@ page.
 1. [Install](install.md)
 2. [First solve](first-solve.md) — Goddard rocket (traditional OCP)
 3. [Posing a problem](posing.md) — states, controls, costs
-4. [Examples](examples/index.md) — ecological models, then textbook OCPs
-5. [Troubleshooting](troubleshooting.md)
-6. [API](api.md)
+4. [Transcription](transcription.md) — piecewise-constant \(u\), collocation, mesh
+5. [Constraints and time](constraints-and-time.md) — boxes, path, \(t_0\)/\(t_f\), horizon
+6. [Guesses, mesh, scaling](guesses-mesh-scaling.md) — cold start, sweeps, units
+7. [Examples](examples/index.md) — ecological models, then textbook OCPs
+8. [Troubleshooting](troubleshooting.md)
+9. [API](api.md)
 
 ## What it is for
 

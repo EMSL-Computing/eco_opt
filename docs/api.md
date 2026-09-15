@@ -10,7 +10,11 @@ Wrap `expr` in `t_0` or `t_f` for a boundary condition; omit the wrap
 for a path constraint.
 
 Roles of states, controls, parameters, forcings, and costs:
-[Posing a problem](posing.md). If `solve` fails:
+[Posing a problem](posing.md). Collocation and piecewise-constant
+\(u\): [Transcription](transcription.md). Boxes, path constraints,
+`t_0`/`t_f`, horizon: [Constraints and time](constraints-and-time.md).
+`initial_guess`, `build` / `optimize`, scaling by hand:
+[Guesses, mesh, scaling](guesses-mesh-scaling.md). If `solve` fails:
 [Troubleshooting](troubleshooting.md).
 
 ## `System`
@@ -55,8 +59,9 @@ A list of expressions is a **running** (Lagrange) cost, integrated in
 time. A `t_f(expr)` term is a **terminal** (Mayer) cost.
 
 `collocation_points` is `"legendre"` or `"radau"`. `initial_guess` maps
-a symbolic component (`sys.x[i]`, `sys.u[i]`) to a constant. Extra IPOPT
-keys go in `ipopt_options`.
+a symbolic component (`sys.x[i]`, `sys.u[i]`) to a **constant**. Extra
+IPOPT keys go in `ipopt_options`. Defaults: 100 intervals, degree 5,
+Legendre, `tf_guess=1.0`.
 
 ### Sweeps on a frozen mesh
 

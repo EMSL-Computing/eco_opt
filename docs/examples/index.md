@@ -14,11 +14,13 @@ Each page uses the same skeleton:
 Typewriter names match folders under `examples/`.
 
 A suggested path: [First solve](../first-solve.md) (Goddard),
-[Posing a problem](../posing.md), then **ecological models**
+[Posing a problem](../posing.md),
+[Transcription](../transcription.md),
+[Constraints and time](../constraints-and-time.md),
+then **ecological models**
 `microbial_growth` → `opt_lignin` → `irrigation_bucket` → `root_opt`.
-Use **traditional OCP** pages when you need a closed form or a
-transcription check. [Troubleshooting](../troubleshooting.md) if the
-NLP fails.
+**Traditional OCP** pages supply a closed form or a transcription
+check. [Troubleshooting](../troubleshooting.md) if the NLP fails.
 
 Yop-shipped problems are rewritten here and **link** the Yop page in
 References. The wording is not copied from

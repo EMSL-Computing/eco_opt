@@ -4,7 +4,9 @@
 written with `if_else`?
 
 This is a **numerical** pulse, not phenology or ecological regime
-switching.
+switching. The pulse is written with CasADi `if_else` because a
+Python `if` cannot branch on symbolic time; see
+[Transcription](../transcription.md).
 
 ## Formulation
 

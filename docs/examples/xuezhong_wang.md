@@ -49,9 +49,5 @@ python -m pytest ../../tests/test_xuezhong_wang.py -q
 
 ## References
 
-Wang, *Solving optimal control problems* (fixed-time LQ and nonnegative
-control variants).
-
-!!! warning "Not validated against that note’s figures"
-    Numerics are checked against the closed forms stated in the note,
-    not against its plots.
+Wang, X. (n.d.). Solving optimal control problems with MATLAB —
+Indirect methods, 21.

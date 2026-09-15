@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+title: eco_opt
+message: Cite this software by name and version.
+type: software
+authors:
+  - family-names: Chakrawal
+    given-names: Arjun
+    affiliation: >-
+      Environmental Molecular Sciences Laboratory,
+      Pacific Northwest National Laboratory,
+      Richland, Washington 99354, United States
+license: MIT
+version: "0.1"
+repository-code: "https://github.com/ArjunChakrawal/eco_opt"
+abstract: >-
+  Python package for posing process-based ecological ODE
+  models as constrained optimal-control problems (CasADi
+  and direct collocation).

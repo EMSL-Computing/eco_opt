@@ -2,14 +2,14 @@
 
 Turn a process ODE into an optimal-control problem by naming each
 symbol’s **role**, then writing \(J\) and the bounds. The package does
-not invent the hypothesis: you do.
+not choose the hypothesis.
 
 ## Roles
 
 | Role | Symbol | In `eco_opt` | Meaning |
 |---|---|---|---|
 | Time | \(t\) | `sys.t` | Independent variable |
-| State | \(\mathbf{x}(t)\) | `sys.x` | A pool you integrate; needs an initial condition |
+| State | \(\mathbf{x}(t)\) | `sys.x` | A pool that is integrated; requires an initial condition |
 | Control | \(\mathbf{u}(t)\) | `sys.u` | A flux or fraction the optimiser may vary in time |
 | Parameter | \(\mathbf{p}\) | `sys.p` | Constant during one solve; may be retuned in a sweep |
 | Algebraic | \(\mathbf{z}(t)\) | `sys.z` | Unknown on \(g=0\), not an ODE (quasi-steady closure) |
@@ -22,11 +22,11 @@ allowed. Import it from `eco_opt`.
 The keyword `plant=` on `closed_loop` is the **simulated process
 model** (control-theory name). It is not vegetation.
 
-## What should be a control
+## What is a control
 
-If a flux is already a number in the process model, leave it as a
-parameter or a forcing. It becomes \(u(t)\) only if the hypothesis
-says that flux may vary in time and is chosen to improve \(J\).
+A flux that is a fixed number in the process model remains a
+parameter or a forcing. It is \(u(t)\) only if the hypothesis allows
+that flux to vary in time in order to improve \(J\).
 
 Examples in this package:
 
@@ -39,6 +39,10 @@ Examples in this package:
 Rain in the irrigation forecast is **forcing** (\(P\equiv 0\) in the
 OCP). Realised rain on the simulated water store is a process
 disturbance, not a second control.
+
+How the continuous problem becomes an NLP, and what may appear in
+\(f\): [Transcription](transcription.md). Boxes, path constraints,
+and whether \(T\) is fixed: [Constraints and time](constraints-and-time.md).
 
 ## Running cost vs terminal cost
 
@@ -58,15 +62,17 @@ ocp.max(eco_opt.t_f(seed))            # maximise x₂(T)
 ```
 
 Free horizon: bound `t_f(sys.t)` from below (and optionally above)
-and pass `tf_guess` of the right order of magnitude.
+and pass `tf_guess` of the right order of magnitude. Time bounds are
+**explicit**; omitting them does not default \(t_0=0\) or free \(T\).
+See [Constraints and time](constraints-and-time.md).
 
 ## Open loop vs closed loop in a methods section
 
 `ocp.solve` is the statement of the hypothesis: given this \(f\),
 this \(J\), these bounds, and this initial state, what is
-\(u^*(\cdot)\)? Report that **open-loop** trajectory when the claim is
-about the hypothesis on the model you wrote. Replay it with
-`ocp.simulate(sol)` as a check that the tape and the ODE agree.
+\(u^*(\cdot)\)? The **open-loop** trajectory is that statement on the
+declared model. `ocp.simulate(sol)` integrates the same \(u^*\) and
+checks that the collocation tape and the ODE agree.
 
 Use **closed loop** (`ocp.closed_loop`) when the claim is about
 applying the **same** hypothesis after the process has left the
@@ -82,6 +88,9 @@ seasonal plan). `horizon="receding"` keeps a rolling prediction
 window. See [irrigation](examples/irrigation_bucket.md),
 [microbial growth](examples/microbial_growth.md), and
 [lignin](examples/opt_lignin.md).
+
+Failed solves: [Guesses, mesh, scaling](guesses-mesh-scaling.md),
+then [Troubleshooting](troubleshooting.md).
 
 ## Further reading
 
