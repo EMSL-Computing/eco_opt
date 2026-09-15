@@ -223,8 +223,10 @@ def solve(
             sys.u[1]: 0.45,
         },
         ipopt_options={
-            "max_iter": 2000,
-            "tol": 1e-7,
+            "max_iter": 5000,
+            "tol": 1e-6,
+            "acceptable_tol": 1e-4,
+            "acceptable_iter": 15,
             "hessian_approximation": "limited-memory",
         },
         tf_guess=T,

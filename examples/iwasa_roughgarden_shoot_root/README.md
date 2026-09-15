@@ -262,16 +262,18 @@ API points this example is meant to document:
   constraint, while each `sys.u[i]` remains a box.
 - **Min-type production** transcribed as a hyperbolic smooth-min of
   Liebig `min(αS, βR)` (`eps=1e-3`), collocation Radau, IPOPT
-  `hessian_approximation=limited-memory`. A raw `cs.fmin` puts a
-  non-differentiable kink on the singular arc and does not converge.
+  `hessian_approximation=limited-memory` with an `acceptable_tol`
+  so L-BFGS can stop when it is already at the same fruit as a
+  declared success. A raw `cs.fmin` puts a non-differentiable kink
+  on the singular arc and does not converge.
 - **Mayer terminal fruit**, not a Lagrange integral of $u_F G$. The
   two are equivalent along feasible trajectories; Mayer is the
   statement of the biological objective.
 - Named signals `sys.y.S`, `sys.y.R`, `sys.y.F`, `sys.y.G`, `sys.y.u_F`.
 
-Initial guess: constant balanced allocations $(u_S,u_R)=(1/2,1/2)$
-and the true initial state. The solver is *not* given the three-phase
-structure.
+Initial guess: constant $(u_S,u_R)=(0.35,0.45)$ (slight root bias
+for a root-deficient seedling) and the true initial state. The solver
+is *not* given the three-phase structure.
 
 ---
 
