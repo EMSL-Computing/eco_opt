@@ -64,5 +64,4 @@ internals.
 
 ## Done
 
-`make test` (or `python -m pytest -q`) passes. Add tests for
-behavioral changes.
+`python -m pytest -q` passes. Add tests for behavioral changes.
