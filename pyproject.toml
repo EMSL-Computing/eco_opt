@@ -19,6 +19,10 @@ keywords = [
     "collocation",
     "ipopt",
     "ode",
+    "python",
+    "optimization",
+    "scientific-computing",
+    "process-based-modeling",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
