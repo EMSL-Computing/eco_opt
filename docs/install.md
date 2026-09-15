@@ -31,7 +31,7 @@ use `scipy.io`). Plot scripts alone:
 python -m pip install -e ".[examples]"
 ```
 
-The documentation is on Read the Docs: <https://eco-opt.readthedocs.io/>.
+Hosted docs: <https://emsl-computing.github.io/eco_opt/>.
 
 To preview locally, with the same interpreter as `eco_opt`:
 
