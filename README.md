@@ -1,119 +1,113 @@
 # eco_opt
 
-Python package for posing process-based ecological ODE models as
-constrained optimal-control problems. Built on CasADi and direct
-orthogonal collocation.
+[![Version](https://img.shields.io/badge/version-0.1-0D7377)](https://github.com/ArjunChakrawal/eco_opt)
+[![Python](https://img.shields.io/badge/python-3.9%2B-3776AB)](https://www.python.org/)
+[![License](https://img.shields.io/badge/license-MIT-2F9E44)](LICENSE)
+[![Docs](https://img.shields.io/badge/docs-Read%20the%20Docs-0D7377)](https://eco-opt.readthedocs.io/)
 
-`eco_opt` is a Python implementation of the
-[Yop](https://www.yoptimization.com) modelling workflow.
+Process-based ecological ODEs as constrained optimal-control problems.
+The right-hand side is the user’s mass balance; states, controls, and
+the criterion $J$ are declared; CasADi collocation and IPOPT produce
+$u^*(\cdot)$.
 
-Version 0.1.
+Python implementation of the [Yop](https://www.yoptimization.com)
+modelling workflow (Leek, 2016).
 
-Public API: `System`, `Ocp`, `OcpResults`, `Phase`, `PhaseTrajectory`,
-`t_0`, `t_f`, `Namespace`, `simulate`, `closed_loop`,
-`SimulationResults`, `ClosedLoopResults`, `control_from_solution`.
+```python
+import eco_opt
 
-Algebraic states are supported in single-phase collocation
-(`System(algebraics=...)`, model returns `(dx, dz, y)`). Not yet
-implemented: automatic scaling. Algebraics are not supported in
-multi-phase problems. Multi-phase sequential collocation:
-`Ocp.st(phases=[...])`. Bound and parameter sweeps on a fixed mesh:
-`ocp.build(...)`, then `set_constraints` / `optimize` (warm start).
-Open-loop replay: `ocp.simulate(sol)`. Closed loop:
-`ocp.closed_loop(x0, dt, t_final=T)` (shrinking horizon by default;
-`horizon='receding'` for a rolling prediction window). If the
-simulated process is the OCP model, shrinking closed loop reprints
-the open-loop tape. The keyword `plant=` is that simulated process
-(control-theory name), not vegetation.
+sys = eco_opt.System(states=3, controls=1, model=goddard_model)
+sig = sys.y.rocket
+
+ocp = eco_opt.Ocp()
+ocp.max(eco_opt.t_f(sig.height))
+ocp.st(system=sys, constraints=[...])
+sol = ocp.solve(control_intervals=59, polynomial_degree=5, tf_guess=200.0)
+
+print(sol.success, sol.tf, sol.objective)
+```
+
+Full first script: [First solve](docs/first-solve.md)
+([Goddard, dimensional](docs/examples/goddard_benchmark.md)).
+
+## Capabilities
+
+| Capability | |
+|---|---|
+| Single-phase collocation | Legendre or Radau; piecewise-constant $u$ |
+| Algebraic states | `System(algebraics=n)`; model returns `(dx, dz, y)` (single-phase) |
+| Multi-phase | `Ocp.st(phases=[...])`; optional continuity of time and state |
+| Sweeps | `build` → `set_constraints` / `optimize` on a frozen mesh |
+| Open loop | `ocp.simulate(sol)` or `eco_opt.simulate` |
+| Closed loop | shrinking or receding horizon (`ocp.closed_loop`) |
+
+Automatic scaling is not implemented. Algebraics are not supported in
+multi-phase problems. The keyword `plant=` is the simulated process
+model (control-theory name), not vegetation.
+
+**Public names:** `System`, `Ocp`, `OcpResults`, `Phase`,
+`PhaseTrajectory`, `t_0`, `t_f`, `Namespace`, `simulate`,
+`closed_loop`, `SimulationResults`, `ClosedLoopResults`,
+`control_from_solution`.
 
 ## Install
 
 ```bash
 git clone https://github.com/ArjunChakrawal/eco_opt.git
 cd eco_opt
-pip install -e ".[test]"
-python -c "import eco_opt; print(eco_opt.__version__, eco_opt.__all__)"
+python -m pip install -e ".[test]"
+python -c "import eco_opt; print(eco_opt.__version__)"
 python -m pytest -q
 ```
 
-See the [Install](docs/install.md) page for IPOPT notes.
+Python 3.9+, CasADi, and IPOPT. See [Install](docs/install.md) if the
+solver is missing from the CasADi wheel.
 
 ## Documentation
 
-Hosted on Read the Docs: <https://eco-opt.readthedocs.io/>
-(live after the repo is public and the RTD project is imported).
+<https://eco-opt.readthedocs.io/> (after the repository is public and
+the RTD project is imported).
 
-The docs are MkDocs Material. They do not import CasADi; a docs-only
-install is enough to preview pages, math, and example write-ups.
+| Page | Contents |
+|---|---|
+| [Posing a problem](docs/posing.md) | Roles, costs, open vs closed loop |
+| [Transcription](docs/transcription.md) | Piecewise-constant $u$, collocation, mesh |
+| [Constraints and time](docs/constraints-and-time.md) | Boxes, path, $t_0$/$t_f$, horizon |
+| [Guesses, mesh, scaling](docs/guesses-mesh-scaling.md) | Cold start, sweeps, units |
+| [Examples](docs/examples/index.md) | Ecological models and textbook OCPs |
+| [API](docs/api.md) | Public contract |
+| [Troubleshooting](docs/troubleshooting.md) | IPOPT failures |
 
-From the package root, with the same interpreter you use for `eco_opt`:
+Preview locally:
 
 ```bash
 python -m pip install -e ".[docs]"
 python -m mkdocs serve
 ```
 
-Then open http://127.0.0.1:8000 (Ctrl+C to stop). Edits under `docs/`
-reload in the browser.
-
-Use `python -m mkdocs`, not a bare `mkdocs` from the OS package manager.
-A distro `mkdocs` does not ship the Material theme and fails with
-`Unrecognised theme name: 'material'`.
-
-If port 8000 is already in use (`Address already in use` / `Errno 98`),
-bind another port:
-
-```bash
-python -m mkdocs serve -a 127.0.0.1:8001
-```
-
-Open http://127.0.0.1:8001. Any free port works in place of `8001`.
-To preview without a server, use `python -m mkdocs build` below and open
-`site/index.html`.
-
-To write a static copy (same as RTD) without serving:
-
-```bash
-python -m mkdocs build
-```
-
-Output is `site/` (gitignored). Open `site/index.html` in a browser.
-`pip install -r docs/requirements.txt` is the RTD-only equivalent if
-you do not want an editable package install.
-
-Start at [First solve](docs/first-solve.md) (Goddard rocket), then
-[Posing a problem](docs/posing.md),
-[Transcription](docs/transcription.md),
-[Constraints and time](docs/constraints-and-time.md),
-[Guesses, mesh, scaling](docs/guesses-mesh-scaling.md), and
-[Examples](docs/examples/index.md).
+<http://127.0.0.1:8000> — use `python -m mkdocs` (see
+[Install](docs/install.md) for the distro-MkDocs theme error and an
+alternate port). `python -m mkdocs build` writes `site/`.
 
 ## Examples
 
-Runnable modules under `examples/`. Documentation pages use the same
-folder names.
+| Folder | Topic |
+|---|---|
+| [`microbial_growth`](docs/examples/microbial_growth.md) | Finite-substrate uptake |
+| [`opt_lignin`](docs/examples/opt_lignin.md) | Ligninolytic investment |
+| [`root_opt`](docs/examples/root_opt.md) | Plant–soil C and N allocation |
 
-**Ecological models:** `microbial_growth`, `opt_lignin`, `root_opt`,
-Cohen–King allocation, Iwasa shoot–root–fruit, Lindh flowering,
-multi-phase Cohen, shallow lake, greenhouse heating, irrigation
-bucket.
+Further examples: [docs/examples](docs/examples/index.md).
 
-**Traditional OCP problems:** dimensional and nondimensional Goddard,
-Goddard landing, bang-bang free horizon, Bryson–Denham, isoperimetric
-constraint, nondifferentiable pulse, brachistochrone, Van der Pol,
-Lenhart–Workman examples and labs, Wang double integrator.
+## Citation
 
-**Numerical features:** quasi-steady microbes as an algebraic
-closure (`algebraic_qss`). Multi-phase and open vs closed loop are
-demonstrated inside the examples above.
+Chakrawal, A., Schwarz, E., Mudunuru, M. K., Leek, V., and Colombi, T.
+(2026). The eco_opt package: From process models to optimal strategies.
+Manuscript in preparation.
 
-## Cite
-
-Chakrawal, A., Schwarz, E., Mudunuru, M. K., Leek, V., & Colombi, T. (2026). The eco_opt package: From process models to optimal strategies. Manuscript in preparation.
-
-Cite this software by name and version (`eco_opt` 0.1). Also cite
-CasADi, IPOPT, and Yop.
+Cite the software as `eco_opt` 0.1. Also cite CasADi, IPOPT, and Yop.
+See [Cite](docs/cite.md) and [`CITATION.cff`](CITATION.cff).
 
 ## License
 
-MIT License. See [LICENSE](LICENSE).
+[MIT](LICENSE). Copyright (c) 2026 Arjun Chakrawal.
