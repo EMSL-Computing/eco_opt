@@ -1,7 +1,6 @@
 # Cite
 
-Until the Methods in Ecology and Evolution Applications article is
-published, cite this software by name and version (`eco_opt` 0.1.0).
+Cite this software by name and version (`eco_opt` 0.1.0).
 
 Also cite:
 
@@ -12,5 +11,4 @@ Also cite:
 
 Example pages cite the scientific source of each problem (paper or
 textbook). Pages that transcribe a Yop-shipped example also link that
-Yop page. After publication, the Applications article is the preferred
-citation for `eco_opt`.
+Yop page.

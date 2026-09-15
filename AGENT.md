@@ -11,12 +11,6 @@ See `docs/LINEAGE.md`.
 Use `python` and `pip` from the working interpreter. Do not hard-code
 absolute interpreter paths in the repository.
 
-## Layout
-
-This git repository is the installable package. A sibling manuscript
-or reference tree may exist; it is not part of this git. Do not put
-filesystem paths in the paper.
-
 ## Package rules
 
 - Package name is `eco_opt`.
@@ -37,13 +31,6 @@ filesystem paths in the paper.
   and the one-line note in the package README / `__init__.py`.
 - Do not add author names, machine hostnames, or absolute environment
   paths to the package.
-
-## Manuscript rules
-
-If a manuscript tree exists next to this package, edit it there, not
-here. No file paths in the paper. A paper that introduces `eco_opt`
-should name and version the software; do not cite it as a prior
-publication.
 
 ## Tests
 
