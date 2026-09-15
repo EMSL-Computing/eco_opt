@@ -26,14 +26,18 @@ g(L) = exp(-(L/a)^b)
 ```
 
 `vh_max`, `mo`, `ro` are fixed parameters (pinned via box-equality
-constraints on `sys.p`). `plot_figure2.py` compiles the NLP once and
-retunes those pins with `set_constraints` / `optimize`.
+constraints on `sys.p`). `lignin_decomposition.py` is one baseline
+`ocp.solve`. `plot_figure2.py` compiles the NLP once and retunes those
+pins with `set_constraints` / `optimize`.
 
 ## Run
 
 ```bash
-python lignin_decomposition.py
-python plot_figure2.py
+cd examples/opt_lignin
+python lignin_decomposition.py    # baseline, ocp.solve
+python plot_figure2.py            # parameter sweep, frozen mesh
+python open_vs_closed.py
+python -m pytest ../../tests/test_opt_lignin.py -q
 ```
 
 ## Validation

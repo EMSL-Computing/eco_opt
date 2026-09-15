@@ -42,7 +42,7 @@ regression-tracked to catch silent transcription regressions.
 import casadi as cs
 
 import eco_opt
-from eco_opt.system import Namespace
+from eco_opt import Namespace
 
 # g-function parameters (Chakrawal et al. 2024, "exp" scenario)
 A = 0.1537
@@ -71,10 +71,9 @@ def lignin_model(t, x, u, p):
 
     dCT = -Dh - Do + G
     dCo = -Do + mo * G
-    dx = cs.vertcat(dCT, dCo)
 
     y = Namespace(CT=CT, Co=Co, vo=vo, Dh=Dh, Do=Do, G=G, L=L)
-    return dx, y
+    return [dCT, dCo], y
 
 
 # Baseline parameters (CN0=50)

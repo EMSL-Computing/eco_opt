@@ -42,7 +42,6 @@ graded-allocation companion.
 
 import math
 
-import casadi as cs
 import numpy as np
 
 import eco_opt
@@ -57,9 +56,8 @@ ANALYTIC_YIELD = X10 * math.exp(T_SEASON - 1.0)
 def plant_model(t, x, u):
     veg, repro = x[0], x[1]
     alloc = u[0]
-    dx = cs.vertcat(alloc * veg, (1.0 - alloc) * veg)
     y = Namespace(veg=veg, repro=repro, alloc=alloc)
-    return dx, y
+    return [alloc * veg, (1.0 - alloc) * veg], y
 
 
 def build_ocp(T=T_SEASON, x10=X10):

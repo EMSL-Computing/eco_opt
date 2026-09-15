@@ -24,8 +24,6 @@ See ``README.md`` for the PMP, the relation to the PROPT Mayer form
 check.
 """
 
-import casadi as cs
-
 import eco_opt
 from eco_opt import Namespace
 
@@ -38,9 +36,8 @@ U_MIN, U_MAX = -1.0, 1.0
 def vdp_model(t, x, u):
     x1, x2 = x[0], x[1]
     force = u[0]
-    dx = cs.vertcat((1.0 - x2 ** 2) * x1 - x2 + force, x1)
     y = Namespace(x1=x1, x2=x2, u=force)
-    return dx, y
+    return [(1.0 - x2 ** 2) * x1 - x2 + force, x1], y
 
 
 def build_ocp(T=T_HORIZON):

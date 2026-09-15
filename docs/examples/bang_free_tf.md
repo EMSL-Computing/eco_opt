@@ -41,11 +41,30 @@ Unequal bounds on \(u\) shift the switch away from the midpoint. The
 horizon is a decision: the problem is finished when the target is
 reached, not at a prescribed clock time.
 
+## Public API
+
+Bare `dx`, no `Namespace` (`examples/bang_free_tf/bang_free_tf.py`):
+
+```python
+import eco_opt
+
+
+def bang_model(t, x, u):
+    return [x[1], u[0]]
+
+
+sys = eco_opt.System(states=2, controls=1, model=bang_model)
+ocp = eco_opt.Ocp()
+ocp.min(eco_opt.t_f(sys.t))
+ocp.st(system=sys, constraints=[...])
+```
+
 ## Run and tests
 
 ```bash
 cd examples/bang_free_tf
 python bang_free_tf.py
+python plot_bang_free_tf.py
 python -m pytest ../../tests/test_bang_free_tf.py -q
 ```
 

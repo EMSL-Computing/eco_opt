@@ -44,9 +44,13 @@ Growth efficiency \(e\) falls linearly with ligninolytic effort.
 ## What was done
 
 The published process ODE is reused. \(v_O(t)\) is the only control.
-Parameters are `System` parameters retuned with `set_constraints` /
-`optimize` on a frozen mesh (sweep of cost \(r_O\) and related
-coefficients).
+Kinetic coefficients are `System` parameters, pinned in `st`.
+
+`lignin_decomposition.py` solves **one** baseline (`ocp.solve`, a new
+NLP). The \(r_O\) / \(v_{H,\max}\) / \(ARC_0\) / \(\mu_O\) sweep is
+`plot_figure2.py`: `compile_ocp` once, then `apply_scenario` →
+`set_constraints` / `optimize` on that mesh
+([Build and optimize](../build-optimize.md)).
 
 ## What we found
 
@@ -68,19 +72,56 @@ hypothesis, not an extra switch put into \(f\).
 
 `open_vs_closed.py` replays \(v_O^*\) on the same litter ODE, then on a
 process that receives extra litter C in days 600–900. On the forecast
-model the shrinking closed loop reprints the tape. After the unforecast
-C pulse the tape keeps the old ligninolytic schedule; the closed loop
-re-solves from the measured \(C_T\) and can raise \(v_O\). Same lesson
-as microbial uptake and irrigation: the hypothesis is unchanged; the
-**state** from which it is solved is not.
+model the shrinking closed loop reprints the tape; printed \(J=\int G\)
+is the realized integral along that applied \(v_O\), not
+`ClosedLoopResults.objectives[-1]` (that entry is the last remaining-
+horizon NLP). After the unforecast C pulse the tape keeps the old
+ligninolytic schedule; the closed loop re-solves from the measured
+\(C_T\) and can raise \(v_O\). Same lesson as microbial uptake and
+irrigation: the hypothesis is unchanged; the **state** from which it
+is solved is not.
 
 ![Open vs closed loop](../assets/examples/opt_lignin/open_vs_closed.png)
+
+## Public API
+
+Skeleton of `examples/opt_lignin/lignin_decomposition.py` (RHS and
+numeric values in that file):
+
+```python
+import eco_opt
+from eco_opt import Namespace
+
+
+def lignin_model(t, x, u, p):
+    CT, Co, vo = x[0], x[1], u[0]
+    vh_max, mo, ro = p[0], p[1], p[2]
+    ...
+    y = Namespace(CT=CT, Co=Co, vo=vo, G=G)
+    return dx, y
+
+
+sys = eco_opt.System(states=2, controls=1, parameters=3, model=lignin_model)
+ocp = eco_opt.Ocp()
+ocp.max([sys.y.G])
+ocp.st(system=sys, constraints=[...])
+sol = ocp.solve()
+```
+
+Frozen-mesh sweep (`plot_figure2.py`):
+
+```python
+ocp, sys = compile_ocp()
+apply_scenario(ocp, sys, vh_max=..., mo=..., ro=..., ARC0=...)
+sol = ocp.optimize(ipopt_options={"max_iter": 2000})
+```
 
 ## Run and tests
 
 ```bash
 cd examples/opt_lignin
-python lignin_decomposition.py
+python lignin_decomposition.py    # baseline, ocp.solve
+python plot_figure2.py            # parameter sweep, frozen mesh
 python open_vs_closed.py
 python -m pytest ../../tests/test_opt_lignin.py -q
 ```

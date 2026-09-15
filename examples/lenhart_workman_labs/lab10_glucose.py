@@ -4,8 +4,6 @@ The book’s T=20 case is outside the GTT model’s validity; default here
 is the physically reasonable T=0.2 (book 16.2).
 """
 
-import casadi as cs
-
 import eco_opt
 from eco_opt import Namespace
 
@@ -16,7 +14,7 @@ DEFAULT = dict(a=1.0, b=1.0, c=1.0, x10=0.75, A=2.0, l=0.5, T=0.2)
 def _model(a, b, c):
     def f(t, x, u):
         x1, x2 = x[0], x[1]
-        return cs.vertcat(-a * x1 - b * x2, -c * x2 + u[0]), Namespace(
+        return [-a * x1 - b * x2, -c * x2 + u[0]], Namespace(
             x1=x1, x2=x2, u=u[0]
         )
 

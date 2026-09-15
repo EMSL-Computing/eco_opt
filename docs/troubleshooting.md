@@ -21,8 +21,50 @@ print(sol.success, sol.return_status, sol.tf, sol.objective)
 
 `return_status` is IPOPT’s string (`Solve_Succeeded`,
 `Solved_To_Acceptable_Level`, `Restoration_Failed`,
-`Maximum_Iterations_Exceeded`, …). Pass extra keys in
-`ipopt_options`, for example `{"max_iter": 5000, "print_level": 5}`.
+`Maximum_Iterations_Exceeded`, …).
+
+## IPOPT options
+
+Pass a dict to `solve` / `optimize` / `closed_loop` as
+`ipopt_options`. Keys are IPOPT option names; values are the option
+values. CasADi forwards them to IPOPT. The full list is
+[Ipopt Options](https://coin-or.github.io/Ipopt/OPTIONS.html)
+(Wächter and Biegler, 2006).
+
+```python
+sol = ocp.solve(
+    control_intervals=40,
+    ipopt_options={
+        "max_iter": 5000,
+        "print_level": 5,
+        "tol": 1e-6,
+    },
+)
+```
+
+`eco_opt` sets `print_level` to 0 unless the dict overrides it, and
+sets CasADi `print_time` to 0. IPOPT is therefore silent until
+`print_level` is raised.
+
+| Option | Role |
+|---|---|
+| `print_level` | 0 silent … 5 iteration log … 12 verbose |
+| `max_iter` | iteration cap (default in IPOPT is 3000) |
+| `max_cpu_time` | wall-time cap in seconds |
+| `tol` | relative NLP error for `Solve_Succeeded` |
+| `acceptable_tol` | looser tolerance for `Solved_To_Acceptable_Level` |
+| `constr_viol_tol` | constraint violation |
+| `nlp_scaling_method` | `"gradient-based"` (default), `"none"`, `"equilibration-based"` |
+| `mu_strategy` | `"monotone"` or `"adaptive"` (barrier) |
+| `warm_start_init_point` | `"yes"` / `"no"` — IPOPT dual warm start, not `optimize(warm_start=...)` |
+
+`optimize(warm_start=True)` reuses the **primal** \(x_0\) from the
+last solve. That is independent of IPOPT’s
+`warm_start_init_point`.
+
+`closed_loop` also defaults `max_iter` to 2000 unless
+`ipopt_options` sets it. Mesh defaults for closed loop differ from
+`solve`; see [API](api.md).
 
 ## Restoration failed / iteration limit
 

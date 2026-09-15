@@ -12,10 +12,8 @@ from eco_opt import Namespace
 
 
 def _solve_u_le_x(collocation_points="radau"):
-    import casadi as cs
-
     def model(t, x, u):
-        dx = cs.vertcat(1.0)
+        dx = 1.0
         y = Namespace(x=x[0], u=u[0], slack=x[0] - u[0])
         return dx, y
 

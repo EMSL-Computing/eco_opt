@@ -126,6 +126,7 @@ the seed.
 ## Running
 
 ```bash
+cd examples/shallow_lake
 python shallow_lake.py
 python plot_shallow_lake.py
 python -m pytest ../../tests/test_shallow_lake.py -q

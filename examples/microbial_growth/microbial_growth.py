@@ -13,24 +13,15 @@ Problem (free terminal time)::
 the resource pool; resources are additionally lost via first-order decay at
 rate ``gamma``.
 
-Reference
----------
-No closed-form objective is given in the paper. The Hamiltonian
-stationarity condition is costate- (hence time-) dependent, so the
-optimal control is a smooth trajectory, not a constant singular arc.
-
-We validate physically instead of against a closed-form number:
-* the free terminal time must be driven by resource exhaustion, i.e.
-  ``C(tf) -> 0`` (finite substrate optimal-uptake problem);
-* the control must respect its box bounds ``0 <= u <= 10`` throughout;
-* the objective is regression-tracked (``REGRESSION_OBJECTIVE`` below) to
-  catch silent future regressions in the transcription.
+An independent Pontryagin trajectory (same necessary conditions as
+Manzoni, Chakrawal and Ledder 2023) is ``analytical_solution``. The
+collocation ``J`` and ``T`` are also regression-tracked.
 """
 
-import casadi as cs
+import numpy as np
 
 import eco_opt
-from eco_opt.system import Namespace
+from eco_opt import Namespace
 
 # Parameters (k=0 baseline case)
 BETA = 0.5
@@ -90,9 +81,50 @@ def solve(control_intervals=200, polynomial_degree=5, tf_guess=2.0):
     return sol, sys
 
 
-# Regression-tracked value: no external closed-form objective available (see
-# module docstring); computed with eco_opt at control_intervals=200, degree=5,
-# radau collocation, default (1.0) initial guess, tf_guess=2.0.
+def analytical_solution(ds=1e-4):
+    """Independent PMP trajectory for the baseline ``k=0`` parameters.
+
+    Integrates the costate and state backward from resource exhaustion.
+    Used to compare collocation against the paper's necessary conditions;
+    not part of the first-solve paste.
+    """
+    a = EMAX * BETA
+    ut = R + np.sqrt(R ** 2 + R * BETA)
+    g_u = a * (R + BETA) / (ut + BETA) ** 2
+    lam_t = g_u / (1.0 - MU * g_u)
+
+    def growth(u):
+        return a * (u - R) / (u + BETA) - K * u
+
+    def u_from_lam(lam):
+        return -BETA + np.sqrt(a * (R + BETA) * (MU + 1.0 / lam))
+
+    s = 0.0
+    C = 0.0
+    rows = []
+    for _ in range(200000):
+        lam = lam_t * np.exp(-GAMMA * s)
+        u = float(u_from_lam(lam))
+        g = float(growth(u))
+        C = C + ds * (u + GAMMA * C - MU * g)
+        s += ds
+        rows.append((s, C, u, g))
+        if C >= C0:
+            break
+    arr = np.asarray(rows)
+    T = float(arr[-1, 0])
+    t = T - arr[::-1, 0]
+    C = arr[::-1, 1]
+    u = arr[::-1, 2]
+    g = arr[::-1, 3]
+    trapz = getattr(np, "trapezoid", None)
+    if trapz is None:
+        trapz = np.trapz
+    J = float(trapz(g, t))
+    return t, C, u, g, T, J
+
+
+# Collocation at control_intervals=200, degree=5, radau, tf_guess=2.0.
 REGRESSION_OBJECTIVE = 0.15184969799373915
 REGRESSION_TF = 1.5181904140431468
 

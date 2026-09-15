@@ -39,11 +39,35 @@ Ex. 1 matches \(J^*=7.75\). Ex. 2 is the trivial zero-control solution.
 A sign restriction on \(u\) can collapse the problem (here to “do
 nothing”). That is a constraint effect, not a failure of collocation.
 
+## Public API
+
+Fixed-time double integrator
+(`examples/xuezhong_wang/bryson_denham_fixed_tf.py`):
+
+```python
+import eco_opt
+from eco_opt import Namespace
+
+
+def trolley_model(t, x, u):
+    position, speed, acceleration = x[0], x[1], u[0]
+    y = Namespace(position=position, speed=speed, acceleration=acceleration)
+    return [speed, acceleration], y
+
+
+sys = eco_opt.System(states=2, controls=1, model=trolley_model)
+ocp = eco_opt.Ocp()
+ocp.min([0.5 * sys.y.acceleration ** 2])
+ocp.st(system=sys, constraints=[...])
+```
+
 ## Run and tests
 
 ```bash
 cd examples/xuezhong_wang
 python bryson_denham_fixed_tf.py
+python double_integrator_nonneg_control.py
+python plot_xuezhong_wang.py
 python -m pytest ../../tests/test_xuezhong_wang.py -q
 ```
 

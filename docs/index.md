@@ -17,14 +17,17 @@ page.
 ## Start here
 
 1. [Install](install.md)
-2. [First solve](first-solve.md) — Goddard rocket (traditional OCP)
-3. [Posing a problem](posing.md) — states, controls, costs
-4. [Transcription](transcription.md) — piecewise-constant \(u\), collocation, mesh
-5. [Constraints and time](constraints-and-time.md) — boxes, path, \(t_0\)/\(t_f\), horizon
-6. [Guesses, mesh, scaling](guesses-mesh-scaling.md) — cold start, sweeps, units
-7. [Examples](examples/index.md) — ecological models, then textbook OCPs
-8. [Troubleshooting](troubleshooting.md)
-9. [API](api.md)
+2. [First solve](first-solve.md) — microbial growth (finite substrate)
+3. [Results and plots](results-and-plots.md) — `sol` arrays and matplotlib
+4. [Posing a problem](posing.md) — states, controls, costs
+5. [CasADi expressions](casadi-expressions.md) — `cs.exp`, `if_else`, interpolants in the model
+6. [Transcription](transcription.md) — piecewise-constant \(u\), collocation, mesh
+7. [Constraints and time](constraints-and-time.md) — boxes, path, \(t_0\)/\(t_f\), horizon
+8. [Guesses, mesh, scaling](guesses-mesh-scaling.md) — cold start, mesh, units
+9. [Build and optimize](build-optimize.md) — frozen mesh, bound and parameter sweeps
+10. [Examples](examples/index.md) — ecological models, then textbook OCPs
+11. [Troubleshooting](troubleshooting.md)
+12. [API](api.md)
 
 ## What it is for
 

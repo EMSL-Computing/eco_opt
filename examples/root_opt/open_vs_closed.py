@@ -43,7 +43,7 @@ def pulse_model(t, x, u):
     dx, y = ro.plant_soil_microbe_nested(t, x, u, ro.PARAMS)
     I = PULSE_N * cs.if_else(cs.logic_and(t >= PULSE_T0, t < PULSE_TF), 1.0, 0.0)
     parts = [dx[i] for i in range(8)] + [dx[8] + I]
-    return cs.vertcat(*parts), y
+    return parts, y
 
 
 def main():

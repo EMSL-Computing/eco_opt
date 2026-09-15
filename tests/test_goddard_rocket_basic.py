@@ -21,8 +21,10 @@ def test_goddard_rocket_basic_physical_sanity_and_convergence():
     # same nondimensional Goddard parameter set): h(T) = 1.01283692.
     # Drag law here is D0*exp(-beta*h) (no h0 offset), which differs
     # slightly from the COPS/Petit convention D0*exp(-beta*(h-h0)/h0);
-    # this explains the ~1-2% gap from the literature value. We use a
+    # this explains the ~1-2% gap from the literature height. We use a
     # generous tolerance and rely primarily on grid-refinement below.
+    # Do not assert sol.tf against the BVP T=0.19885626: piecewise-constant
+    # u, mesh, and the drag-law offset make this transcription's T different.
     rel_err = abs(sol.objective - REFERENCE_HEIGHT) / REFERENCE_HEIGHT
     assert rel_err < 0.03, f"objective={sol.objective} vs reference {REFERENCE_HEIGHT}"
 

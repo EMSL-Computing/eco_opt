@@ -42,7 +42,7 @@ from scipy.integrate import solve_ivp
 from scipy.optimize import minimize_scalar
 
 import eco_opt
-from eco_opt.system import Namespace
+from eco_opt import Namespace
 
 # ---------------------------------------------------------------------------
 # Growth models: F(V) = P * U(V)
@@ -87,7 +87,7 @@ def build_ocp(growth, P, t0=SEASON_START, tf=SEASON_END, v0=V0, vmax=VMAX):
         dV = u[0] * F
         dR = (1 - u[0]) * F
         y = Namespace(V=V, R=R, F=F, growth_rate=F / Vc)
-        return cs.vertcat(dV, dR), y
+        return [dV, dR], y
 
     sys = eco_opt.System(states=2, controls=1, model=model, name=f"lindh_{growth}")
     ocp = eco_opt.Ocp()

@@ -11,12 +11,33 @@ Each page uses the same skeleton:
 7. How to run / tests
 8. References — **last**, and only when a paper or Yop page must be cited
 
-Typewriter names match folders under `examples/`.
+Typewriter names match folders under `examples/` in the **git clone**
+(not the wheel). Plot scripts need matplotlib; Goddard comparison
+plots and Lindh’s 1-D check need scipy:
 
-A suggested path: [First solve](../first-solve.md) (Goddard),
+```bash
+python -m pip install -e ".[examples]"
+cd examples/microbial_growth
+python microbial_growth.py
+```
+
+Every **Run and tests** block starts with `cd examples/<folder>` so it
+works from the repository root. Plot scripts need `.[examples]`.
+Those blocks also run pytest, which is **`[test]`** (pytest plus the
+plot extras). Scripts import the public package
+(`import eco_opt`, and `from eco_opt import Namespace` when named
+signals are used). Do not import `eco_opt.system` or other internal
+modules. `Namespace` is names only. Import `casadi as cs` when \(f\)
+uses CasADi functions (`exp`, `sin`, `sign`, interpolants); a list of
+derivatives needs no CasADi import
+([CasADi expressions](../casadi-expressions.md)). Each page has a short public-API
+skeleton; the full script is under `examples/<name>/`.
+
+A suggested path: [First solve](../first-solve.md) (microbial growth),
 [Posing a problem](../posing.md),
 [Transcription](../transcription.md),
 [Constraints and time](../constraints-and-time.md),
+[Build and optimize](../build-optimize.md),
 then **ecological models**
 `microbial_growth` → `opt_lignin` → `irrigation_bucket` → `root_opt`.
 **Traditional OCP** pages supply a closed form or a transcription

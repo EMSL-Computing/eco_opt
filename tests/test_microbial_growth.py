@@ -38,3 +38,10 @@ def test_microbial_growth_matches_regression_and_is_physical():
     # -- regression tracking --------------------------------------------------
     assert abs(sol.objective - mg.REGRESSION_OBJECTIVE) < 1e-4
     assert abs(sol.tf - mg.REGRESSION_TF) < 1e-3
+
+    t_an, C_an, u_an, _g_an, T_an, J_an = mg.analytical_solution()
+    assert abs(T_an - sol.tf) < 5e-3
+    assert abs(J_an - sol.objective) < 5e-4
+    u_col = np.interp(t_an, sol.time[:-1], sol.u[:, 0])
+    scale = np.max(np.abs(u_an))
+    assert np.max(np.abs(u_col - u_an)) < 0.05 * scale

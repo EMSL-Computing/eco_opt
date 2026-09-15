@@ -28,18 +28,15 @@ and the analytic optimal objective is ``J* = 7.75`` (integrate
 ``0.5*(alpha*t+beta)^2`` from 0 to 2 with the above coefficients).
 """
 
-import casadi as cs
-
 import eco_opt
-from eco_opt.system import Namespace
+from eco_opt import Namespace
 
 
 def trolley_model(t, x, u):
     position, speed = x[0], x[1]
     acceleration = u[0]
-    dx = cs.vertcat(speed, acceleration)
     y = Namespace(position=position, speed=speed, acceleration=acceleration)
-    return dx, y
+    return [speed, acceleration], y
 
 
 def build_ocp():

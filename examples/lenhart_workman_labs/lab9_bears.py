@@ -40,7 +40,7 @@ def _model(r, K, mp, mf):
             + (mf * r / K**2) * P * F**2
             + (mp * r / K**2) * P**2 * F
         )
-        return cs.vertcat(dP, dF, dO), Namespace(P=P, F=F, O=O, up=up, uf=uf)
+        return [dP, dF, dO], Namespace(P=P, F=F, O=O, up=up, uf=uf)
 
     return f
 

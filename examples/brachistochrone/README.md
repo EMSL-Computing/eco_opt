@@ -196,6 +196,7 @@ Derived: $a=1$, $\varphi_f=\pi$, $t_f^\star=\pi$, $v(t_f)=2$.
 ## 9. Running
 
 ```bash
+cd examples/brachistochrone
 python brachistochrone.py
 python plot_brachistochrone.py
 python -m pytest ../../tests/test_brachistochrone.py -q

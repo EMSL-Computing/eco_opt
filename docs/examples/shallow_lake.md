@@ -101,6 +101,29 @@ Restoration is the tipping point again: the terminal inequality
 \(P(T)\le P_{\mathrm{clean}}\) is not reachable by sitting at the
 desired loading if you start turbid.
 
+## Public API
+
+Full script: `examples/shallow_lake/shallow_lake.py`.
+
+```python
+import casadi as cs
+import eco_opt
+from eco_opt import Namespace
+
+
+def lake_model(t, x, u):
+    P, L = x[0], u[0]
+    dP = L - B * P + P ** 2 / (1.0 + P ** 2)
+    y = Namespace(P=P, L=L)
+    return dP, y
+
+
+sys = eco_opt.System(states=1, controls=1, model=lake_model)
+ocp = eco_opt.Ocp()
+ocp.max([cs.exp(-rho * sys.t) * (cs.log(sys.y.L) - c * sys.y.P ** 2)])
+ocp.st(system=sys, constraints=[...])
+```
+
 ## Run and tests
 
 ```bash

@@ -15,7 +15,8 @@ horizon if \(T\) is free, and any parameters.
 The parameterisation represents \(u\) as a step on each interval. A
 plot that interpolates `sol.u` as a continuous curve misrepresents
 the discretisation. `matplotlib.pyplot.stairs` or
-`step(..., where="post")` matches the transcription.
+`step(..., where="post")` matches the transcription. Snippets:
+[Results and plots](results-and-plots.md).
 `sol.time` is the coarse knot grid (interval boundaries). Interior
 collocation nodes enforce the ODE; they are not `sol.time`.
 
@@ -36,8 +37,9 @@ sol = ocp.solve(
 ```
 
 Defaults are 100 intervals, degree 5, Legendre points, `tf_guess=1.0`.
-Those defaults match the Goddard archive in this package. A typical
-first mesh for a new model is 20–40 intervals and degree 3.
+They are **not** the Goddard archive (59 intervals, `tf_guess=200`)
+or [First solve](first-solve.md) (200 intervals, Radau, `tf_guess=2`).
+A typical first mesh for a new model is 20–40 intervals and degree 3.
 
 | Setting | Role |
 |---|---|
@@ -58,7 +60,8 @@ discretisation error, not a change of ecological mechanism.
 ## What may appear in \(f\)
 
 The model function is a **CasADi** expression graph, not a general
-Python program. A Python branch on a symbolic state or control is
+Python program. Functions on symbols:
+[CasADi expressions](casadi-expressions.md). A Python branch on a symbolic state or control is
 invalid:
 
 ```python

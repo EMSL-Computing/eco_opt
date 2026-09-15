@@ -43,11 +43,31 @@ A jump in **forcing** is not a jump in the **control**. Bang–bang
 allocation (Cohen, Lindh) is a different object. Do not read this
 example as a phenology switch.
 
+## Public API
+
+Bare `dx` (`examples/non_diff/non_diff.py`):
+
+```python
+import eco_opt
+
+
+def nondiff_model(t, x, u):
+    ...
+    return dx
+
+
+sys = eco_opt.System(states=3, controls=1, model=nondiff_model)
+ocp = eco_opt.Ocp()
+ocp.min(eco_opt.t_f(sys.x[2]))
+ocp.st(system=sys, constraints=[...])
+```
+
 ## Run and tests
 
 ```bash
 cd examples/non_diff
 python non_diff.py
+python plot_non_diff.py
 python -m pytest ../../tests/test_non_diff.py -q
 ```
 

@@ -34,11 +34,29 @@ Multi-phase collocation is for **sequential missions** (or sequential
 life-history stages in ecology). The landing bound is a terminal
 condition on phase 2, not a path constraint on the whole horizon.
 
+## Public API
+
+Full script: `examples/multiphase_goddard_landing/goddard_landing.py`.
+
+```python
+import eco_opt
+from eco_opt import Namespace, Phase
+
+sys1 = eco_opt.System(states=3, controls=1, model=goddard_model, name="ascent")
+sys2 = eco_opt.System(states=3, controls=1, model=goddard_model, name="landing")
+p1 = Phase(sys1, constraints=[...], name="ascent")
+p2 = Phase(sys2, constraints=[...], name="landing")
+ocp = eco_opt.Ocp()
+ocp.max(eco_opt.t_f(sys1.y.rocket.height))
+ocp.st(phases=[p1, p2], continuity=True)
+```
+
 ## Run and tests
 
 ```bash
 cd examples/multiphase_goddard_landing
 python goddard_landing.py
+python plot_goddard_landing.py
 python -m pytest ../../tests/test_multiphase_goddard_landing.py -q
 ```
 

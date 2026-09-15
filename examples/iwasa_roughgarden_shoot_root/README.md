@@ -82,7 +82,7 @@ positive-length interval). The dynamics use a hyperbolic smooth-min
 
 ```python
 G = 0.5 * (a + b - cs.sqrt((a - b) ** 2 + eps ** 2))  # a=αS, b=βR
-dx = cs.vertcat(u_S * G, u_R * G, (1.0 - u_S - u_R) * G)
+return [u_S * G, u_R * G, (1.0 - u_S - u_R) * G]
 ```
 
 with `eps = 1e-3`. This is a standard C¹ surrogate of `min`, not a
@@ -372,6 +372,7 @@ $F(T)=2e^2/\sqrt{5}$.
 ## 12. Running
 
 ```bash
+cd examples/iwasa_roughgarden_shoot_root
 python shoot_root.py
 python plot_shoot_root.py
 python -m pytest ../../tests/test_iwasa_roughgarden_shoot_root.py -q

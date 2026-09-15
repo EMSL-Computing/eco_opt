@@ -16,8 +16,7 @@ import eco_opt
 
 def iso_model(t, x, u):
     x1, x2 = x[0], x[1]
-    dx = cs.vertcat(-cs.sin(x1) + u[0], u[0] ** 2)
-    return dx  # no `y` signal tree
+    return [-cs.sin(x1) + u[0], u[0] ** 2]  # no `y` signal tree
 
 
 def build_ocp():

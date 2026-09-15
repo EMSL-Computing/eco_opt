@@ -7,7 +7,7 @@ import numpy as np
 import casadi as cs
 
 import eco_opt
-from eco_opt.system import Namespace
+from eco_opt import Namespace
 
 
 def goddard_model(t, x, u):
@@ -27,7 +27,7 @@ def goddard_model(t, x, u):
     dv = (F * c - F_D) / m - g
     dh = v
     dm = -F
-    dx = cs.vertcat(dv, dh, dm)
+    dx = [dv, dh, dm]
 
     y = Namespace()
     y.rocket = Namespace(velocity=v, height=h, mass=m, fuelMassFlow=F)

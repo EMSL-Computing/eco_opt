@@ -24,15 +24,19 @@ worthwhile as the pool nears exhaustion.
 ## Run
 
 ```bash
+cd examples/microbial_growth
 python microbial_growth.py
 python plot_microbial_growth.py
 python open_vs_closed.py
+python -m pytest ../../tests/test_microbial_growth.py -q
 ```
 
 ## Validation
 
-No closed-form objective is published. Checks: solver success; `C(T) -> 0`;
-bounds respected; regression-tracked objective and terminal time.
+Collocation is checked against an independent PMP trajectory
+(`analytical_solution`; figure `figs/microbial_growth_vs_analytical.png`)
+and against resource exhaustion / box bounds. $T^*\approx 1.518$ and
+$J^*\approx 0.1518$ are also regression-tracked.
 
 ## Open loop vs closed loop
 

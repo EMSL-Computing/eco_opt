@@ -3,6 +3,9 @@
 **Question.** How should substrate uptake vary, and when should it stop,
 if cumulative growth is maximised while a finite resource is exhausted?
 
+The complete first script and the eco_opt–analytical figure:
+[First solve](../first-solve.md).
+
 ## Formulation
 
 | Symbol | Role | Meaning |
@@ -47,13 +50,13 @@ degree 5, 200 intervals) with IPOPT.
 
 ## What we found
 
-The numerical solution recovers the closed-form strategy of the source
-for \(k=0\), \(r>0\): \(u^*(t)\) declines as \(C\) is depleted, stays
-off the lower bound, and \(C(T)\to 0\). Regression values
-\(T^*=1.518\), \(J^*=0.1518\) (relative error below \(10^{-5}\) vs the
-closed form in the paper SI).
+Solver succeeds; \(C(T)\to 0\) (resource exhaustion); \(C\) and \(u\)
+stay in their box bounds. Collocation overlays the independent
+analytical trajectories on [First solve](../first-solve.md)
+(\(T\approx 1.518\), \(J\approx 0.1518\)). For \(k=0\), \(r>0\),
+\(u^*(t)\) is a smooth interior path that declines as \(C\) is depleted.
 
-![Substrate, uptake, and growth](../assets/examples/microbial_growth/microbial_growth_states_control.png)
+![Control, substrate, and cumulative growth: eco_opt versus analytical](../assets/examples/microbial_growth/microbial_growth_vs_analytical.png)
 
 ![Phase portrait](../assets/examples/microbial_growth/microbial_growth_phase_portrait.png)
 
@@ -99,11 +102,57 @@ not on the state you predicted on day zero.
 
 ![Open vs closed loop, with and without extra C](../assets/examples/microbial_growth/open_vs_closed.png)
 
+## Public API
+
+Same solve as `examples/microbial_growth/microbial_growth.py`.
+
+```python
+import eco_opt
+from eco_opt import Namespace
+
+BETA, GAMMA, R, EMAX, MU, K = 0.5, 0.5, 0.1, 0.5, 0.5, 0.0
+
+
+def growth_rate(u):
+    return EMAX * BETA * (u - R) / (u + BETA) - K * u
+
+
+def microbial_growth_model(t, x, u):
+    Cs, uptake = x[0], u[0]
+    G = growth_rate(uptake)
+    dx = -uptake - GAMMA * Cs + MU * G
+    y = Namespace(Cs=Cs, uptake=uptake, growth=G)
+    return dx, y
+
+
+sys = eco_opt.System(states=1, controls=1, model=microbial_growth_model)
+ocp = eco_opt.Ocp()
+ocp.max([growth_rate(sys.y.uptake)])
+ocp.st(
+    system=sys,
+    constraints=[
+        (0, "==", eco_opt.t_0(sys.t)),
+        (1, "==", eco_opt.t_0(sys.y.Cs)),
+        (0, "<=", eco_opt.t_f(sys.t), "<=", float("inf")),
+        (0, "<=", sys.y.Cs, "<=", 1),
+        (0, "<=", sys.y.uptake, "<=", 10),
+    ],
+)
+sol = ocp.solve(
+    control_intervals=200,
+    polynomial_degree=5,
+    collocation_points="radau",
+    tf_guess=2.0,
+)
+print(sol.success, sol.tf, sol.objective)
+```
+
 ## Run and tests
 
 ```bash
 cd examples/microbial_growth
 python microbial_growth.py
+python plot_microbial_growth.py
 python open_vs_closed.py
 python -m pytest ../../tests/test_microbial_growth.py -q
 ```

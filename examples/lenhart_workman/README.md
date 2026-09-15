@@ -30,9 +30,10 @@ Analytic `tf* = 2*sqrt(x0) ~= 6.32456` for `x0=10`.
 ## Running
 
 ```bash
+cd examples/lenhart_workman
 python linear_bangbang_ex17_2.py
 python lq_tracking_ex17_3.py
 python min_time_trolley_ex20_4.py
 python plot_lenhart_workman.py
-pytest ../../tests/test_lenhart_workman.py -q
+python -m pytest ../../tests/test_lenhart_workman.py -q
 ```

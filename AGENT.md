@@ -16,7 +16,7 @@ absolute interpreter paths in the repository.
 - Package name is `eco_opt`.
 - Must remain `pip install`-able: `import eco_opt` and `pytest` after install.
 - Public API only through `eco_opt` (`System`, `Ocp`, `OcpResults`, `Phase`,
-  `PhaseTrajectory`, `t_0`, `t_f`, `Namespace`, `simulate`,
+  `PhaseTrajectory`, `t_0`, `t_f`, `TimepointExpression`, `Namespace`, `simulate`,
   `closed_loop`, `SimulationResults`, `ClosedLoopResults`,
   `control_from_solution`). Do not teach users to import internal
   modules. Single-phase bound/parameter sweeps: `Ocp.build`,

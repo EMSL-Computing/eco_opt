@@ -30,10 +30,13 @@ nav:
   - Home: index.md
   - Install: install.md
   - First solve: first-solve.md
+  - Results and plots: results-and-plots.md
   - Posing a problem: posing.md
+  - CasADi expressions: casadi-expressions.md
   - Transcription: transcription.md
   - Constraints and time: constraints-and-time.md
   - Guesses, mesh, scaling: guesses-mesh-scaling.md
+  - Build and optimize: build-optimize.md
   - Troubleshooting: troubleshooting.md
   - Examples:
       - Overview: examples/index.md

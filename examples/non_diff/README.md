@@ -17,6 +17,7 @@ objective is regression-tracked.
 ## Running
 
 ```bash
+cd examples/non_diff
 python non_diff.py
 python plot_non_diff.py
 python -m pytest ../../tests/test_non_diff.py -q

@@ -35,6 +35,7 @@ $x$, and $u$ match.
 ## Running
 
 ```bash
+cd examples/greenhouse
 python greenhouse.py
 python greenhouse_from_file.py
 python plot_greenhouse.py

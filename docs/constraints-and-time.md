@@ -4,18 +4,36 @@ Every declared constraint enters the NLP. Redundant or inconsistent
 inequalities can make a feasible continuous problem infeasible after
 transcription.
 
-Constraint tuples have one form:
+Constraint tuples. `t_0(...)` or `t_f(...)` marks a **boundary**
+condition; a bare expression is a **path** condition (the whole
+horizon).
 
 ```python
-(lb, "==", expr)                 # equality
-(lb, "<=", expr)                 # one-sided (lower)
-(lb, "<=", expr, "<=", ub)       # two-sided
+# Two-sided
+(lb, "<=", expr, "<=", ub)
+(lb, "<=", eco_opt.t_0(expr), "<=", ub)
+(lb, "<=", eco_opt.t_f(expr), "<=", ub)
+
+# Lower bound:  lb <= expr
+(lb, "<=", expr)
+(lb, "<=", eco_opt.t_0(expr))
+(lb, "<=", eco_opt.t_f(expr))
+
+# Upper bound:  ub >= expr  (same as expr <= ub)
+(ub, ">=", expr)
+(ub, ">=", eco_opt.t_0(expr))
+(ub, ">=", eco_opt.t_f(expr))
+
+# Equality
+(eq, "==", expr)
+(eq, "==", eco_opt.t_0(expr))
+(eq, "==", eco_opt.t_f(expr))
 ```
 
-`op` is `"=="`, `"<="`, or `">="`. `t_0(...)` or `t_f(...)` marks a
-**boundary** condition. A bare expression is a **path** condition
-(the whole horizon). A one-sided infinite bound is
-`(0, "<=", expr, "<=", float("inf"))`.
+Read `(ub, ">=", expr)` left to right: the number is at least the
+expression. Bryson `(1.0/9.0, ">=", position)` is \(x\le 1/9\), not
+\(x\ge 1/9\). `(expr, "<=", ub)` is accepted as the same upper bound;
+the form above is the one to write.
 
 ## Taxonomy
 
@@ -66,10 +84,10 @@ A **fixed** horizon is the usual seasonal plan (leaf growth over
 120 d, a flowering season). A **free** horizon is a burnout or a
 minimum-time problem: `t_f(sys.t)` is bounded from below by zero,
 optionally from above, and `tf_guess` is the same **order of
-magnitude** as \(T\). Goddard uses `tf_guess=200`; `tf_guess=1.0` on
-a 40-second burn is a common cause of solver failure. See
-[First solve](first-solve.md) and
-[Guesses, mesh, scaling](guesses-mesh-scaling.md).
+magnitude** as \(T\). [First solve](first-solve.md) uses
+`tf_guess=2` on a horizon of order 1.5. Goddard uses `tf_guess=200`;
+`tf_guess=1.0` on a 200-second burn is a common cause of solver
+failure. See [Guesses, mesh, scaling](guesses-mesh-scaling.md).
 
 Closed loop with a shrinking window requires a remaining horizon that
 still contains the planned terminal time. If the open-loop problem

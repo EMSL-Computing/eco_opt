@@ -1,8 +1,13 @@
-"""State/control and phase-portrait figures for the microbial growth example.
+"""State/control, phase-portrait, and eco_opt vs analytical figures.
 
-Run:  python examples/microbial_growth/plot_microbial_growth.py
+Run from the repository root::
+
+    cd examples/microbial_growth
+    python plot_microbial_growth.py
+
 Output: figs/microbial_growth_states_control.png,
-        figs/microbial_growth_phase_portrait.png
+        figs/microbial_growth_phase_portrait.png,
+        figs/microbial_growth_vs_analytical.png
 """
 import os
 
@@ -67,6 +72,83 @@ def main():
 
     print("Wrote:", p1)
     print("Wrote:", p2)
+
+    t_an, C_an, u_an, G_an, T_an, J_an = mg.analytical_solution()
+    t_opt = sol.time
+    C_opt = sol.x[:, 0]
+    u_opt_t = sol.time_intervals
+    u_opt = sol.u[:, 0]
+    G_opt = mg.growth_rate(u_opt)
+    J_an_t = np.concatenate(
+        [[0.0], np.cumsum(0.5 * (G_an[1:] + G_an[:-1]) * np.diff(t_an))]
+    )
+    J_opt = np.concatenate([[0.0], np.cumsum(G_opt * np.diff(u_opt_t))])
+
+    analytical_color = "#222222"
+    state_color = "#0072B2"
+    control_color = "#D55E00"
+    secondary_color = "#009E73"
+    fig, axes = plt.subplots(1, 3, figsize=(8.7, 3.0))
+
+    ax = axes[0]
+    ax.plot(t_an, u_an, color=analytical_color, lw=1.5, label="analytical")
+    ax.step(
+        u_opt_t[:-1],
+        u_opt,
+        where="post",
+        color=control_color,
+        lw=3,
+        linestyle=":",
+        label="eco_opt",
+    )
+    ax.set_xlabel("time")
+    ax.set_ylabel("uptake $u$")
+    ax.set_title("(a) Control")
+    ax.legend(frameon=False, loc="upper right", handlelength=1.6)
+    tf = float(sol.tf)
+    ax.axvline(tf, color="0.4", lw=0.7, ls=":", zorder=0)
+    ymin, ymax = ax.get_ylim()
+    pad = 0.10 * (ymax - ymin)
+    ax.set_ylim(ymin - pad, ymax)
+    ax.annotate(
+        r"$t_f$",
+        xy=(tf, ymin),
+        xytext=(tf - 0.5, ymin),
+        ha="right",
+        va="center",
+        fontsize=12,
+        color="0.25",
+        arrowprops=dict(arrowstyle="<-", color="0.4", lw=0.7),
+    )
+
+    ax = axes[1]
+    ax.plot(t_an, C_an, color=analytical_color, lw=1.5, label="analytical")
+    ax.plot(t_opt, C_opt, color=state_color, lw=3, linestyle=":", label="eco_opt")
+    ax.set_xlabel("time")
+    ax.set_ylabel("substrate $C$")
+    ax.set_title("(b) State")
+    ax.legend(frameon=False, loc="upper right", handlelength=1.6)
+
+    ax = axes[2]
+    ax.plot(t_an, J_an_t, color=analytical_color, lw=1.5, label="analytical")
+    ax.plot(
+        u_opt_t,
+        J_opt,
+        color=secondary_color,
+        lw=3,
+        linestyle=":",
+        label="eco_opt",
+    )
+    ax.set_xlabel("time")
+    ax.set_ylabel("cumulative growth $J$")
+    ax.set_title("(c) Objective")
+    ax.legend(frameon=False, loc="upper left", handlelength=1.6)
+
+    fig.tight_layout()
+    p3 = os.path.join(FIG_DIR, "microbial_growth_vs_analytical.png")
+    fig.savefig(p3, dpi=150)
+    plt.close(fig)
+    print("Wrote:", p3, f"(analytical T={T_an:.4f}, J={J_an:.4f})")
 
 
 if __name__ == "__main__":

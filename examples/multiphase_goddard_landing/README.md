@@ -113,6 +113,7 @@ at this mesh, plus the landing equalities and bounds.
 ## 6. Running
 
 ```bash
+cd examples/multiphase_goddard_landing
 python goddard_landing.py
 python plot_goddard_landing.py
 python -m pytest ../../tests/test_multiphase_goddard_landing.py -q

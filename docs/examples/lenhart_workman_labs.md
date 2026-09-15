@@ -160,6 +160,28 @@ Default (22.2).
 
 ![Lab 13](../assets/examples/lenhart_workman_labs/lab13_predator_prey.png)
 
+## Public API
+
+Each lab is `import eco_opt` / `from eco_opt import Namespace`
+(`examples/lenhart_workman_labs/lab1_introductory.py` and siblings):
+
+```python
+import eco_opt
+from eco_opt import Namespace
+
+
+def lab1_model(t, x, u):
+    state, ctrl = x[0], u[0]
+    dx = -0.5 * state ** 2 + C * ctrl
+    return dx, Namespace(x=state, u=ctrl)
+
+
+sys = eco_opt.System(states=1, controls=1, model=lab1_model)
+ocp = eco_opt.Ocp()
+ocp.max([A * sys.y.x - B * sys.y.u ** 2])
+ocp.st(system=sys, constraints=[...])
+```
+
 ## Run and tests
 
 ```bash

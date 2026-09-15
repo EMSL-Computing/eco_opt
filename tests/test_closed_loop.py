@@ -1,10 +1,9 @@
 """Open-loop replay and shrinking-horizon closed loop."""
-import casadi as cs
 import numpy as np
 import pytest
 
 import eco_opt
-from eco_opt.system import Namespace
+from eco_opt import Namespace
 
 
 def _lin_model(t, x, u):
@@ -16,8 +15,9 @@ def _vdp_ocp(T=5.0):
     def model(t, x, u):
         x1, x2 = x[0], x[1]
         force = u[0]
-        dx = cs.vertcat((1.0 - x2**2) * x1 - x2 + force, x1)
-        return dx, Namespace(x1=x1, x2=x2, u=force)
+        return [(1.0 - x2**2) * x1 - x2 + force, x1], Namespace(
+            x1=x1, x2=x2, u=force
+        )
 
     sys = eco_opt.System(states=2, controls=1, model=model, name="vdp")
     ocp = eco_opt.Ocp()
@@ -114,8 +114,9 @@ def test_closed_loop_differs_when_plant_is_not_the_model():
     def kicked(t, x, u):
         x1, x2 = x[0], x[1]
         force = u[0]
-        dx = cs.vertcat((1.0 - x2**2) * x1 - x2 + force + 0.35, x1)
-        return dx, Namespace(x1=x1, x2=x2, u=force)
+        return [(1.0 - x2**2) * x1 - x2 + force + 0.35, x1], Namespace(
+            x1=x1, x2=x2, u=force
+        )
 
     plant = eco_opt.System(states=2, controls=1, model=kicked, name="vdp_kick")
     ocp2, sys2 = _vdp_ocp(T)
@@ -137,7 +138,7 @@ def test_closed_loop_differs_when_plant_is_not_the_model():
 
 def test_closed_loop_rejects_multiphase():
     def model(t, x, u):
-        return cs.vertcat(x[0])
+        return x[0]
 
     sys_a = eco_opt.System(states=1, controls=0, model=model, name="a")
     sys_b = eco_opt.System(states=1, controls=0, model=model, name="b")

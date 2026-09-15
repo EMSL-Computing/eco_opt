@@ -14,6 +14,7 @@ Analytic bang-bang: switch from `u=+1` to `u=-2` at `t=20`, `tf*=30`.
 ## Running
 
 ```bash
+cd examples/bang_free_tf
 python bang_free_tf.py
 python plot_bang_free_tf.py
 python -m pytest ../../tests/test_bang_free_tf.py -q

@@ -36,6 +36,7 @@ do **not** put `sqrt` in $f$: write $0=g$ and $M\ge 0$.
 ## Running
 
 ```bash
+cd examples/algebraic_qss
 python linear_qss.py
 python quadratic_qss.py
 python plot_algebraic_qss.py

@@ -53,11 +53,35 @@ keeps the decision variable equal to what the grower actually chooses
 (heating), and keeps the NLP dimension from growing with the weather
 table.
 
+## Public API
+
+Weather is a forcing inside \(f\), not a control
+(`examples/greenhouse/greenhouse.py`):
+
+```python
+import eco_opt
+from eco_opt import Namespace
+
+
+def greenhouse_model(t, x, u):
+    crop, temp, heat = x[0], x[1], u[0]
+    y = Namespace(crop=crop, temp=temp, heat=heat)
+    return [P1 * I_fun(t) * temp, P2 * (T_fun(t) - temp) + P3 * heat], y
+
+
+sys = eco_opt.System(states=2, controls=1, model=greenhouse_model)
+ocp = eco_opt.Ocp()
+ocp.min([eco_opt.t_f(-P5 * sys.y.crop), P4 * sys.y.heat])
+ocp.st(system=sys, constraints=[...])
+```
+
 ## Run and tests
 
 ```bash
 cd examples/greenhouse
 python greenhouse.py
+python greenhouse_from_file.py
+python plot_greenhouse.py
 python -m pytest ../../tests/test_greenhouse.py -q
 ```
 

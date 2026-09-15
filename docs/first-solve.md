@@ -1,89 +1,72 @@
 # First solve
 
-The dimensional Goddard rocket: maximise final altitude with free
-burnout time. This is a **traditional optimal-control problem**. The
-script below is complete. Ecological models use the same structure;
-they are listed under [Examples](examples/index.md).
-
-Full write-up, figures, and the archived reference:
-[Goddard, dimensional](examples/goddard_benchmark.md).
+Finite-substrate microbial growth: maximise cumulative growth while a
+resource pool is exhausted. The horizon \(T\) is free. The script below
+is complete. Formulation, closed loop, and further figures:
+[Microbial growth](examples/microbial_growth.md).
 
 If IPOPT fails, see [Troubleshooting](troubleshooting.md). For what
 counts as a state, a control, or a cost, see
 [Posing a problem](posing.md).
 The control is piecewise constant on the collocation mesh; see
 [Transcription](transcription.md).
-This problem has a **free** horizon (`tf_guess=200`); time bounds are
-written explicitly in `st`
+Time bounds are written explicitly in `st`
 ([Constraints and time](constraints-and-time.md)).
 
+This right-hand side uses only `+`, `-`, `*`, `/`, so there is no
+`import casadi`. Named signals are a `Namespace`
+([CasADi expressions](casadi-expressions.md)). A list of derivatives
+is stacked by `System`; a one-state model may return a scalar.
+
 ```python
-import casadi as cs
 import eco_opt
+from eco_opt import Namespace
+
+BETA, GAMMA, R, EMAX, MU, K = 0.5, 0.5, 0.1, 0.5, 0.5, 0.0
 
 
-def goddard_model(t, x, u):
-    v, h, m = x[0], x[1], x[2]
-    F = u[0]
+def growth_rate(u):
+    return EMAX * BETA * (u - R) / (u + BETA) - K * u
 
-    D0 = 0.01227
-    beta = 0.145e-3
-    c = 2060.0
-    g0 = 9.81
-    r0 = 6.371e6
 
-    D = D0 * cs.exp(-beta * h)
-    F_D = cs.sign(v) * D * v ** 2
-    g = g0 * (r0 / (r0 + h)) ** 2
-
-    dv = (F * c - F_D) / m - g
-    dh = v
-    dm = -F
-    dx = cs.vertcat(dv, dh, dm)
-
-    y = eco_opt.Namespace()
-    y.rocket = eco_opt.Namespace(
-        velocity=v, height=h, mass=m, fuelMassFlow=F
-    )
-    y.drag = eco_opt.Namespace(coefficient=D, force=F_D)
-    y.gravity = g
+def microbial_growth_model(t, x, u):
+    Cs, uptake = x[0], u[0]
+    G = growth_rate(uptake)
+    dx = -uptake - GAMMA * Cs + MU * G
+    y = Namespace(Cs=Cs, uptake=uptake, growth=G)
     return dx, y
 
 
-sys = eco_opt.System(states=3, controls=1, model=goddard_model, name="goddard")
-rocket = sys.y.rocket
-
-m0 = 214.839
-mf = 67.9833
-Fm = 9.525515
-
+sys = eco_opt.System(states=1, controls=1, model=microbial_growth_model)
 ocp = eco_opt.Ocp()
-ocp.max(eco_opt.t_f(rocket.height))
+ocp.max([growth_rate(sys.y.uptake)])
 ocp.st(
     system=sys,
     constraints=[
         (0, "==", eco_opt.t_0(sys.t)),
-        (0, "==", eco_opt.t_0(rocket.velocity)),
-        (0, "==", eco_opt.t_0(rocket.height)),
-        (m0, "==", eco_opt.t_0(rocket.mass)),
+        (1, "==", eco_opt.t_0(sys.y.Cs)),
         (0, "<=", eco_opt.t_f(sys.t), "<=", float("inf")),
-        (0, "<=", rocket.velocity, "<=", float("inf")),
-        (0, "<=", rocket.height, "<=", float("inf")),
-        (mf, "<=", rocket.mass, "<=", m0),
-        (0, "<=", rocket.fuelMassFlow, "<=", Fm),
+        (0, "<=", sys.y.Cs, "<=", 1),
+        (0, "<=", sys.y.uptake, "<=", 10),
     ],
 )
 sol = ocp.solve(
-    control_intervals=59,
+    control_intervals=200,
     polynomial_degree=5,
-    collocation_points="legendre",
-    tf_guess=200.0,
+    collocation_points="radau",
+    tf_guess=2.0,
 )
 print(sol.success, sol.tf, sol.objective)
 ```
 
-Same solve as a module: `examples/goddard_benchmark/goddard_benchmark.py`.
+Same solve as a module: `examples/microbial_growth/microbial_growth.py`.
 
-`sol.success` should be true. This mesh gives \(T\approx 213\,\mathrm{s}\)
-and \(h(T)\approx 1.61\times 10^{5}\,\mathrm{m}\). The example page
-compares the same transcription to an independent archive.
+`sol.success` should be true. This mesh gives \(T\approx 1.518\) and
+\(J\approx 0.1518\). How to read `sol` and plot with matplotlib:
+[Results and plots](results-and-plots.md).
+
+The figure compares collocation (thick dotted) to an independent
+analytical solution (solid): control, substrate, and cumulative
+growth, with \(t_f\) marked on the control panel.
+
+![Control, substrate, and cumulative growth: eco_opt versus analytical](assets/first-solve/microbial.png)

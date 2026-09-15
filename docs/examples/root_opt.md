@@ -44,7 +44,8 @@ At both N supplies, exudation sits on the upper bound through
 mid-season, then declines as more root C goes to root growth. Lower
 initial mineral N raises the belowground share of net leaf assimilate
 and cuts leaf-C accumulation. \(J^*=499.5\,\mathrm{g\,C\,m^{-2}}\) at
-\(20\,\mathrm{g\,N\,m^{-2}}\) and \(322.3\) at \(10\).
+\(20\,\mathrm{g\,N\,m^{-2}}\) and \(322.1\) at \(10\)
+(`control_intervals=50`, degree 3).
 
 ![Seasonal allocation](../assets/examples/root_opt/root_opt_scenarios.png)
 
@@ -70,12 +71,41 @@ appears only when the soil is not the forecast.
 
 ![Open vs closed loop after extra mineral N](../assets/examples/root_opt/open_vs_closed.png)
 
+## Public API
+
+Skeleton of `examples/root_opt/plant_soil_nitrogen_allocation.py`
+(nine-state RHS in that file):
+
+```python
+import eco_opt
+from eco_opt import Namespace
+
+
+def plant_soil_microbe_nested(t, state, u, params=PARAMS):
+    ...
+    y = Namespace(leafC=fCL, leaf_growth_rate=leaf_growth, ...)
+    return dx, y
+
+
+sys = eco_opt.System(
+    states=9,
+    controls=2,
+    model=lambda t, x, u: plant_soil_microbe_nested(t, x, u, PARAMS),
+)
+ocp = eco_opt.Ocp()
+ocp.max([sys.y.leaf_growth_rate])
+ocp.st(system=sys, constraints=[...])
+sol = ocp.solve()
+```
+
 ## Run and tests
 
 ```bash
 cd examples/root_opt
 python plant_soil_nitrogen_allocation.py
+python plot_root_opt.py
 python open_vs_closed.py
+python reproduce_figures.py
 python -m pytest ../../tests/test_root_opt.py -q
 ```
 

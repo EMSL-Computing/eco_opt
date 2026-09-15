@@ -24,14 +24,11 @@ u=-2 at t=20.
 Run directly:  python examples/bang_free_tf/bang_free_tf.py
 """
 
-import casadi as cs
-
 import eco_opt
 
 
 def bang_model(t, x, u):
-    dx = cs.vertcat(x[1], u[0])
-    return dx  # no `y` signal tree -- exercises System's optional-y support
+    return [x[1], u[0]]  # no `y` signal tree -- exercises System's optional-y support
 
 
 def build_ocp():
