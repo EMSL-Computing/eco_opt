@@ -254,7 +254,8 @@ def solve(terminal_time=120.0, state_init=STATE_INIT, params=PARAMS,
 
 # Regression-tracked value: computed with eco_opt at the base scenario
 # above, control_intervals=50, polynomial_degree=3, legendre collocation.
-REGRESSION_OBJECTIVE = 499.50491065884506
+# Updated when path inequalities were also applied at interval starts.
+REGRESSION_OBJECTIVE = 499.3902440480594
 
 
 if __name__ == "__main__":

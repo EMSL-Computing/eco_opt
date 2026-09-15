@@ -901,6 +901,11 @@ class Ocp:
 
             Xk_end = D[0] * Xk
             tk = T0 + k * h_interval
+            # Collocation skips tau=0. Piecewise-constant Uk is defined at
+            # the interval left end, so mixed g(x,u) must be applied there.
+            for pi, pc in enumerate(path_constraints):
+                val = eval_expr_at(pc.expr, tk, Xk, Uk, Zk)
+                idx.g_path[pi].extend(push_g(val, pc.lb, pc.ub))
             for j in range(d):
                 xp = C[0, j + 1] * Xk
                 for r in range(d):
@@ -962,6 +967,9 @@ class Ocp:
         idx.g_final = []
         u_last = U_all[-1] if U_all else (cs.MX.zeros(nu) if nu else cs.MX.zeros(0))
         z_last = Zf if nz else z_empty
+        for pi, pc in enumerate(path_constraints):
+            val = eval_expr_at(pc.expr, Tf, Xk, u_last, z_last)
+            idx.g_path[pi].extend(push_g(val, pc.lb, pc.ub))
         for fc in final_constraints:
             val = eval_expr_at(fc.expr, Tf, Xk, u_last, z_last)
             idx.g_final.append(push_g(val, fc.lb, fc.ub))
@@ -1221,6 +1229,11 @@ class Ocp:
 
                 Xk_end = D[0] * Xk
                 tk = T0 + k * h_interval
+                for pc in path_constraints:
+                    val = eval_expr_at(pc.expr, tk, Xk, Uk)
+                    g.append(val)
+                    lbg.append(pc.lb)
+                    ubg.append(pc.ub)
                 for j in range(d):
                     xp = C[0, j + 1] * Xk
                     for r in range(d):
@@ -1257,10 +1270,15 @@ class Ocp:
                 X_all.append(Xk)
                 Xc_all.append(Xkj)
 
+            u_last = U_all[-1] if U_all else (
+                cs.MX.zeros(nu) if nu else cs.MX.zeros(0)
+            )
+            for pc in path_constraints:
+                val = eval_expr_at(pc.expr, Tf, Xk, u_last)
+                g.append(val)
+                lbg.append(pc.lb)
+                ubg.append(pc.ub)
             for fc in final_constraints:
-                u_last = U_all[-1] if U_all else (
-                    cs.MX.zeros(nu) if nu else cs.MX.zeros(0)
-                )
                 val = eval_expr_at(fc.expr, Tf, Xk, u_last)
                 g.append(val)
                 lbg.append(fc.lb)
