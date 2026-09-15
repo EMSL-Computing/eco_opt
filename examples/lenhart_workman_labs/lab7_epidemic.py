@@ -42,7 +42,7 @@ def _model(b, d, c, e, g, a):
         dI = e * E - (g + a + d) * I
         dN = (b - d) * N - a * I
         y = Namespace(S=S, E=E, I=I, N=N, u=v)
-        return cs.vertcat(dS, dE, dI, dN), y
+        return [dS, dE, dI, dN], y
 
     return f
 

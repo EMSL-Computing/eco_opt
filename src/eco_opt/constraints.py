@@ -18,7 +18,13 @@ import casadi as cs
 
 from .expressions import TimepointExpression
 
-__all__ = ["ParsedConstraint", "classify_constraint", "is_bare_variable", "variable_slot"]
+__all__ = [
+    "ParsedConstraint",
+    "classify_constraint",
+    "is_bare_variable",
+    "variable_slot",
+    "merge_constraint_tuples",
+]
 
 
 def _all_components(system):
@@ -141,3 +147,58 @@ def classify_constraint(system, constraint_tuple) -> ParsedConstraint:
         slot = variable_slot(system, mid)
         kind = "box" if slot is not None else "path"
         return ParsedConstraint(kind=kind, lb=lb, ub=ub, expr=mid, slot=slot)
+
+
+def _expr_equal(a, b) -> bool:
+    try:
+        return bool(cs.is_equal(a, b, 2))
+    except Exception:
+        return False
+
+
+def _constraints_match(a: ParsedConstraint, b: ParsedConstraint) -> bool:
+    if a.kind != b.kind:
+        return False
+    if a.kind in ("box", "box_initial", "box_final"):
+        return a.slot == b.slot
+    return _expr_equal(a.expr, b.expr)
+
+
+def merge_constraint_tuples(system, existing, updates):
+    """Patch ``existing`` with ``updates``; omitted entries keep their bounds.
+
+    Boxes on a decision variable may be added (NLP default is ±inf). A
+    derived path or boundary expression must already be in ``existing``.
+    A path box on time replaces every time-slot bound so a later
+    ``build()`` matches the compiled NLP.
+    """
+    out = list(existing)
+    parsed = [classify_constraint(system, c) for c in out]
+    for tup in updates:
+        pc = classify_constraint(system, tup)
+        if pc.kind == "box" and pc.slot and pc.slot[0] == "t":
+            keep, keep_p = [], []
+            for c, p in zip(out, parsed):
+                if not (p.slot and p.slot[0] == "t"):
+                    keep.append(c)
+                    keep_p.append(p)
+            out, parsed = keep, keep_p
+            out.append(tup)
+            parsed.append(pc)
+            continue
+        idx = next(
+            (i for i, p in enumerate(parsed) if _constraints_match(p, pc)),
+            None,
+        )
+        if idx is not None:
+            out[idx] = tup
+            parsed[idx] = pc
+        elif pc.kind in ("box", "box_initial", "box_final") and pc.slot is not None:
+            out.append(tup)
+            parsed.append(pc)
+        else:
+            raise ValueError(
+                "constraint is not in the compiled NLP; add it in "
+                "st() and call build() again"
+            )
+    return out

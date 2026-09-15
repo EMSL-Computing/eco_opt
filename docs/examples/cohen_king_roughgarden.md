@@ -56,12 +56,34 @@ a single terminal harvest (Cohen) versus a running reproductive
 payoff (King). The switch is not inserted in \(f\); it is implied by
 \(J\) and \(0\le u\le 1\).
 
+## Public API
+
+Cohen terminal yield (`examples/cohen_king_roughgarden/cohen_terminal_yield.py`):
+
+```python
+import eco_opt
+from eco_opt import Namespace
+
+
+def plant_model(t, x, u):
+    veg, repro, alloc = x[0], x[1], u[0]
+    y = Namespace(veg=veg, repro=repro, alloc=alloc)
+    return [alloc * veg, (1.0 - alloc) * veg], y
+
+
+sys = eco_opt.System(states=2, controls=1, model=plant_model)
+ocp = eco_opt.Ocp()
+ocp.max(eco_opt.t_f(sys.y.repro))
+ocp.st(system=sys, constraints=[...])
+```
+
 ## Run and tests
 
 ```bash
 cd examples/cohen_king_roughgarden
 python cohen_terminal_yield.py
 python king_singular_allocation.py
+python plot_cohen_king.py
 python -m pytest ../../tests/test_cohen_king_roughgarden.py -q
 ```
 

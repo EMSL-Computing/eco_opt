@@ -68,11 +68,38 @@ seasonal allocation plan and re-allocation after a rain, a litterfall
 pulse, or a missed mineral-N flush. The OCP does not become a
 different hypothesis; the **state** from which it is solved changes.
 
+## Public API
+
+Full script: `examples/irrigation_bucket/irrigation_bucket.py`.
+
+```python
+import eco_opt
+from eco_opt import Namespace
+
+
+def dry_model(t, x, u):
+    S, irr = x[0], u[0]
+    dS = irr - et(t) - K_DRAIN * S
+    y = Namespace(S=S, u=irr)
+    return dS, y
+
+
+sys = eco_opt.System(states=1, controls=1, model=dry_model)
+ocp = eco_opt.Ocp()
+ocp.min([sys.y.u])
+ocp.st(system=sys, constraints=[...])
+sol = ocp.solve()
+```
+
+Closed loop on a rainy process: `ocp.closed_loop` in
+`examples/irrigation_bucket/open_vs_closed.py`.
+
 ## Run and tests
 
 ```bash
 cd examples/irrigation_bucket
 python irrigation_bucket.py
+python plot_irrigation_bucket.py
 python open_vs_closed.py
 python -m pytest ../../tests/test_irrigation_bucket.py -q
 ```

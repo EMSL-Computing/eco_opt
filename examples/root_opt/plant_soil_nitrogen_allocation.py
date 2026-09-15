@@ -32,7 +32,7 @@ sanity of all 9 states, and (c) a regression-tracked objective value.
 import casadi as cs
 
 import eco_opt
-from eco_opt.system import Namespace
+from eco_opt import Namespace
 
 # ---------------------------------------------------------------------------
 # Parameters ("base" scenario)
@@ -151,7 +151,7 @@ def plant_soil_microbe_nested(t, state, u, params=PARAMS):
     dmicN = exu_uptake / p["CNE"] + SOM_uptake / CNSOM - micro_turnover / CNM - phiN
     dInorgN = phiN - root_N_uptake - Nleaching
 
-    dx = cs.vertcat(dleafC, drootC, dexuC, dSOMC, dmicC, drootN, dSOMN, dmicN, dInorgN)
+    dx = [dleafC, drootC, dexuC, dSOMC, dmicC, drootN, dSOMN, dmicN, dInorgN]
 
     y = Namespace(
         leafC=fCL, rootC=fCR, exuC=fCE, SOMC=fSOMC, micC=fCM,

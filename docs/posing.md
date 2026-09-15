@@ -17,7 +17,14 @@ not choose the hypothesis.
 | Diagnostic | — | `sys.y` | Named signal for \(J\) or a constraint, not extra dynamics |
 
 `Namespace` holds diagnostics (`sys.y.rocket.height`). Nesting is
-allowed. Import it from `eco_opt`.
+allowed. Import it from `eco_opt`. It does **not** replace CasADi
+([CasADi expressions](casadi-expressions.md)):
+`+`, `-`, `*`, `/` on states work without `import casadi`; `exp`,
+`sin`, `sign`, and interpolants do not. A vector \(\dot{\mathbf{x}}\)
+may be a list of expressions; `System` stacks it. Import `casadi as cs`
+only when the right-hand side needs those functions (Goddard:
+`cs.exp`, `cs.sign`). A one-state microbial model typically needs only
+`eco_opt`.
 
 The keyword `plant=` on `closed_loop` is the **simulated process
 model** (control-theory name). It is not vegetation.
@@ -46,19 +53,18 @@ and whether \(T\) is fixed: [Constraints and time](constraints-and-time.md).
 
 ## Running cost vs terminal cost
 
-A **list** of expressions is a running (Lagrange) cost, integrated
-from \(t_0\) to \(T\):
+Classify **per term**. An entry that is not wrapped in `t_f(...)` is
+a running (Lagrange) cost, integrated from \(t_0\) to \(T\). A
+`t_f(...)` term is a terminal (Mayer) cost, the value at \(T\). A
+list may mix both (greenhouse: harvest at \(T\) minus heating).
+`max` / `min` replace the whole criterion, so mixed \(J\) is one list.
 
 ```python
-ocp.max([growth])          # maximise ∫ G dt
-ocp.min([irrigation])      # minimise ∫ u dt
-```
-
-A `t_f(...)` term is a terminal (Mayer) cost, the value at \(T\):
-
-```python
-ocp.max(eco_opt.t_f(rocket.height))   # maximise h(T)
-ocp.max(eco_opt.t_f(seed))            # maximise x₂(T)
+ocp.max([growth])                        # maximise ∫ G dt
+ocp.min([irrigation])                    # minimise ∫ u dt
+ocp.max(eco_opt.t_f(rocket.height))      # maximise h(T)
+ocp.max(eco_opt.t_f(seed))               # maximise x₂(T)
+ocp.min([eco_opt.t_f(-P5 * crop), P4 * heat])  # Mayer + Lagrange
 ```
 
 Free horizon: bound `t_f(sys.t)` from below (and optionally above)
@@ -85,12 +91,33 @@ result.
 
 `horizon="shrinking"` shortens the remaining window (the usual
 seasonal plan). `horizon="receding"` keeps a rolling prediction
-window. See [irrigation](examples/irrigation_bucket.md),
+window. \(T\) must be pinned (`(T, "==", t_f(sys.t))`). Signature:
+[API](api.md#closed_loop).
+
+```python
+T, dt = 14.0, 1.0
+sol = ocp.solve(control_intervals=14, polynomial_degree=3, tf_guess=T)
+cl = ocp.closed_loop(
+    x0=sol.x[0],
+    dt=dt,
+    t_final=T,
+    horizon="shrinking",
+)
+# receding (rolling look-ahead):
+# cl = ocp.closed_loop(
+#     x0=sol.x[0], dt=dt, t_final=T,
+#     horizon="receding", prediction_horizon=4.0,
+# )
+# unforecast process: plant=other_sys  (same nx, nu)
+```
+
+Worked scripts: [irrigation](examples/irrigation_bucket.md),
 [microbial growth](examples/microbial_growth.md), and
 [lignin](examples/opt_lignin.md).
 
 Failed solves: [Guesses, mesh, scaling](guesses-mesh-scaling.md),
-then [Troubleshooting](troubleshooting.md).
+then [Troubleshooting](troubleshooting.md). Bound and parameter
+sweeps: [Build and optimize](build-optimize.md).
 
 ## Further reading
 

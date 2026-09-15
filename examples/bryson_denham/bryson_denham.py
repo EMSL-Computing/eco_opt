@@ -2,7 +2,7 @@
 
 Bryson & Ho, Applied Optimal Control, 1975. Exercises:
 * a Lagrange (running-cost) objective term,
-* a fully-fixed final time (t_f(time) == 1, i.e. lb=ub=1),
+* a fully-fixed horizon (t_0(time) == 0 and t_f(time) == 1),
 * a single-sided path constraint (position <= 1/9, no lower bound).
 
 Reference / analytic solution
@@ -16,18 +16,15 @@ discretization, see tomopt.com/docs/propt/tomlab_propt018.php). We use
 J* = 4.0 as the reference value with a documented tolerance.
 """
 
-import casadi as cs
-
 import eco_opt
-from eco_opt.system import Namespace
+from eco_opt import Namespace
 
 
 def trolley_model(t, x, u):
     position, speed = x[0], x[1]
     acceleration = u[0]
-    dx = cs.vertcat(speed, acceleration)
     y = Namespace(position=position, speed=speed, acceleration=acceleration)
-    return dx, y
+    return [speed, acceleration], y
 
 
 def build_ocp():
@@ -40,6 +37,7 @@ def build_ocp():
     ocp.st(
         system=sys,
         constraints=[
+            (0, "==", eco_opt.t_0(time)),
             (0, "==", eco_opt.t_0(trolley.position)),
             (1, "==", eco_opt.t_0(trolley.speed)),
             (1, "==", eco_opt.t_f(time)),

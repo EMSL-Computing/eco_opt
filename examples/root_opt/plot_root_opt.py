@@ -28,7 +28,7 @@ def run_scenarios(control_intervals=50, polynomial_degree=3):
 
     # low mineral N
     state_low_n = copy.deepcopy(m.STATE_INIT)
-    state_low_n["inorgN"] = 7.5
+    state_low_n["inorgN"] = 10.0
     results["low min. N"] = m.solve(
         state_init=state_low_n, control_intervals=control_intervals, polynomial_degree=polynomial_degree
     )

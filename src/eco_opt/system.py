@@ -8,10 +8,9 @@ dynamics ``dx`` and a nested namespace of named signals ``y``, e.g.::
         v, h, m = x[0], x[1], x[2]
         F = u[0]
         ...
-        dx = cs.vertcat(dv, dh, dm)
         y = Namespace()
         y.rocket = Namespace(velocity=v, height=h, mass=m, fuelMassFlow=F)
-        return dx, y
+        return [dv, dh, dm], y
 
     sys = System(states=3, controls=1, model=goddard_model)
 """
@@ -23,6 +22,21 @@ from typing import Callable, Optional
 import casadi as cs
 
 __all__ = ["System", "Namespace"]
+
+
+def _as_column(expr, nrow: int, label: str):
+    """MX column with ``nrow`` rows. A list/tuple of that length is stacked.
+
+    ``Namespace`` does not do this: it only names signals. Stacking ``dx``
+    (or a CasADi call such as ``cs.exp``) is separate.
+    """
+    if isinstance(expr, (list, tuple)):
+        if len(expr) != nrow:
+            raise ValueError(f"{label} has {len(expr)} entries; System has {nrow}")
+        if nrow == 0:
+            return cs.MX(0, 1)
+        expr = cs.vertcat(*expr)
+    return expr
 
 
 class Namespace:
@@ -50,11 +64,13 @@ class System:
         Dimensions of each variable class (default 0 for algebraics/parameters).
     model : callable(t, x, u, z=None, p=None) -> (dx, y) or (dx, dz, y)
         User dynamics callback. Must return the state derivative ``dx`` (a
-        CasADi column vector matching ``states``), optionally the algebraic
-        residual ``dz``/``alg`` when ``algebraics > 0``, and a :class:`Namespace`
-        tree ``y`` of named signals built from symbolic state/control/etc.
-        expressions (used for constraint/objective authoring and for
-        retrieving named trajectories from the solution).
+        CasADi column, or a list/tuple of ``states`` expressions), optionally
+        the algebraic residual ``dz`` when ``algebraics > 0``, and a
+        :class:`Namespace` tree ``y`` of named signals (used for
+        constraint/objective authoring and named trajectories). ``y`` is
+        names only; CasADi is still required for ``exp``, ``sin``, ``sign``,
+        and interpolants. Return ``dx`` as a list or tuple of length
+        ``states`` (or a scalar when ``states`` is 1).
     """
 
     def __init__(
@@ -121,7 +137,9 @@ class System:
                 dx = result
                 y = Namespace()
                 self.dz = None
-        self.dx = dx
+        self.dx = _as_column(dx, self.nx, "dx")
+        if self.nz:
+            self.dz = _as_column(self.dz, self.nz, "dz")
         self.y = y
 
     # -- convenience accessors -------------------------------------------------

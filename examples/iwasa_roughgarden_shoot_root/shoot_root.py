@@ -159,9 +159,8 @@ def shoot_root_model(t, x, u, alpha=ALPHA, beta=BETA, eps=LIEBIG_EPS):
     u_S, u_R = u[0], u[1]
     G = liebig_G(S, R, alpha=alpha, beta=beta, eps=eps)
     u_F = 1.0 - u_S - u_R
-    dx = cs.vertcat(u_S * G, u_R * G, u_F * G)
     y = Namespace(S=S, R=R, F=F, u_S=u_S, u_R=u_R, u_F=u_F, G=G)
-    return dx, y
+    return [u_S * G, u_R * G, u_F * G], y
 
 
 def build_ocp(

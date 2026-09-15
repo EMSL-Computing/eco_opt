@@ -41,11 +41,31 @@ A cumulative C, N, water, or management budget is the same object: an
 integral constraint, implemented as a terminal value of an extra
 state. It is not a path bound on \(u(t)\) at each instant.
 
+## Public API
+
+No `Namespace`: the model returns bare `dx` (`examples/iso_constraint/iso_constraint.py`).
+
+```python
+import casadi as cs
+import eco_opt
+
+
+def iso_model(t, x, u):
+    return [-cs.sin(x[0]) + u[0], u[0] ** 2]
+
+
+sys = eco_opt.System(states=2, controls=1, model=iso_model)
+ocp = eco_opt.Ocp()
+ocp.min([sys.x[0]])
+ocp.st(system=sys, constraints=[...])
+```
+
 ## Run and tests
 
 ```bash
 cd examples/iso_constraint
 python iso_constraint.py
+python plot_iso_constraint.py
 python -m pytest ../../tests/test_iso_constraint.py -q
 ```
 

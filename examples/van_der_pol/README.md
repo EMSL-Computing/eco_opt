@@ -175,6 +175,7 @@ Public API: `eco_opt.System`, `eco_opt.Ocp`, `eco_opt.t_0`,
 ## 8. Running
 
 ```bash
+cd examples/van_der_pol
 python van_der_pol.py
 python plot_van_der_pol.py
 python -m pytest ../../tests/test_van_der_pol.py -q

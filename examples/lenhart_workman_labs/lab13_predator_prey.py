@@ -22,7 +22,7 @@ def _model(d1, d2):
         dN1 = (1.0 - N2) * N1 - d1 * N1 * ctrl
         dN2 = (N1 - 1.0) * N2 - d2 * N2 * ctrl
         dz = ctrl
-        return cs.vertcat(dN1, dN2, dz), Namespace(N1=N1, N2=N2, z=z, u=ctrl)
+        return [dN1, dN2, dz], Namespace(N1=N1, N2=N2, z=z, u=ctrl)
 
     return f
 

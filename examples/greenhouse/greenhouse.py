@@ -61,9 +61,8 @@ def make_model(I_fun, T_fun):
         heat = u[0]
         I = I_fun(t)
         T_out = T_fun(t)
-        dx = cs.vertcat(P1 * I * temp, P2 * (T_out - temp) + P3 * heat)
         y = Namespace(crop=crop, temp=temp, heat=heat, light=I, T_out=T_out)
-        return dx, y
+        return [P1 * I * temp, P2 * (T_out - temp) + P3 * heat], y
 
     return greenhouse_model
 

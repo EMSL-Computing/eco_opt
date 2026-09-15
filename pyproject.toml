@@ -46,7 +46,8 @@ Repository = "https://github.com/ArjunChakrawal/eco_opt"
 Issues = "https://github.com/ArjunChakrawal/eco_opt/issues"
 
 [project.optional-dependencies]
-test = ["pytest>=7.0"]
+examples = ["matplotlib>=3.4", "scipy>=1.7"]
+test = ["pytest>=7.0", "eco_opt[examples]"]
 docs = ["mkdocs>=1.5,<2", "mkdocs-material>=9", "pymdown-extensions>=10"]
 
 [tool.setuptools.packages.find]

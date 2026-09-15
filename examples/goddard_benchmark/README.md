@@ -17,6 +17,7 @@ trajectory in `work/goddard_benchmark/yop_goddard.mat`.
 ## Running
 
 ```bash
+cd examples/goddard_benchmark
 python goddard_benchmark.py
 python plot_goddard_benchmark.py
 python -m pytest ../../tests/test_goddard_benchmark.py -q

@@ -31,11 +31,38 @@ The first named calculus-of-variations problem is still the cleanest
 free-horizon nonlinear-kinematics test. It is not an ecological model;
 it gates free \(T\) on a curved state manifold.
 
+## Public API
+
+Full script: `examples/brachistochrone/brachistochrone.py`.
+
+```python
+import casadi as cs
+import eco_opt
+from eco_opt import Namespace
+
+
+def brachistochrone_model(t, x, u, g=1.0):
+    xpos, ypos, speed, theta = x[0], x[1], x[2], u[0]
+    y = Namespace(x=xpos, y=ypos, v=speed, theta=theta)
+    return [
+        speed * cs.sin(theta),
+        speed * cs.cos(theta),
+        g * cs.cos(theta),
+    ], y
+
+
+sys = eco_opt.System(states=3, controls=1, model=brachistochrone_model)
+ocp = eco_opt.Ocp()
+ocp.min(eco_opt.t_f(sys.t))
+ocp.st(system=sys, constraints=[...])
+```
+
 ## Run and tests
 
 ```bash
 cd examples/brachistochrone
 python brachistochrone.py
+python plot_brachistochrone.py
 python -m pytest ../../tests/test_brachistochrone.py -q
 ```
 

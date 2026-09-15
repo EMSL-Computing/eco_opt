@@ -45,23 +45,10 @@ applies; `tf_guess` may be set near the coarse \(T^*\).
 
 ## Sweeps on a frozen mesh
 
-When only **numeric** bounds or pinned parameters change, the
-collocation graph can be reused:
-
-```python
-ocp.build(control_intervals=40, tf_guess=120.0, initial_guess=guess)
-sol_a = ocp.optimize()
-ocp.set_constraints([(new_p, "==", sys.p[0])])
-sol_b = ocp.optimize()   # warm-starts from sol_a
-```
-
-`set_constraints` retunes bounds already declared in `st`. A new path
-**expression** requires `st` and `build` again. After the first
-successful `optimize`, the next call reuses the previous primal as
-\(x_0\) (`warm_start=True`).
-
-`build` / `optimize` applies to bound and parameter changes on a
-fixed transcription, not to a change of \(f\).
+When only **numeric** bounds or pinned parameters change, reuse the
+collocation graph with `build` / `set_constraints` / `optimize`.
+That sequence is [Build and optimize](build-optimize.md). A new path
+**expression** or a change of \(f\) requires `st` and `build` again.
 
 ## Scaling
 

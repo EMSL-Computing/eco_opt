@@ -29,7 +29,7 @@ import math
 import casadi as cs
 
 import eco_opt
-from eco_opt.system import Namespace
+from eco_opt import Namespace
 
 X0 = 10.0
 
@@ -37,9 +37,8 @@ X0 = 10.0
 def trolley_model(t, x, u):
     position, speed = x[0], x[1]
     acceleration = u[0]
-    dx = cs.vertcat(speed, acceleration)
     y = Namespace(position=position, speed=speed, acceleration=acceleration)
-    return dx, y
+    return [speed, acceleration], y
 
 
 def build_ocp(x0=X0):

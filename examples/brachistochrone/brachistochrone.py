@@ -54,9 +54,8 @@ def brachistochrone_model(t, x, u, g=G):
     theta = u[0]
     s = cs.sin(theta)
     c = cs.cos(theta)
-    dx = cs.vertcat(speed * s, speed * c, g * c)
     y = Namespace(x=xpos, y=ypos, v=speed, theta=theta)
-    return dx, y
+    return [speed * s, speed * c, g * c], y
 
 
 def build_ocp(xf=X_F, yf=Y_F, g=G):

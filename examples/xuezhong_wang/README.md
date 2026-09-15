@@ -22,8 +22,9 @@ Trivial optimum: `u*(t)=0`, `J*=0`.
 ## Running
 
 ```bash
+cd examples/xuezhong_wang
 python bryson_denham_fixed_tf.py
 python double_integrator_nonneg_control.py
 python plot_xuezhong_wang.py
-pytest ../../tests/test_xuezhong_wang.py -q
+python -m pytest ../../tests/test_xuezhong_wang.py -q
 ```

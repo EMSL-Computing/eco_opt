@@ -1,19 +1,18 @@
 """Build once, retune bounds/parameters, re-optimize (no new transcription)."""
-import casadi as cs
 import numpy as np
 import pytest
 
 import eco_opt
-from eco_opt.system import Namespace
+from eco_opt.constraints import classify_constraint
+from eco_opt import Namespace
 
 
 def _energy_ocp(x_final=1.0):
     def model(t, x, u):
         p, v = x[0], x[1]
         a = u[0]
-        dx = cs.vertcat(v, a)
         y = Namespace(position=p, velocity=v, accel=a)
-        return dx, y
+        return [v, a], y
 
     sys = eco_opt.System(states=2, controls=1, model=model, name="di")
     y = sys.y
@@ -65,9 +64,8 @@ def test_set_constraints_retunes_terminal_without_rebuild():
 
 def test_path_box_retune_bryson_style():
     def model(t, x, u):
-        dx = cs.vertcat(x[1], u[0])
         y = Namespace(position=x[0], speed=x[1], acceleration=u[0])
-        return dx, y
+        return [x[1], u[0]], y
 
     sys = eco_opt.System(states=2, controls=1, model=model, name="trolley")
     y = sys.y
@@ -90,10 +88,16 @@ def test_path_box_retune_bryson_style():
     assert abs(sol_loose.objective - 4.0) / 4.0 < 5e-3
 
     ocp.set_constraints([(1.0 / 20.0, ">=", y.position)])
-    sol_tight = ocp.optimize()
+    sol_tight = ocp.optimize(warm_start=False, tf_guess=1.0)
     assert sol_tight.success
     assert sol_tight.x[:, 0].max() <= 1.0 / 20.0 + 2e-3
     assert sol_tight.objective > sol_loose.objective
+
+    ocp.set_constraints([(1.0 / 5.0, ">=", y.position)])
+    sol_loose_again = ocp.optimize(warm_start=False, tf_guess=1.0)
+    assert sol_loose_again.success
+    assert sol_loose_again.x[:, 0].max() <= 1.0 / 5.0 + 2e-3
+    assert sol_loose_again.objective < sol_tight.objective
 
 
 def test_parameter_pin_sweep_reuses_nlp():
@@ -130,6 +134,67 @@ def test_parameter_pin_sweep_reuses_nlp():
     assert abs(sol1.objective - sol2.objective) > 1e-4
 
 
+def test_set_constraints_updates_ocp_constraints_and_survives_rebuild():
+    ocp, sys = _energy_ocp(1.0)
+    ocp.build(control_intervals=12, polynomial_degree=3, tf_guess=1.0)
+    ocp.optimize(warm_start=False, tf_guess=1.0)
+
+    ocp.set_constraints([(2.0, "==", eco_opt.t_f(sys.y.position))])
+
+    finals = [
+        classify_constraint(sys, c)
+        for c in ocp.constraints
+        if classify_constraint(sys, c).kind == "box_final"
+        and classify_constraint(sys, c).slot == ("x", 0)
+    ]
+    assert len(finals) == 1
+    assert finals[0].lb == 2.0 and finals[0].ub == 2.0
+
+    accel = [
+        classify_constraint(sys, c)
+        for c in ocp.constraints
+        if classify_constraint(sys, c).kind == "box"
+        and classify_constraint(sys, c).slot == ("u", 0)
+    ]
+    assert len(accel) == 1
+    assert accel[0].lb == -10.0 and accel[0].ub == 10.0
+
+    ocp.build(control_intervals=20, polynomial_degree=3, tf_guess=1.0)
+    sol = ocp.optimize(warm_start=False, tf_guess=1.0)
+    assert sol.success
+    assert abs(sol.x[-1, 0] - 2.0) < 1e-4
+    assert abs(sol.u).max() <= 10.0 + 1e-6
+
+
+def test_path_bound_survives_rebuild():
+    def model(t, x, u):
+        y = Namespace(position=x[0], speed=x[1], acceleration=u[0])
+        return [x[1], u[0]], y
+
+    sys = eco_opt.System(states=2, controls=1, model=model, name="trolley")
+    y = sys.y
+    ocp = eco_opt.Ocp()
+    ocp.min([0.5 * y.acceleration ** 2])
+    ocp.st(
+        system=sys,
+        constraints=[
+            (0, "==", eco_opt.t_0(y.position)),
+            (1, "==", eco_opt.t_0(y.speed)),
+            (1, "==", eco_opt.t_f(sys.t)),
+            (0, "==", eco_opt.t_f(y.position)),
+            (-1, "==", eco_opt.t_f(y.speed)),
+            (1.0 / 9.0, ">=", y.position),
+        ],
+    )
+    ocp.build(control_intervals=16, polynomial_degree=3, tf_guess=1.0)
+    ocp.optimize(warm_start=False, tf_guess=1.0)
+    ocp.set_constraints([(1.0 / 20.0, ">=", y.position)])
+    ocp.build(control_intervals=24, polynomial_degree=3, tf_guess=1.0)
+    sol = ocp.optimize(warm_start=False, tf_guess=1.0)
+    assert sol.success
+    assert sol.x[:, 0].max() <= 1.0 / 20.0 + 3e-3
+
+
 def test_new_path_expression_requires_rebuild():
     ocp, sys = _energy_ocp(1.0)
     ocp.build(control_intervals=8, polynomial_degree=3, tf_guess=1.0)
@@ -139,7 +204,7 @@ def test_new_path_expression_requires_rebuild():
 
 def test_multiphase_set_constraints_requires_rebuild():
     def model(t, x, u):
-        return cs.vertcat(x[0])
+        return x[0]
 
     sys_a = eco_opt.System(states=1, controls=0, model=model, name="a")
     sys_b = eco_opt.System(states=1, controls=0, model=model, name="b")

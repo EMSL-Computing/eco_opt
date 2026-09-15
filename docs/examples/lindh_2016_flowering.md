@@ -47,11 +47,34 @@ sign of \(\mathrm{d}t_F/\mathrm{d}P\). That sign is a property of
 \(U(V)\). Constrained growth is a hypothesis about production, not an
 extra phenology rule.
 
+## Public API
+
+Full script: `examples/lindh_2016_flowering/optimal_flowering.py`.
+
+```python
+import eco_opt
+from eco_opt import Namespace
+
+
+def model(t, x, u):
+    V, R = x[0], x[1]
+    F = P * U_fn(V)
+    y = Namespace(V=V, R=R, F=F)
+    return [u[0] * F, (1 - u[0]) * F], y
+
+
+sys = eco_opt.System(states=2, controls=1, model=model)
+ocp = eco_opt.Ocp()
+ocp.max([eco_opt.t_f(sys.y.R)])
+ocp.st(system=sys, constraints=[...])
+```
+
 ## Run and tests
 
 ```bash
 cd examples/lindh_2016_flowering
 python optimal_flowering.py
+python plot_figure2.py
 python -m pytest ../../tests/test_lindh_2016_flowering.py -q
 ```
 

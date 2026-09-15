@@ -44,7 +44,7 @@ def goddard_model(t, x, u):
     dv = (F * C_EXH - F_D) / m - g
     dh = v
     dm = -F
-    dx = cs.vertcat(dv, dh, dm)
+    dx = [dv, dh, dm]
     y = Namespace()
     y.rocket = Namespace(velocity=v, height=h, mass=m, fuelMassFlow=F)
     y.drag = Namespace(coefficient=D, force=F_D)

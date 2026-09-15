@@ -20,8 +20,7 @@ def nondiff_model(t, x, u):
     dx1 = x2
     dx2 = -x1 - x2 + u[0] + d
     dx3 = 5 * x1 ** 2 + 2.5 * x2 ** 2 + 0.5 * u[0] ** 2
-    dx = cs.vertcat(dx1, dx2, dx3)
-    return dx  # no `y` signal tree
+    return [dx1, dx2, dx3]  # no `y` signal tree
 
 
 def build_ocp():

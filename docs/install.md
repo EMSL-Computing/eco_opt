@@ -3,12 +3,32 @@
 Requires Python 3.9+, CasADi, and IPOPT (pulled in with CasADi on most
 platforms). The package does not require MATLAB at runtime.
 
-From the package root:
+A wheel or `python -m pip install eco_opt` installs the library only
+(`import eco_opt`). Example scripts, tests, and `work/*.mat` live in
+the **git clone**, not in the wheel.
+
+A virtual environment is cheap (`python -m venv` is seconds). The
+wait is downloading wheels (CasADi, NumPy; extras add matplotlib and
+SciPy). Those wheels do not compile on typical Linux, macOS, or
+Windows. Use a venv so `python` and `pip` are the same interpreter
+(a distro `pip` often is not).
+
+From the repository root:
 
 ```bash
-pip install -e ".[test]"
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+python -m pip install -e ".[test]"
 python -c "import eco_opt; print(eco_opt.__version__, eco_opt.__all__)"
 python -m pytest -q
+```
+
+`[test]` is pytest plus matplotlib and scipy (tests import some
+example plot modules at collection time; Goddard comparison plots
+use `scipy.io`). Plot scripts alone:
+
+```bash
+python -m pip install -e ".[examples]"
 ```
 
 The documentation is on Read the Docs: <https://eco-opt.readthedocs.io/>.

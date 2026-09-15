@@ -42,7 +42,7 @@ def test_low_mineral_n_scenario_reduces_growth():
     consistency with the paper's N-limitation narrative)."""
     sol_base, _ = m.solve()
     state_low_n = dict(m.STATE_INIT)
-    state_low_n["inorgN"] = 7.5
+    state_low_n["inorgN"] = 10.0
     sol_low_n, _ = m.solve(state_init=state_low_n)
 
     assert sol_low_n.success

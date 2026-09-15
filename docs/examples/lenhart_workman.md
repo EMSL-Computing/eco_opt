@@ -46,11 +46,29 @@ Textbook biology OCPs are small enough that a wrong transcription is
 obvious. They are not substitutes for the process-model examples;
 they gate bang–bang, tracking, and free time separately.
 
+## Public API
+
+Example 17.2 returns bare `dx`; 20.4 uses `Namespace`
+(`examples/lenhart_workman/`):
+
+```python
+import eco_opt
+from eco_opt import Namespace
+
+sys = eco_opt.System(states=1, controls=1, model=linear_bangbang_model)
+ocp = eco_opt.Ocp()
+ocp.max([2 * sys.x[0] - 3 * sys.u[0]])
+ocp.st(system=sys, constraints=[...])
+```
+
 ## Run and tests
 
 ```bash
 cd examples/lenhart_workman
 python linear_bangbang_ex17_2.py
+python lq_tracking_ex17_3.py
+python min_time_trolley_ex20_4.py
+python plot_lenhart_workman.py
 python -m pytest ../../tests/test_lenhart_workman.py -q
 ```
 

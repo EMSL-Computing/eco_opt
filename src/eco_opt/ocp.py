@@ -13,7 +13,11 @@ import numpy as np
 import casadi as cs
 
 from .expressions import TimepointExpression
-from .constraints import classify_constraint, ParsedConstraint
+from .constraints import (
+    classify_constraint,
+    merge_constraint_tuples,
+    ParsedConstraint,
+)
 from .collocation import CollocationCoefficients
 from .results import OcpResults, PhaseTrajectory
 from .phase import Phase
@@ -596,16 +600,22 @@ class Ocp:
         return self
 
     def set_constraints(self, constraints):
-        """Replace numeric bounds on constraints already declared in ``st()``.
+        """Retune numeric bounds and store them on ``ocp.constraints``.
 
-        Same tuple syntax as ``st(constraints=...)``. Box bounds on states,
+        Same tuple syntax as ``st(constraints=...)``. Omitted entries keep
+        their last bounds. A later ``build()`` uses this updated list (mesh
+        refine does not restore the original ``st``). Box bounds on states,
         controls, parameters, and time, and path/boundary expressions that
         were in the original problem, can be retuned. Adding a new path
         expression requires ``st()`` + ``build()``.
         """
         if self._compiled is None:
             raise RuntimeError("build() must be called before set_constraints()")
-        self._compiled.set_constraints(list(constraints))
+        updates = list(constraints)
+        self._compiled.set_constraints(updates)
+        self.constraints = merge_constraint_tuples(
+            self.system, self.constraints, updates
+        )
         return self
 
     def optimize(

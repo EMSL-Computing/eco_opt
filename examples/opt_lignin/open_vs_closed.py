@@ -33,7 +33,26 @@ IPOPT = {"print_level": 0, "max_iter": 2000, "sb": "yes"}
 def pulse_model(t, x, u, p):
     dx, y = ld.lignin_model(t, x, u, p)
     I = PULSE_I * cs.if_else(cs.logic_and(t >= PULSE_T0, t < PULSE_TF), 1.0, 0.0)
-    return cs.vertcat(dx[0] + I, dx[1]), y
+    return [dx[0] + I, dx[1]], y
+
+
+def growth_rate(CT, Co, vo, p):
+    vh_max, _mo, ro = np.asarray(p, dtype=float).ravel()
+    L = Co / CT
+    Dh = vh_max * np.exp(-((L / ld.A) ** ld.B)) * (CT - Co)
+    Do = vo * Co
+    e = ld.EMAX - ro * vo
+    return e * (Dh + Do)
+
+
+def cumulative_G(time, x, u, p):
+    """Realized ∫G dt on the applied piecewise-constant \(v_O\)."""
+    t = np.asarray(time, dtype=float)
+    vo = np.asarray(u, dtype=float).reshape(-1)
+    acc = 0.0
+    for k in range(vo.size):
+        acc += growth_rate(x[k, 0], x[k, 1], vo[k], p) * (t[k + 1] - t[k])
+    return float(acc)
 
 
 def closed_loop(ocp, sys, x0, plant=None, p=None):
@@ -72,9 +91,13 @@ def main():
     cl_same = closed_loop(ocp, sys, x0, plant=None, p=p)
     cl_pulse = closed_loop(ocp, sys, x0, plant=plant, p=p)
 
+    J_ol = float(sol.objective)
+    J_replay = cumulative_G(replay.time, replay.x, replay.u, p)
+    J_cl = cumulative_G(cl_same.time, cl_same.x, cl_same.u, p)
     print("Lignin  T=2000 d  open vs closed")
-    print(f"open-loop NLP          J={sol.objective:.4f}  CT(T)={sol.x[-1,0]:.4f}")
-    print(f"closed loop, same f    J={cl_same.objectives[-1] if cl_same.objectives is not None else float('nan')}")
+    print(f"open-loop NLP          J=∫G = {J_ol:.4f}  CT(T)={sol.x[-1,0]:.4f}")
+    print(f"replay u* on f         J=∫G = {J_replay:.4f}  CT(T)={replay.x[-1,0]:.4f}")
+    print(f"closed loop, same f    J=∫G = {J_cl:.4f}  CT(T)={cl_same.x[-1,0]:.4f}")
     print(f"tape on extra-C pulse  CT(T)={ol_pulse.x[-1,0]:.4f}")
     print(f"closed loop on pulse   CT(T)={cl_pulse.x[-1,0]:.4f}")
 

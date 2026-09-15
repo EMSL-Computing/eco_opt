@@ -43,7 +43,7 @@ def _model(s, m1, m2, m3, r, Tmax, k, Npart):
         )
         dTi = ctrl * k * V * T - m2 * Ti
         dV = Npart * m2 * Ti - m3 * V
-        return cs.vertcat(dT, dTi, dV), Namespace(T=T, Ti=Ti, V=V, u=ctrl)
+        return [dT, dTi, dV], Namespace(T=T, Ti=Ti, V=V, u=ctrl)
 
     return f
 

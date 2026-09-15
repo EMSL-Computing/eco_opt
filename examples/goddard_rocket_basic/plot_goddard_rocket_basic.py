@@ -26,8 +26,9 @@ def plot_goddard_rocket_basic():
     assert sol.success, sol.return_status
     err = abs(sol.objective - grb.REFERENCE_HEIGHT) / grb.REFERENCE_HEIGHT
     note = (
-        f"h(T)={sol.objective:.6f} vs reference {grb.REFERENCE_HEIGHT} "
-        f"(rel err {err:.2e}); T={sol.tf:.6f} vs reference {grb.REFERENCE_TF}"
+        f"h(T)={sol.objective:.6f} vs literature BVP height {grb.REFERENCE_HEIGHT} "
+        f"(rel err {err:.2e}; few-percent drag-law gap); "
+        f"T={sol.tf:.6f} (this transcription, not BVP {grb.LITERATURE_BVP_TF})"
     )
     labels = ["v (speed)", "h (height)", "m (mass)"]
 

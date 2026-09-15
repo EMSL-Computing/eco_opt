@@ -15,7 +15,6 @@ Defaults T=5, X10=1  ⇒  t_s*=4,  yield=exp(4).
 
 import math
 
-import casadi as cs
 import numpy as np
 
 import eco_opt
@@ -29,16 +28,14 @@ ANALYTIC_YIELD = X10 * math.exp(T_SEASON - 1.0)
 
 def vegetative_model(t, x, u):
     veg, repro = x[0], x[1]
-    dx = cs.vertcat(veg, 0.0 * repro)
     y = Namespace(veg=veg, repro=repro)
-    return dx, y
+    return [veg, 0.0 * repro], y
 
 
 def reproductive_model(t, x, u):
     veg, repro = x[0], x[1]
-    dx = cs.vertcat(0.0 * veg, veg)
     y = Namespace(veg=veg, repro=repro)
-    return dx, y
+    return [0.0 * veg, veg], y
 
 
 def build_ocp(T=T_SEASON, x10=X10):

@@ -86,6 +86,31 @@ state is that modelling choice, made visible to collocation. The linear
 pair (ODE vs DAE) is how you **trust** the implementation: same
 hypothesis, two writings, same \(u^*(t)\).
 
+## Public API
+
+ODE vs DAE of the same hypothesis (`examples/algebraic_qss/linear_qss.py`):
+
+```python
+import eco_opt
+from eco_opt import Namespace
+
+
+def ode_model(t, x, u):
+    C, uptake = x[0], u[0]
+    M = biomass(C, uptake)
+    return -uptake, Namespace(C=C, M=M, u=uptake)
+
+
+def dae_model(t, x, u, z):
+    C, uptake, M = x[0], u[0], z[0]
+    g = growth(C, uptake) - D * M
+    return -uptake, g, Namespace(C=C, M=M, u=uptake)
+
+
+ode = eco_opt.System(states=1, controls=1, model=ode_model)
+dae = eco_opt.System(states=1, controls=1, algebraics=1, model=dae_model)
+```
+
 ## Run and tests
 
 ```bash

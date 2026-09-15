@@ -31,9 +31,11 @@ the ceiling.
 ## Run
 
 ```bash
+cd examples/irrigation_bucket
 python irrigation_bucket.py
 python plot_irrigation_bucket.py
 python open_vs_closed.py
+python -m pytest ../../tests/test_irrigation_bucket.py -q
 ```
 
 Figures: `figs/irrigation_bucket.png`, `figs/open_vs_closed.png`.

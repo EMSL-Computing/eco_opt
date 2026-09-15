@@ -62,9 +62,10 @@ flower later -- the paper's namesake "flip".
 ## Running
 
 ```bash
+cd examples/lindh_2016_flowering
 python optimal_flowering.py    # OCP solves + bang-bang check for P=2, all 3 models
 python plot_figure2.py         # writes figs/figure2_reproduction.png
-pytest ../../tests/test_lindh_2016_flowering.py -q
+python -m pytest ../../tests/test_lindh_2016_flowering.py -q
 ```
 
 ## Parameters

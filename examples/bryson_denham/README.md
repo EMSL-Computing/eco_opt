@@ -20,12 +20,13 @@ ocp, sys = build_ocp()
 ocp.build(control_intervals=20, polynomial_degree=5, tf_guess=1.0)
 sol_a = ocp.optimize(warm_start=False, tf_guess=1.0)
 ocp.set_constraints([(1.0 / 5.0, ">=", sys.y.position)])
-sol_b = ocp.optimize()
+sol_b = ocp.optimize(warm_start=False, tf_guess=1.0)
 ```
 
 ## Running
 
 ```bash
+cd examples/bryson_denham
 python bryson_denham.py
 python plot_bryson_denham.py
 python -m pytest ../../tests/test_bryson_denham.py -q

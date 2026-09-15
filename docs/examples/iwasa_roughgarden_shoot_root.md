@@ -48,11 +48,27 @@ extra state. The hypothesis “maximise terminal fruit with Liebig
 production” forces a balanced-growth phase that Cohen’s one-compartment
 plant never needs.
 
+## Public API
+
+Full script: `examples/iwasa_roughgarden_shoot_root/shoot_root.py`.
+
+```python
+import eco_opt
+from eco_opt import Namespace
+
+sys = eco_opt.System(states=3, controls=2, model=shoot_root_model)
+ocp = eco_opt.Ocp()
+ocp.max(eco_opt.t_f(sys.y.F))
+ocp.st(system=sys, constraints=[...])
+sol = ocp.solve()
+```
+
 ## Run and tests
 
 ```bash
 cd examples/iwasa_roughgarden_shoot_root
 python shoot_root.py
+python plot_shoot_root.py
 python -m pytest ../../tests/test_iwasa_roughgarden_shoot_root.py -q
 ```
 

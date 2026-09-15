@@ -22,11 +22,10 @@ def test_import_public_api():
 
 
 def test_system_construction():
-    import casadi as cs
-    from eco_opt.system import Namespace
+    from eco_opt import Namespace
 
     def model(t, x, u):
-        dx = cs.vertcat(-x[0] + u[0])
+        dx = -x[0] + u[0]
         y = Namespace(pos=x[0], ctrl=u[0])
         return dx, y
 
@@ -34,6 +33,27 @@ def test_system_construction():
     assert sys.nx == 1
     assert sys.nu == 1
     assert sys.y.pos is not None
+
+
+def test_model_may_return_dx_as_list():
+    from eco_opt import Namespace
+
+    def model(t, x, u):
+        y = Namespace(position=x[0], speed=x[1], accel=u[0])
+        return [x[1], u[0]], y
+
+    sys = eco_opt.System(states=2, controls=1, model=model, name="list_dx")
+    assert sys.dx.shape == (2, 1)
+
+
+def test_dx_list_length_must_match_states():
+    with pytest.raises(ValueError, match="dx"):
+        eco_opt.System(
+            states=2,
+            controls=1,
+            model=lambda t, x, u: [x[0]],
+            name="bad_dx",
+        )
 
 
 def test_timepoint_expressions():
@@ -53,15 +73,13 @@ def test_small_solve_double_integrator():
     Exercises System/Ocp/solve/OcpResults end to end on a tiny problem
     (not Goddard) to validate general applicability of the transcription.
     """
-    import casadi as cs
-    from eco_opt.system import Namespace
+    from eco_opt import Namespace
 
     def model(t, x, u):
         p, v = x[0], x[1]
         a = u[0]
-        dx = cs.vertcat(v, a)
         y = Namespace(position=p, velocity=v, accel=a)
-        return dx, y
+        return [v, a], y
 
     sys = eco_opt.System(states=2, controls=1, model=model, name="di")
     y = sys.y
@@ -86,3 +104,32 @@ def test_small_solve_double_integrator():
     assert abs(sol.tf - 2.0) < 1e-6
     assert abs(sol.x[-1, 0] - 1.0) < 1e-4
     assert abs(sol.x[-1, 1] - 0.0) < 1e-4
+
+
+_INTERNAL_IMPORTS = (
+    "from eco_opt.system import",
+    "from eco_opt.ocp import",
+    "from eco_opt.phase import",
+    "from eco_opt.results import",
+    "from eco_opt.simulate import",
+    "from eco_opt.expressions import",
+    "from eco_opt.collocation import",
+    "from eco_opt.constraints import",
+)
+
+
+def test_example_scripts_use_public_imports():
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1] / "examples"
+    offenders = []
+    for path in sorted(root.rglob("*.py")):
+        text = path.read_text(encoding="utf-8")
+        for needle in _INTERNAL_IMPORTS:
+            if needle in text:
+                rel = path.relative_to(root.parent)
+                offenders.append(f"{rel}: {needle}")
+    assert not offenders, (
+        "example scripts must import from eco_opt, not internals:\n"
+        + "\n".join(offenders)
+    )

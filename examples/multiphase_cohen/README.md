@@ -99,6 +99,7 @@ Results:
 ## 5. Running
 
 ```bash
+cd examples/multiphase_cohen
 python cohen_two_phase.py
 python plot_cohen_two_phase.py
 python -m pytest ../../tests/test_multiphase.py -q

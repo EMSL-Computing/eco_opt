@@ -16,6 +16,7 @@ regression-tracked.
 ## Running
 
 ```bash
+cd examples/iso_constraint
 python iso_constraint.py
 python plot_iso_constraint.py
 python -m pytest ../../tests/test_iso_constraint.py -q

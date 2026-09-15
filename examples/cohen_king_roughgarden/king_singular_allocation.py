@@ -104,9 +104,8 @@ ANALYTIC_TERMINAL_RATIO = Y_JUNCTION + Z_JUNCTION  # x2(T)/x1(T)
 def plant_model(t, x, u):
     veg, repro = x[0], x[1]
     alloc = u[0]
-    dx = cs.vertcat(alloc * veg, (1.0 - alloc) * veg)
     y = Namespace(veg=veg, repro=repro, alloc=alloc)
-    return dx, y
+    return [alloc * veg, (1.0 - alloc) * veg], y
 
 
 def build_ocp(T=T_SEASON, x10=None, x20=X20):

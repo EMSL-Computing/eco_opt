@@ -49,11 +49,29 @@ If the biology is “first grow, then reproduce,” that structure can sit
 in the **phase graph** rather than in a relaxed \(u(t)\). The optimum
 is the same; the decision variable is the switch instant.
 
+## Public API
+
+Full script: `examples/multiphase_cohen/cohen_two_phase.py`.
+
+```python
+import eco_opt
+from eco_opt import Namespace, Phase
+
+sys_v = eco_opt.System(states=2, controls=0, model=vegetative_model)
+sys_r = eco_opt.System(states=2, controls=0, model=reproductive_model)
+p1 = Phase(sys_v, constraints=[...], name="vegetative")
+p2 = Phase(sys_r, constraints=[...], name="reproductive")
+ocp = eco_opt.Ocp()
+ocp.max(eco_opt.t_f(sys_r.y.repro))
+ocp.st(phases=[p1, p2], continuity=True)
+```
+
 ## Run and tests
 
 ```bash
 cd examples/multiphase_cohen
 python cohen_two_phase.py
+python plot_cohen_two_phase.py
 python -m pytest ../../tests/test_multiphase.py -q
 ```
 

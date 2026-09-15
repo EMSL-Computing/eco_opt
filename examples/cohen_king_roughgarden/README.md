@@ -85,9 +85,8 @@ In `eco_opt` the model is a two-state, one-control `System`:
 def plant_model(t, x, u):
     veg, repro = x[0], x[1]
     alloc = u[0]
-    dx = cs.vertcat(alloc * veg, (1.0 - alloc) * veg)
     y = Namespace(veg=veg, repro=repro, alloc=alloc)
-    return dx, y
+    return [alloc * veg, (1.0 - alloc) * veg], y
 ```
 
 The two examples differ only in the objective and in the initial
@@ -435,6 +434,7 @@ $x_2(T)/x_1(T)\approx 3.3509$.
 From this directory, with the package installed:
 
 ```bash
+cd examples/cohen_king_roughgarden
 python cohen_terminal_yield.py
 python king_singular_allocation.py
 python plot_cohen_king.py

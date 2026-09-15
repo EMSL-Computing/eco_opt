@@ -24,8 +24,10 @@ exudation fraction.
 ## Run
 
 ```bash
+cd examples/root_opt
 python plant_soil_nitrogen_allocation.py
 python plot_root_opt.py
+python open_vs_closed.py
 python reproduce_figures.py
-pytest ../../tests/test_root_opt.py -q
+python -m pytest ../../tests/test_root_opt.py -q
 ```
