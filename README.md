@@ -58,7 +58,7 @@ clone. Full notes: [Install](docs/install.md). HTTPS clone:
 ## Documentation
 
 <https://emsl-computing.github.io/eco_opt/> (GitHub Pages; needs Pages
-enabled on the repository). Local preview:
+enabled, and typically a **public** repository). Local preview:
 
 | Page | Contents |
 |---|---|
