@@ -46,31 +46,35 @@ Hosted on Read the Docs: <https://eco-opt.readthedocs.io/>
 The docs are MkDocs Material. They do not import CasADi; a docs-only
 install is enough to preview pages, math, and example write-ups.
 
-From the package root:
+From the package root, with the same interpreter you use for `eco_opt`:
 
 ```bash
-pip install -e ".[docs]"
-mkdocs serve
+python -m pip install -e ".[docs]"
+python -m mkdocs serve
 ```
 
 Then open http://127.0.0.1:8000 (Ctrl+C to stop). Edits under `docs/`
 reload in the browser.
 
+Use `python -m mkdocs`, not a bare `mkdocs` from the OS package manager.
+A distro `mkdocs` does not ship the Material theme and fails with
+`Unrecognised theme name: 'material'`.
+
 If port 8000 is already in use (`Address already in use` / `Errno 98`),
 bind another port:
 
 ```bash
-mkdocs serve -a 127.0.0.1:8001
+python -m mkdocs serve -a 127.0.0.1:8001
 ```
 
 Open http://127.0.0.1:8001. Any free port works in place of `8001`.
-To preview without a server, use `mkdocs build` below and open
+To preview without a server, use `python -m mkdocs build` below and open
 `site/index.html`.
 
 To write a static copy (same as RTD) without serving:
 
 ```bash
-mkdocs build
+python -m mkdocs build
 ```
 
 Output is `site/` (gitignored). Open `site/index.html` in a browser.
