@@ -64,7 +64,7 @@ Constraints and objectives may use `sys.x[i]` or a named field of
 ## `Namespace`
 
 ```python
-Namespace(Cs=Cs, uptake=uptake, growth=G)
+Namespace(height=h, velocity=v, mass=m)
 ```
 
 Attribute bag. Nesting is allowed (`y.rocket.height`).
@@ -157,8 +157,8 @@ call, `warm_start=True` (the default) uses the previous primal as
 ### Multi-phase
 
 ```python
-p1 = Phase(sys_a, constraints=[...], control_intervals=20, name="veg")
-p2 = Phase(sys_b, constraints=[...], control_intervals=20, name="repro")
+p1 = Phase(sys_a, constraints=[...], control_intervals=20, name="ascent")
+p2 = Phase(sys_b, constraints=[...], control_intervals=20, name="landing")
 ocp.st(phases=[p1, p2], continuity=True)
 sol = ocp.solve(tf_guess=5.0)
 ```

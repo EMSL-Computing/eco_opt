@@ -179,8 +179,8 @@ looser bound \(x\le 1/5\) and a lower cost. Default
 `optimize()` (`warm_start=True`) on this loosening can return
 `Maximum_Iterations_Exceeded`.
 
-The same pattern applies to an N-supply pin (`sys.p[i]`) or a terminal
-pool bound. Changing the ODE is not this pattern: that is `st` and
+The same pattern applies to a parameter pin (`sys.p[i]`) or a terminal
+state bound. Changing the ODE is not this pattern: that is `st` and
 `build` again.
 
 Mesh refinement is also a new `build`. The previous `sol` is not

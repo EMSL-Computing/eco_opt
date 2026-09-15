@@ -6,7 +6,7 @@
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-0D7377)](https://emsl-computing.github.io/eco_opt/)
 
 Process-based ecological ODEs as constrained optimal-control problems.
-The right-hand side is the user’s mass balance; states, controls, and
+The right-hand side is the user’s process model; states, controls, and
 the criterion $J$ are declared; CasADi collocation and IPOPT produce
 $u^*(\cdot)$.
 

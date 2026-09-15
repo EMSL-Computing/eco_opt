@@ -33,15 +33,17 @@ derivatives needs no CasADi import
 ([CasADi expressions](../casadi-expressions.md)). Each page has a short public-API
 skeleton; the full script is under `examples/<name>/`.
 
-A suggested path: [First solve](../first-solve.md) (microbial growth),
+A suggested path: [First solve](../first-solve.md) (one worked script),
 [Posing a problem](../posing.md),
 [Transcription](../transcription.md),
 [Constraints and time](../constraints-and-time.md),
 [Build and optimize](../build-optimize.md),
-then **ecological models**
-`microbial_growth` → `opt_lignin` → `irrigation_bucket` → `root_opt`.
-**Traditional OCP** pages supply a closed form or a transcription
-check. [Troubleshooting](../troubleshooting.md) if the NLP fails.
+then the tables below. `eco_opt` is not only plants and microbes:
+lakes, greenhouse climate, irrigation, harvest, and textbook OCPs
+(rockets, bang–bang, path constraints) sit alongside allocation and
+uptake models. **Traditional OCP** pages supply a closed form or a
+transcription check. [Troubleshooting](../troubleshooting.md) if the
+NLP fails.
 
 Yop-shipped problems are rewritten here and **link** the Yop page in
 References. The wording is not copied from
