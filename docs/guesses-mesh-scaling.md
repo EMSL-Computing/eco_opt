@@ -16,15 +16,15 @@ sol = ocp.solve(
 )
 ```
 
-Useful values already satisfy the boxes (non-negative pools, an
-allocation in \([0,1]\)). The default fill is not a process
+Useful values already satisfy the boxes (non-negative states, a
+control in \([0,1]\)). The default fill is not a process
 trajectory. A zero guess on a quantity that appears in a denominator
 can make the first IPOPT iteration fail.
 
 `initial_guess` is not a time series. `ocp.simulate(sol)` replays a
 **solution**; it does not load an arbitrary simulated \(u(t)\) into
 the collocation NLP. Forward integration of \(f\) with a prescribed
-open-loop \(u\) (constant uptake, zero irrigation) is
+open-loop \(u\) (a constant control, zero irrigation) is
 `eco_opt.simulate(sys, x0, t, u)`, independent of `solve`.
 
 ## Mesh refinement
@@ -33,7 +33,7 @@ A typical first mesh is 20–40 intervals and degree 3. After
 `sol.success` and a plausible \(u(t)\), `control_intervals` may be
 increased (and degree, if the state is poorly resolved). First-solve
 Goddard uses 59 intervals and degree 5 to match an archive; that mesh
-is not required for a nine-state C–N model.
+is not required for a new model.
 
 `"radau"` is often more reliable when \(u^*\) is expected to switch;
 `"legendre"` matches the Goddard archive. See
@@ -52,15 +52,14 @@ That sequence is [Build and optimize](build-optimize.md). A new path
 
 ## Scaling
 
-Automatic scaling is not implemented. If pools differ by many orders
-of magnitude (gC m\(^{-2}\) versus a fraction versus a thin-layer
-microbial biomass), the **model** is rescaled: nondimensional groups,
-or each pool divided by a typical size, so that NLP variables are
-O(1).
+Automatic scaling is not implemented. If states differ by many orders
+of magnitude (a large inventory versus a fraction versus a thin-layer
+biomass), the **model** is rescaled: nondimensional groups, or each
+state divided by a typical size, so that NLP variables are O(1).
 
 There is no `ocp.scale` method. Path residuals in the problem
-statement are likewise O(1) when a mass-balance defect is divided by
-a typical flux.
+statement are likewise O(1) when a defect is divided by a typical
+scale.
 
 Failed solves: [Troubleshooting](troubleshooting.md)
 (`return_status`, print level, restoration).

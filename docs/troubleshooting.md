@@ -89,7 +89,7 @@ sampling interval `dt` is too large or the remaining horizon no
 longer contains the planned terminal time (free \(T\) with a
 shrinking window past burnout). A fixed \(T\) is required for the
 closed-loop study if the open-loop problem had a free horizon; the
-microbial example does that.
+microbial-growth and irrigation examples do that.
 
 ## IPOPT missing
 

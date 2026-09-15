@@ -18,11 +18,11 @@ k = 0.3
 
 
 def model(t, x, u):
-    C, uptake = x[0], u[0]
-    # C is MX: cs.exp, not np.exp or math.exp
-    loss = k * C * cs.exp(-C)
-    y = Namespace(C=C, uptake=uptake, loss=loss)
-    return -uptake - loss, y
+    stock, harvest = x[0], u[0]
+    # stock is MX: cs.exp, not np.exp or math.exp
+    loss = k * stock * cs.exp(-stock)
+    y = Namespace(stock=stock, harvest=harvest, loss=loss)
+    return -harvest - loss, y
 ```
 
 Python `+`, `-`, `*`, `/`, `**` on `MX` mixed with Python floats are
@@ -39,7 +39,7 @@ A Python `if` on a **numeric** constant (a float you pass in, not
 ([Transcription](transcription.md#what-may-appear-in-f)).
 
 Import `casadi as cs` only when the right-hand side needs a function
-below. Many one-pool models need only `+`, `-`, `*`, `/`.
+below. Many one-state models need only `+`, `-`, `*`, `/`.
 
 ## Arithmetic
 
@@ -121,8 +121,8 @@ A switch that depends on \(t\), \(\mathbf{x}\), or \(\mathbf{u}\) is
 | \(\pm\infty\) in **tuples** | `float("inf")` (or `cs.inf`) |
 
 ```python
-alive = cs.if_else(t >= t_frost, 0.0, 1.0)
-uptake = alive * vmax * x[0] / (km + x[0])
+alive = cs.if_else(t >= t_cut, 0.0, 1.0)
+rate = alive * vmax * x[0] / (km + x[0])
 
 on = cs.logic_and(t >= t0, t < tf)
 I = I0 * cs.if_else(on, 1.0, 0.0)
@@ -148,7 +148,7 @@ inside the model.
 
 ## Linear algebra (rarely needed)
 
-Mass-balance ODEs are almost always scalar or a short list of
+Process ODEs are almost always scalar or a short list of
 scalars. If a term is genuinely a matrix expression, CasADi also
 provides `cs.mtimes`, `cs.inv`, `cs.solve`, `cs.dot`, `cs.norm_2`,
 `cs.sum1`, `cs.transpose`. Prefer a Python list of scalar rates

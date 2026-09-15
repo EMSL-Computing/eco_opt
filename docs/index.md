@@ -3,10 +3,10 @@
 `eco_opt` is a Python package for turning a process-based ODE into a
 constrained optimal-control problem and solving it by direct collocation.
 
-The mass-balance right-hand side is supplied by the user. Fluxes that
-may vary in time, the performance criterion, and physiological limits
-are declared. The package transcribes that statement with CasADi and
-solves it with IPOPT.
+The process right-hand side is supplied by the user. Controls
+(quantities the modeller lets vary in time to improve \(J\)), the
+performance criterion, and constraints are declared. The package
+transcribes that statement with CasADi and solves it with IPOPT.
 
 The modelling workflow follows [Yop](https://www.yoptimization.com)
 (Leek, 2016). `eco_opt` is a Python implementation of that workflow, not
@@ -31,13 +31,17 @@ page.
 
 ## What it is for
 
-Process models in ecology are usually integrated forward: rates and
-allocation fractions are specified, pools (states) are predicted. Many of
-those fluxes can vary biologically. `eco_opt` asks what trajectory is
-implied by an explicit optimality hypothesis and the same process
-equations.
+Process models in ecology are usually integrated forward: given the
+process equations and inputs, stocks (state variables) are predicted.
+Some of those inputs or rates can be treated as controls. `eco_opt`
+asks what trajectory is implied by an explicit optimality hypothesis
+and the same process equations, subject to constraints.
 
-It does not claim that organisms maximise the chosen objective. A
+The same workflow applies to populations, water, greenhouse climate,
+biogeochemistry, and other process-based ecological ODEs — not only
+carbon allocation or organism physiology.
+
+It does not claim that the system maximises the chosen objective. A
 numerical solution shows that the hypothesis is internally consistent
 with the dynamics and constraints.
 

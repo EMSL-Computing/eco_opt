@@ -9,8 +9,8 @@ not choose the hypothesis.
 | Role | Symbol | In `eco_opt` | Meaning |
 |---|---|---|---|
 | Time | \(t\) | `sys.t` | Independent variable |
-| State | \(\mathbf{x}(t)\) | `sys.x` | A pool that is integrated; requires an initial condition |
-| Control | \(\mathbf{u}(t)\) | `sys.u` | A flux or fraction the optimiser may vary in time |
+| State | \(\mathbf{x}(t)\) | `sys.x` | A quantity that is integrated; requires an initial condition |
+| Control | \(\mathbf{u}(t)\) | `sys.u` | A quantity the optimiser may vary in time |
 | Parameter | \(\mathbf{p}\) | `sys.p` | Constant during one solve; may be retuned in a sweep |
 | Algebraic | \(\mathbf{z}(t)\) | `sys.z` | Unknown on \(g=0\), not an ODE (quasi-steady closure) |
 | Forcing | \(w(t)\) | inside \(f\) | Known function of time (weather, a prescribed input) |
@@ -23,7 +23,7 @@ allowed. Import it from `eco_opt`. It does **not** replace CasADi
 `sin`, `sign`, and interpolants do not. A vector \(\dot{\mathbf{x}}\)
 may be a list of expressions; `System` stacks it. Import `casadi as cs`
 only when the right-hand side needs those functions (Goddard:
-`cs.exp`, `cs.sign`). A one-state microbial model typically needs only
+`cs.exp`, `cs.sign`). A one-state model typically needs only
 `eco_opt`.
 
 The keyword `plant=` on `closed_loop` is the **simulated process
@@ -31,16 +31,18 @@ model** (control-theory name). It is not vegetation.
 
 ## What is a control
 
-A flux that is a fixed number in the process model remains a
+A quantity that is a fixed number in the process model remains a
 parameter or a forcing. It is \(u(t)\) only if the hypothesis allows
-that flux to vary in time in order to improve \(J\).
+that quantity to vary in time in order to improve \(J\).
 
 Examples in this package:
 
-- uptake rate (microbial growth);
-- ligninolytic effort;
 - irrigation;
-- an allocation fraction;
+- greenhouse heat;
+- lake loading;
+- harvest;
+- microbial uptake;
+- plant allocation;
 - rocket mass-flow.
 
 Rain in the irrigation forecast is **forcing** (\(P\equiv 0\) in the
@@ -82,15 +84,14 @@ checks that the collocation tape and the ODE agree.
 
 Use **closed loop** (`ocp.closed_loop`) when the claim is about
 applying the **same** hypothesis after the process has left the
-forecast — rain on the water store, a litter pulse, an unmodelled
-mineral-N flush. Re-planning updates the initial condition of the
-remaining OCP; it does not change \(J\) or \(f\). If the simulated
-process is identical to the OCP model, shrinking-horizon closed loop
-reprints the open-loop tape and is a code check, not a new ecological
-result.
+forecast — rain on the water store, a wind gust, an unforecast load.
+Re-planning updates the initial condition of the remaining OCP; it
+does not change \(J\) or \(f\). If the simulated process is identical
+to the OCP model, shrinking-horizon closed loop reprints the
+open-loop tape and is a code check, not a new process result.
 
 `horizon="shrinking"` shortens the remaining window (the usual
-seasonal plan). `horizon="receding"` keeps a rolling prediction
+finite-horizon plan). `horizon="receding"` keeps a rolling prediction
 window. \(T\) must be pinned (`(T, "==", t_f(sys.t))`). Signature:
 [API](api.md#closed_loop).
 

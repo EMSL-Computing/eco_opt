@@ -80,26 +80,28 @@ explicitly:
 (0, "<=", eco_opt.t_f(sys.t), "<=", Tmax)  # free T, upper cap
 ```
 
-A **fixed** horizon is the usual seasonal plan (leaf growth over
-120 d, a flowering season). A **free** horizon is a burnout or a
-minimum-time problem: `t_f(sys.t)` is bounded from below by zero,
-optionally from above, and `tf_guess` is the same **order of
-magnitude** as \(T\). [First solve](first-solve.md) uses
-`tf_guess=2` on a horizon of order 1.5. Goddard uses `tf_guess=200`;
-`tf_guess=1.0` on a 200-second burn is a common cause of solver
-failure. See [Guesses, mesh, scaling](guesses-mesh-scaling.md).
+A **fixed** horizon is a prescribed interval (a season, a campaign, a
+mission). A **free** horizon is a burnout or a minimum-time problem:
+`t_f(sys.t)` is bounded from below by zero, optionally from above, and
+`tf_guess` is the same **order of magnitude** as \(T\).
+[First solve](first-solve.md) uses `tf_guess=2` on a horizon of order
+1.5. Goddard uses `tf_guess=200`; `tf_guess=1.0` on a 200-second burn
+is a common cause of solver failure. See
+[Guesses, mesh, scaling](guesses-mesh-scaling.md).
 
 Closed loop with a shrinking window requires a remaining horizon that
 still contains the planned terminal time. If the open-loop problem
 had a free horizon, the closed-loop study uses a fixed \(T\). The
-microbial example does that.
+microbial-growth and irrigation examples do that.
 
 ## Multi-phase problems
 
-A phase is a change of **dynamics or objective**. Vegetative then
-reproductive allocation with a free switch
+A phase is a change of **dynamics or objective**. Examples: vegetative
+then reproductive allocation with a free switch
 ([multiphase_cohen](examples/multiphase_cohen.md)); ascent then
-landing. Continuity of time and state at the junction is
+landing
+([Goddard landing](examples/multiphase_goddard_landing.md)).
+Continuity of time and state at the junction is
 `ocp.st(phases=[p1, p2], continuity=True)`.
 
 A bang–bang \(u(t)\) on one system remains a single-phase problem

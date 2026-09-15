@@ -50,12 +50,12 @@ A typical first mesh for a new model is 20–40 intervals and degree 3.
 
 `"legendre"` matches the Goddard archive in this package.
 `"radau"` is often more reliable when \(u^*\) is discontinuous
-(bang–bang allocation, pulses). See
+(bang–bang controls, pulses; allocation is one example). See
 [non_diff](examples/non_diff.md) and
 [bang_free_tf](examples/bang_free_tf.md).
 
 Mesh refinement can change \(J\) by a small amount. That change is
-discretisation error, not a change of ecological mechanism.
+discretisation error, not a change of mechanism.
 
 ## What may appear in \(f\)
 
@@ -67,7 +67,7 @@ invalid:
 ```python
 # invalid — Python if on a CasADi MX
 if x[0] > 0:
-    uptake = vmax * x[0] / (km + x[0])
+    rate = vmax * x[0] / (km + x[0])
 ```
 
 A switch that depends on \(t\), \(\mathbf{x}\), or \(\mathbf{u}\) is
@@ -76,8 +76,9 @@ Python `if` on a numeric value that is not a CasADi symbol (a Python
 float, not `sys.p`) is evaluated before the graph is built.
 
 A jump in a **forcing** (`if_else` on time) is not a jump in the
-**control**. Phenology that is a bang–bang \(u(t)\) is a control
-structure; a frost cutoff written in \(f\) is a nonsmooth forcing.
+**control**. A bang–bang \(u(t)\) (allocation, thrust, a harvest
+switch) is a control structure; a cutoff written in \(f\) is a
+nonsmooth forcing.
 See [non_diff](examples/non_diff.md).
 
 Named diagnostics belong in the `Namespace` `y`. They are not extra
