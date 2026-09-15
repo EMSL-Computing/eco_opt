@@ -102,8 +102,8 @@ demonstrated inside the examples above.
 
 ## Cite
 
-Until a journal article is published, cite this software by name and
-version (`eco_opt` 0.1.0). Also cite CasADi, IPOPT, and Yop.
+Cite this software by name and version (`eco_opt` 0.1.0). Also cite
+CasADi, IPOPT, and Yop.
 
 ## License
 
