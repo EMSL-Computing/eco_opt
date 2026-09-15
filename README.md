@@ -80,9 +80,10 @@ python -m pip install -e ".[docs]"
 python -m mkdocs serve
 ```
 
-<http://127.0.0.1:8000> — use `python -m mkdocs` (see
-[Install](docs/install.md) for the distro-MkDocs theme error and an
-alternate port). `python -m mkdocs build` writes `site/`.
+<http://127.0.0.1:8000>. Use `python -m mkdocs`, not a distro `mkdocs`
+(that often lacks the Material theme). If the port is taken:
+`python -m mkdocs serve -a 127.0.0.1:8001`. `python -m mkdocs build`
+writes `site/`.
 
 ## Examples
 
@@ -113,8 +114,9 @@ See [Cite](docs/cite.md) and [`CITATION.cff`](CITATION.cff).
 
 ## Development and questions
 
-Issues, fixes, docs, and small examples are welcome. Fork the
-repository and open a pull request.
+Issues, fixes, docs, and small examples are welcome if you have
+access to this repository. Open a pull request from a branch, or
+email if you cannot.
 
 Please do not add code or data whose license would conflict with this
 project (restricted datasets, snippets that cannot be reused or
