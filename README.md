@@ -40,7 +40,7 @@ model (control-theory name), not vegetation.
 ## Install
 
 ```bash
-git clone https://github.com/EMSL-Computing/eco_opt.git
+git clone git@github.com:EMSL-Computing/eco_opt.git
 cd eco_opt
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
@@ -49,14 +49,16 @@ python -c "import eco_opt; print(eco_opt.__version__)"
 python -m pytest -q
 ```
 
-Python 3.9+, CasADi, and IPOPT. `.[test]` includes matplotlib and
-scipy. Plot scripts without pytest: `python -m pip install -e ".[examples]"`.
-Example folders are in this clone, not in the wheel. Full notes:
-[Install](docs/install.md).
+Not on PyPI. Python 3.9+, CasADi, and IPOPT. `.[test]` includes
+matplotlib and scipy. Plot scripts without pytest:
+`python -m pip install -e ".[examples]"`. Example folders are in this
+clone. Full notes: [Install](docs/install.md). HTTPS clone:
+`https://github.com/EMSL-Computing/eco_opt.git`.
 
 ## Documentation
 
-<https://emsl-computing.github.io/eco_opt/>
+<https://emsl-computing.github.io/eco_opt/> (GitHub Pages; needs Pages
+enabled on the repository). Local preview:
 
 | Page | Contents |
 |---|---|

@@ -1,11 +1,18 @@
 # Install
 
 Requires Python 3.9+, CasADi, and IPOPT (pulled in with CasADi on most
-platforms). The package does not require MATLAB at runtime.
+platforms). The package does not require MATLAB at runtime. It is
+**not** on PyPI: install from the git clone.
 
-A wheel or `python -m pip install eco_opt` installs the library only
-(`import eco_opt`). Example scripts, tests, and `work/*.mat` live in
-the **git clone**, not in the wheel.
+```bash
+git clone git@github.com:EMSL-Computing/eco_opt.git
+# HTTPS: git clone https://github.com/EMSL-Computing/eco_opt.git
+cd eco_opt
+```
+
+Example scripts, tests, and `work/*.mat` live in that clone. A
+path/`pip` install of the package directory alone is the library
+(`import eco_opt`) without those folders.
 
 A virtual environment is cheap (`python -m venv` is seconds). The
 wait is downloading wheels (CasADi, NumPy; extras add matplotlib and
@@ -31,9 +38,10 @@ use `scipy.io`). Plot scripts alone:
 python -m pip install -e ".[examples]"
 ```
 
-Hosted docs: <https://emsl-computing.github.io/eco_opt/>.
-
-To preview locally, with the same interpreter as `eco_opt`:
+This page is part of the MkDocs site. GitHub Pages is optional and
+needs Pages enabled on the repository (a private repo on a plan
+without Pages will not serve the site). Local preview always works,
+with the same interpreter as `eco_opt`:
 
 ```bash
 python -m pip install -e ".[docs]"
