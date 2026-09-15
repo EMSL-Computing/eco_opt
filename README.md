@@ -116,7 +116,8 @@ See [Cite](docs/cite.md) and [`CITATION.cff`](CITATION.cff).
 
 Issues, fixes, docs, and small examples are welcome if you have
 access to this repository. Open a pull request from a branch, or
-email if you cannot.
+email if you cannot. See [CONTRIBUTING.md](CONTRIBUTING.md). Coding
+agents: [AGENTS.md](AGENTS.md). `make test` runs pytest.
 
 Please do not add code or data whose license would conflict with this
 project (restricted datasets, snippets that cannot be reused or
