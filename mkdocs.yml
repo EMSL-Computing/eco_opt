@@ -1,7 +1,7 @@
 site_name: eco_opt
 site_description: Optimal control for process-based ecological models
-site_url: https://eco-opt.readthedocs.io/
-repo_url: https://github.com/ArjunChakrawal/eco_opt
+site_url: https://emsl-computing.github.io/eco_opt/
+repo_url: https://github.com/EMSL-Computing/eco_opt
 exclude_docs: |
   LINEAGE.md
 theme:

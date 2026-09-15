@@ -1,9 +1,9 @@
 # eco_opt
 
-[![Version](https://img.shields.io/badge/version-0.1-0D7377)](https://github.com/ArjunChakrawal/eco_opt)
+[![Version](https://img.shields.io/badge/version-0.1-0D7377)](https://github.com/EMSL-Computing/eco_opt)
 [![Python](https://img.shields.io/badge/python-3.9%2B-3776AB)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-2F9E44)](LICENSE)
-[![Docs](https://img.shields.io/badge/docs-Read%20the%20Docs-0D7377)](https://eco-opt.readthedocs.io/)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-0D7377)](https://emsl-computing.github.io/eco_opt/)
 
 Process-based ecological ODEs as constrained optimal-control problems.
 The right-hand side is the user’s mass balance; states, controls, and
@@ -40,7 +40,7 @@ model (control-theory name), not vegetation.
 ## Install
 
 ```bash
-git clone https://github.com/ArjunChakrawal/eco_opt.git
+git clone https://github.com/EMSL-Computing/eco_opt.git
 cd eco_opt
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
@@ -56,8 +56,7 @@ Example folders are in this clone, not in the wheel. Full notes:
 
 ## Documentation
 
-<https://eco-opt.readthedocs.io/> (after the repository is public and
-the RTD project is imported).
+<https://emsl-computing.github.io/eco_opt/>
 
 | Page | Contents |
 |---|---|

@@ -40,10 +40,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/ArjunChakrawal/eco_opt"
-Documentation = "https://eco-opt.readthedocs.io/"
-Repository = "https://github.com/ArjunChakrawal/eco_opt"
-Issues = "https://github.com/ArjunChakrawal/eco_opt/issues"
+Homepage = "https://github.com/EMSL-Computing/eco_opt"
+Documentation = "https://emsl-computing.github.io/eco_opt/"
+Repository = "https://github.com/EMSL-Computing/eco_opt"
+Issues = "https://github.com/EMSL-Computing/eco_opt/issues"
 
 [project.optional-dependencies]
 examples = ["matplotlib>=3.4", "scipy>=1.7"]

@@ -1,4 +1,4 @@
-# Docs-only install for Read the Docs (no CasADi).
+# Docs-only install for GitHub Pages / local preview (no CasADi).
 mkdocs>=1.5,<2
 mkdocs-material>=9
 pymdown-extensions>=10
