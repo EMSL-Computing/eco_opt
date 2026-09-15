@@ -7,5 +7,5 @@ Do not add code or data whose license would conflict with this project.
 
 ```bash
 python -m pip install -e ".[test]"
-make test
+python -m pytest -q
 ```
