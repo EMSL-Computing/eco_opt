@@ -6,7 +6,7 @@
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-0D7377)](https://emsl-computing.github.io/eco_opt/)
 
 Process-based ecological ODEs as constrained optimal-control problems.
-The right-hand side is the user’s process model; states, controls, and
+The right-hand side is the user’s mass balance; states, controls, and
 the criterion $J$ are declared; CasADi collocation and IPOPT produce
 $u^*(\cdot)$.
 
@@ -111,6 +111,36 @@ Manuscript in preparation.
 Cite the software as `eco_opt` 0.1. Also cite CasADi, IPOPT, and Yop.
 See [Cite](docs/cite.md) and [`CITATION.cff`](CITATION.cff).
 
-## License
+## Development and questions
 
-[MIT](LICENSE). Copyright (c) 2026 Arjun Chakrawal.
+Issues, fixes, docs, and small examples are welcome. Fork the
+repository and open a pull request.
+
+Please do not add code or data whose license would conflict with this
+project (restricted datasets, snippets that cannot be reused or
+modified).
+
+Questions: [arjun.chakrawal@pnnl.gov](mailto:arjun.chakrawal@pnnl.gov).
+
+## Acknowledgments
+
+This research was supported by the computing facility at the
+Environmental Molecular Sciences Laboratory, a DOE Office of Science
+User Facility sponsored by the Biological and Environmental Research
+program under Contract No. DE-AC05-76RL01830.
+
+## Disclaimer
+
+This research work was prepared as an account of work sponsored by an
+agency of the United States Government. Neither the United States
+Government nor any agency thereof, nor any of their employees, makes
+any warranty, express or implied, or assumes any legal liability or
+responsibility for the accuracy, completeness, or usefulness of any
+information, apparatus, product, or process disclosed, or represents
+that its use would not infringe privately owned rights. Reference
+herein to any specific commercial product, process, or service by
+trade name, trademark, manufacturer, or otherwise does not necessarily
+constitute or imply its endorsement, recommendation, or favoring by
+the United States Government or any agency thereof. The views and
+opinions of authors expressed herein do not necessarily state or
+reflect those of the United States Government or any agency thereof.
