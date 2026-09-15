@@ -1,10 +1,9 @@
 # First solve
 
 The dimensional Goddard rocket: maximise final altitude with free
-burnout time. This is a **traditional optimal-control problem**, used
-here so the first script you run is complete and copy-pasteable.
-Ecological models are written the same way; they are listed under
-[Examples](examples/index.md).
+burnout time. This is a **traditional optimal-control problem**. The
+script below is complete. Ecological models use the same structure;
+they are listed under [Examples](examples/index.md).
 
 Full write-up, figures, and the archived reference:
 [Goddard, dimensional](examples/goddard_benchmark.md).
@@ -12,6 +11,11 @@ Full write-up, figures, and the archived reference:
 If IPOPT fails, see [Troubleshooting](troubleshooting.md). For what
 counts as a state, a control, or a cost, see
 [Posing a problem](posing.md).
+The control is piecewise constant on the collocation mesh; see
+[Transcription](transcription.md).
+This problem has a **free** horizon (`tf_guess=200`); time bounds are
+written explicitly in `st`
+([Constraints and time](constraints-and-time.md)).
 
 ```python
 import casadi as cs

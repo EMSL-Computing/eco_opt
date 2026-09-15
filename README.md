@@ -7,7 +7,7 @@ orthogonal collocation.
 `eco_opt` is a Python implementation of the
 [Yop](https://www.yoptimization.com) modelling workflow.
 
-Version 0.1.0.
+Version 0.1.
 
 Public API: `System`, `Ocp`, `OcpResults`, `Phase`, `PhaseTrajectory`,
 `t_0`, `t_f`, `Namespace`, `simulate`, `closed_loop`,
@@ -82,7 +82,10 @@ Output is `site/` (gitignored). Open `site/index.html` in a browser.
 you do not want an editable package install.
 
 Start at [First solve](docs/first-solve.md) (Goddard rocket), then
-[Posing a problem](docs/posing.md) and
+[Posing a problem](docs/posing.md),
+[Transcription](docs/transcription.md),
+[Constraints and time](docs/constraints-and-time.md),
+[Guesses, mesh, scaling](docs/guesses-mesh-scaling.md), and
 [Examples](docs/examples/index.md).
 
 ## Examples
@@ -106,9 +109,13 @@ demonstrated inside the examples above.
 
 ## Cite
 
-Cite this software by name and version (`eco_opt` 0.1.0). Also cite
+Inventor: Arjun Chakrawal, Environmental Molecular Sciences
+Laboratory, Pacific Northwest National Laboratory, Richland,
+Washington 99354, United States.
+
+Cite this software by name and version (`eco_opt` 0.1). Also cite
 CasADi, IPOPT, and Yop.
 
 ## License
 
-GNU Lesser General Public License v3.0 or later (LGPL-3.0-or-later).
+MIT License. See [LICENSE](LICENSE).

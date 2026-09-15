@@ -6,6 +6,8 @@ control?
 
 Here **plant** is the same annual-plant model as
 [cohen_king_roughgarden](cohen_king_roughgarden.md).
+Two phases because \(f\) and the role of the state change at a free
+switch; see [Constraints and time](../constraints-and-time.md).
 
 ## Formulation
 

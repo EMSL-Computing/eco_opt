@@ -13,7 +13,7 @@ python -m pytest -q
 
 The documentation is on Read the Docs: <https://eco-opt.readthedocs.io/>.
 
-To preview locally, with the same interpreter you use for `eco_opt`:
+To preview locally, with the same interpreter as `eco_opt`:
 
 ```bash
 python -m pip install -e ".[docs]"
@@ -34,4 +34,4 @@ If `import casadi` succeeds but `ocp.solve` cannot find IPOPT, install
 IPOPT from the platform package manager and confirm CasADi still
 imports.
 
-The package is LGPL-3.0 or later.
+The package is MIT licensed. See the `LICENSE` file in the repository.

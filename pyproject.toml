@@ -4,15 +4,46 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "eco_opt"
-version = "0.1.0"
+version = "0.1"
 description = "Optimal control for process-based models (CasADi). Python implementation of the Yop modelling workflow."
 readme = "README.md"
 requires-python = ">=3.9"
-license = { text = "LGPL-3.0-or-later" }
+license = { text = "MIT" }
+authors = [
+    { name = "Arjun Chakrawal", email = "arjun.chakrawal@pnnl.gov" },
+]
+keywords = [
+    "optimal-control",
+    "ecology",
+    "casadi",
+    "collocation",
+    "ipopt",
+    "ode",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+]
 dependencies = [
     "casadi>=3.6",
     "numpy>=1.20",
 ]
+
+[project.urls]
+Homepage = "https://github.com/ArjunChakrawal/eco_opt"
+Documentation = "https://eco-opt.readthedocs.io/"
+Repository = "https://github.com/ArjunChakrawal/eco_opt"
+Issues = "https://github.com/ArjunChakrawal/eco_opt/issues"
 
 [project.optional-dependencies]
 test = ["pytest>=7.0"]
