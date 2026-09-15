@@ -1,4 +1,0 @@
-recursive-include examples *.py *.md *.csv *.png
-recursive-include tests *.py
-recursive-include work *.mat
-global-exclude __pycache__ *.py[cod]

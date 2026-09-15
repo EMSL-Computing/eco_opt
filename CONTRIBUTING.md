@@ -9,5 +9,5 @@ Coding agents: [AGENTS.md](AGENTS.md).
 
 ```bash
 python -m pip install -e ".[test]"
-make test
+python -m pytest -q
 ```

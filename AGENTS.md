@@ -29,8 +29,8 @@ Plot scripts: `.[examples]`. Docs build: `pip install -r docs/requirements.txt`.
 ## Commands
 
 ```bash
-make test                          # python -m pytest -q
-make docs                          # python -m mkdocs build
+python -m pytest -q
+python -m mkdocs build
 ```
 
 ## Public API
