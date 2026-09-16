@@ -2,7 +2,6 @@
 
 [![Version](https://img.shields.io/badge/version-0.1-0D7377)](https://github.com/EMSL-Computing/eco_opt)
 [![Python](https://img.shields.io/badge/python-3.9%2B-3776AB)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-MIT-2F9E44)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-0D7377)](https://emsl-computing.github.io/eco_opt/)
 
 Process-based ecological ODEs as constrained optimal-control problems.
