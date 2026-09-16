@@ -72,18 +72,6 @@ enabled, and typically a **public** repository). Local preview:
 | [API](docs/api.md) | Public contract |
 | [Troubleshooting](docs/troubleshooting.md) | IPOPT options and failures |
 
-Preview locally:
-
-```bash
-python -m pip install -e ".[docs]"
-python -m mkdocs serve
-```
-
-<http://127.0.0.1:8000>. Use `python -m mkdocs`, not a distro `mkdocs`
-(that often lacks the Material theme). If the port is taken:
-`python -m mkdocs serve -a 127.0.0.1:8001`. `python -m mkdocs build`
-writes `site/`.
-
 ## Examples
 
 From the repository root (`python -m pip install -e ".[examples]"`):
@@ -102,15 +90,6 @@ python microbial_growth.py
 Every example page starts its run block with `cd examples/<folder>`.
 Further examples: [docs/examples](docs/examples/index.md).
 
-## Citation
-
-Chakrawal, A., Schwarz, E., Mudunuru, M. K., Leek, V., and Colombi, T.
-(2026). The eco_opt package: From process models to optimal strategies.
-Manuscript in preparation.
-
-Cite the software as `eco_opt` 0.1. Also cite CasADi, IPOPT, and Yop.
-See [Cite](docs/cite.md) and [`CITATION.cff`](CITATION.cff).
-
 ## Development and questions
 
 Issues, fixes, docs, and small examples are welcome if you have
@@ -122,6 +101,14 @@ project (restricted datasets, snippets that cannot be reused or
 modified).
 
 Questions: [arjun.chakrawal@pnnl.gov](mailto:arjun.chakrawal@pnnl.gov).
+
+## Citation
+
+Chakrawal, A., Schwarz, E., Mudunuru, M. K., Leek, V., and Colombi, T.
+(2026). The eco_opt package: From process models to optimal strategies.
+Manuscript in preparation.
+
+Cite the software as `eco_opt` 0.1. See [Cite](docs/cite.md) and [`CITATION.cff`](CITATION.cff).
 
 ## Acknowledgments
 
