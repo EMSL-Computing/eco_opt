@@ -54,6 +54,36 @@ matplotlib and scipy. Plot scripts without pytest:
 clone. Full notes: [Install](docs/install.md). HTTPS clone:
 `https://github.com/EMSL-Computing/eco_opt.git`.
 
+## Agent-assisted workflows
+
+This repository includes project-specific [agent skills](.agents/skills) that
+help compatible coding agents use eco_opt's public API and repository
+conventions. Start the agent from anywhere inside the cloned repository. An
+agent may select a skill from the request or allow explicit invocation with
+`$skill-name`; discovery and invocation details depend on the agent.
+
+For scientific users, start with
+[`solve-with-eco-opt`](.agents/skills/solve-with-eco-opt/SKILL.md). It helps
+translate equations, states, controls, constraints, and objectives into an
+executable eco_opt model, then simulate, troubleshoot, interpret, and plot the
+result. For example:
+
+```text
+$solve-with-eco-opt Formulate an optimal harvesting model from these equations,
+solve it, and plot the state and piecewise-constant control: ...
+```
+
+Two additional skills support repository contributors:
+
+| Skill | Use it for |
+|---|---|
+| [`add-eco-opt-example`](.agents/skills/add-eco-opt-example/SKILL.md) | Adding a tested, documented scientific example |
+| [`change-eco-opt-api`](.agents/skills/change-eco-opt-api/SKILL.md) | Changing or reviewing package behavior and public APIs |
+
+If newly added or updated skills do not appear, restart the agent and consult
+its documentation for skill discovery and invocation details. The skill
+instructions themselves are vendor-neutral.
+
 ## Documentation
 
 <https://emsl-computing.github.io/eco_opt/> (GitHub Pages; needs Pages
