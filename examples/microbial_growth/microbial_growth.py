@@ -135,3 +135,6 @@ if __name__ == "__main__":
     print("objective (integral of G):", sol.objective)
     print("final time (resource exhaustion):", sol.tf)
     print("C(tf):", sol.x[-1, 0])
+    from plot_microbial_growth import write_vs_analytical_figure
+
+    write_vs_analytical_figure(sol)

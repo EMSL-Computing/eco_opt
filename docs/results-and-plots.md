@@ -6,9 +6,11 @@ ship a plot method. matplotlib and scipy are the `[examples]` extra
 (`python -m pip install -e ".[examples]"`; `[test]` includes them).
 They are not a core dependency.
 
-The [First solve](first-solve.md) script ends at
-`print(sol.success, sol.tf, sol.objective)`. Its comparison figure is
-produced by `examples/microbial_growth/plot_microbial_growth.py`.
+The [First solve](first-solve.md) paste ends at
+`print(sol.success, sol.tf, sol.objective)`. Running
+`examples/microbial_growth/microbial_growth.py` also writes the
+comparison figure and prints its path. Extra panels:
+`examples/microbial_growth/plot_microbial_growth.py`.
 The snippets below use a three-state `sol` (Goddard) to show named
 signals. Field list:
 [API](api.md#ocpresults). Piecewise-constant \(u\):
