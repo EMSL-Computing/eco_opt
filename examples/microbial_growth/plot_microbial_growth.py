@@ -52,7 +52,7 @@ def main():
         fontsize=10,
     )
     fig.tight_layout()
-    p1 = os.path.join(FIG_DIR, "microbial_growth_states_control.png")
+    p1 = os.path.abspath(os.path.join(FIG_DIR, "microbial_growth_states_control.png"))
     fig.savefig(p1, dpi=150)
     plt.close(fig)
 
@@ -66,13 +66,18 @@ def main():
     axes[2].set_xlabel("u_opt"); axes[2].set_ylabel("G_opt"); axes[2].grid(alpha=0.3)
     fig.suptitle("Microbial growth OCP: phase portraits (eco_opt)", fontsize=10)
     fig.tight_layout()
-    p2 = os.path.join(FIG_DIR, "microbial_growth_phase_portrait.png")
+    p2 = os.path.abspath(os.path.join(FIG_DIR, "microbial_growth_phase_portrait.png"))
     fig.savefig(p2, dpi=150)
     plt.close(fig)
 
     print("Wrote:", p1)
     print("Wrote:", p2)
+    write_vs_analytical_figure(sol)
 
+
+def write_vs_analytical_figure(sol):
+    """Write the first-solve comparison figure and print its path."""
+    os.makedirs(FIG_DIR, exist_ok=True)
     t_an, C_an, u_an, G_an, T_an, J_an = mg.analytical_solution()
     t_opt = sol.time
     C_opt = sol.x[:, 0]
@@ -145,10 +150,11 @@ def main():
     ax.legend(frameon=False, loc="upper left", handlelength=1.6)
 
     fig.tight_layout()
-    p3 = os.path.join(FIG_DIR, "microbial_growth_vs_analytical.png")
-    fig.savefig(p3, dpi=150)
+    path = os.path.abspath(os.path.join(FIG_DIR, "microbial_growth_vs_analytical.png"))
+    fig.savefig(path, dpi=150)
     plt.close(fig)
-    print("Wrote:", p3, f"(analytical T={T_an:.4f}, J={J_an:.4f})")
+    print("Wrote:", path, f"(analytical T={T_an:.4f}, J={J_an:.4f})")
+    return path
 
 
 if __name__ == "__main__":

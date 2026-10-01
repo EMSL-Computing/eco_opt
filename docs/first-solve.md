@@ -60,6 +60,12 @@ print(sol.success, sol.tf, sol.objective)
 ```
 
 Same solve as a module: `examples/microbial_growth/microbial_growth.py`.
+That command writes the comparison figure and prints its path:
+
+```bash
+cd examples/microbial_growth
+python microbial_growth.py
+```
 
 `sol.success` should be true. This mesh gives \(T\approx 1.518\) and
 \(J\approx 0.1518\). How to read `sol` and plot with matplotlib:

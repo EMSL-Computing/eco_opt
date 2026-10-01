@@ -54,6 +54,39 @@ matplotlib and scipy. Plot scripts without pytest:
 clone. Full notes: [Install](docs/install.md). HTTPS clone:
 `https://github.com/EMSL-Computing/eco_opt.git`.
 
+## Examples
+
+From the repository root (`python -m pip install -e ".[examples]"`):
+
+```bash
+cd examples/microbial_growth
+python microbial_growth.py
+```
+
+Expect `success=True`, \(T\approx 1.518\), \(J\approx 0.1518\), and
+\(C(T)\) near zero. The script prints those values and the path of
+the comparison figure it writes, for example:
+
+```text
+OcpResults(success=True, status='Solve_Succeeded', objective=0.15185, t0=0.0, tf=1.51819)
+objective (integral of G): 0.15184969799373968
+final time (resource exhaustion): 1.5181904140430988
+C(tf): 1.1349772462111628e-08
+Wrote: /path/to/eco_opt/examples/microbial_growth/figs/microbial_growth_vs_analytical.png
+```
+
+IPOPT may print a license banner first. The `Wrote:` line is the
+figure path on your machine.
+
+| Folder | Topic |
+|---|---|
+| [`microbial_growth`](docs/examples/microbial_growth.md) | Finite-substrate uptake |
+| [`opt_lignin`](docs/examples/opt_lignin.md) | Ligninolytic investment |
+| [`root_opt`](docs/examples/root_opt.md) | Plant–soil C and N allocation |
+
+Every example page starts its run block with `cd examples/<folder>`.
+Further examples: [docs/examples](docs/examples/index.md).
+
 ## Agent-assisted workflows
 
 This repository includes project-specific [agent skills](.agents/skills) that
@@ -101,25 +134,6 @@ enabled, and typically a **public** repository). Local preview:
 | [Examples](docs/examples/index.md) | Ecological models and textbook OCPs |
 | [API](docs/api.md) | Public contract |
 | [Troubleshooting](docs/troubleshooting.md) | IPOPT options and failures |
-
-
-## Examples
-
-From the repository root (`python -m pip install -e ".[examples]"`):
-
-```bash
-cd examples/microbial_growth
-python microbial_growth.py
-```
-
-| Folder | Topic |
-|---|---|
-| [`microbial_growth`](docs/examples/microbial_growth.md) | Finite-substrate uptake |
-| [`opt_lignin`](docs/examples/opt_lignin.md) | Ligninolytic investment |
-| [`root_opt`](docs/examples/root_opt.md) | Plant–soil C and N allocation |
-
-Every example page starts its run block with `cd examples/<folder>`.
-Further examples: [docs/examples](docs/examples/index.md).
 
 
 ## Development and questions
