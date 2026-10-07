@@ -74,11 +74,35 @@ def _clip_guess(w0, lbw, ubw):
     return np.minimum(np.maximum(w0, lo), hi)
 
 
-def _solver_opts(ipopt_options):
-    opts = {"ipopt": dict(ipopt_options or {})}
+def _solver_opts(ipopt_options, nlpsol_options=None):
+    """Options dict for ``cs.nlpsol``.
+
+    ``nlpsol_options`` are top-level CasADi nlpsol options (``expand``,
+    ``print_time``, ``jit``, ...). If it also holds an ``"ipopt"`` dict, that
+    dict is merged with ``ipopt_options`` and ``ipopt_options`` wins on
+    conflicts. Defaults ``print_level=0`` and ``print_time=0`` apply only
+    when neither source sets them.
+    """
+    opts = dict(nlpsol_options or {})
+    ipopt = dict(opts.get("ipopt") or {})
+    ipopt.update(ipopt_options or {})
+    opts["ipopt"] = ipopt
     opts["ipopt"].setdefault("print_level", 0)
     opts.setdefault("print_time", 0)
     return opts
+
+
+def _freeze(obj):
+    """Hashable, order-independent view of a nested options dict."""
+    if isinstance(obj, dict):
+        return tuple(sorted((k, _freeze(v)) for k, v in obj.items()))
+    if isinstance(obj, (list, tuple)):
+        return tuple(_freeze(v) for v in obj)
+    return obj
+
+
+def _solver_key(ipopt_options, nlpsol_options):
+    return (_freeze(ipopt_options or {}), _freeze(nlpsol_options or {}))
 
 
 class _BoundIndex:
@@ -255,14 +279,18 @@ class _CompiledNlp:
             for k in self.idx.z[i]:
                 self.w0[k] = val
 
-    def ensure_solver(self, ipopt_options):
-        key = tuple(sorted((ipopt_options or {}).items()))
+    def ensure_solver(self, ipopt_options, nlpsol_options=None):
+        key = _solver_key(ipopt_options, nlpsol_options)
         if self.solver is None or key != self.solver_key:
-            self.solver = cs.nlpsol("solver", "ipopt", self.nlp, _solver_opts(ipopt_options))
+            self.solver = cs.nlpsol(
+                "solver", "ipopt", self.nlp, _solver_opts(ipopt_options, nlpsol_options)
+            )
             self.solver_key = key
         return self.solver
 
-    def run(self, ipopt_options, warm_start, initial_guess, tf_guess, sense):
+    def run(
+        self, ipopt_options, warm_start, initial_guess, tf_guess, sense, nlpsol_options=None
+    ):
         if initial_guess is not None:
             self._apply_guess_dict(initial_guess)
             warm_start = False
@@ -274,7 +302,7 @@ class _CompiledNlp:
             if tf_guess is not None:
                 self.w0[self.idx.tf] = float(tf_guess)
         self.w0 = _clip_guess(self.w0, self.lbw, self.ubw)
-        solver = self.ensure_solver(ipopt_options)
+        solver = self.ensure_solver(ipopt_options, nlpsol_options)
         sol = solver(
             x0=self.w0, lbx=self.lbw, ubx=self.ubw, lbg=self.lbg, ubg=self.ubg
         )
@@ -341,11 +369,11 @@ class _CompiledMultiphase:
             "set_constraints is single-phase; change Phase constraints and call build() again"
         )
 
-    def ensure_solver(self, ipopt_options):
-        key = tuple(sorted((ipopt_options or {}).items()))
+    def ensure_solver(self, ipopt_options, nlpsol_options=None):
+        key = _solver_key(ipopt_options, nlpsol_options)
         if self.solver is None or key != self.solver_key:
             self.solver = cs.nlpsol(
-                "solver", "ipopt", self.nlp, _solver_opts(ipopt_options)
+                "solver", "ipopt", self.nlp, _solver_opts(ipopt_options, nlpsol_options)
             )
             self.solver_key = key
         return self.solver
@@ -368,7 +396,9 @@ class _CompiledMultiphase:
                     for k in self.u_idx[ph][ui]:
                         self.w0[k] = float(val)
 
-    def run(self, ipopt_options, warm_start, initial_guess, tf_guess, sense):
+    def run(
+        self, ipopt_options, warm_start, initial_guess, tf_guess, sense, nlpsol_options=None
+    ):
         if initial_guess is not None:
             self._apply_guess_dict(initial_guess)
             warm_start = False
@@ -379,7 +409,7 @@ class _CompiledMultiphase:
             if tf_guess is not None:
                 self._apply_tf_guess(tf_guess)
         self.w0 = _clip_guess(self.w0, self.lbw, self.ubw)
-        solver = self.ensure_solver(ipopt_options)
+        solver = self.ensure_solver(ipopt_options, nlpsol_options)
         sol = solver(
             x0=self.w0, lbx=self.lbw, ubx=self.ubw, lbg=self.lbg, ubg=self.ubg
         )
@@ -546,8 +576,11 @@ class Ocp:
         initial_guess: Optional[dict] = None,
         ipopt_options: Optional[dict] = None,
         tf_guess: float = 1.0,
+        nlpsol_options: Optional[dict] = None,
     ) -> OcpResults:
         """Build the collocation NLP and solve it (one-shot).
+
+        ``nlpsol_options`` is forwarded to ``optimize`` (see there).
 
         For a bound or parameter sweep on a fixed mesh, call ``build`` once
         then ``set_constraints`` / ``optimize``.
@@ -564,6 +597,7 @@ class Ocp:
             ipopt_options=ipopt_options,
             tf_guess=tf_guess,
             warm_start=False,
+            nlpsol_options=nlpsol_options,
         )
 
     def build(
@@ -624,12 +658,21 @@ class Ocp:
         ipopt_options: Optional[dict] = None,
         tf_guess: Optional[float] = None,
         warm_start: bool = True,
+        nlpsol_options: Optional[dict] = None,
     ) -> OcpResults:
         """Run IPOPT on the compiled NLP.
 
         After the first successful call, ``warm_start=True`` (default) uses
         the previous primal as ``x0``. Pass ``initial_guess`` to override
         with per-component constants.
+
+        ``nlpsol_options`` passes top-level CasADi ``nlpsol`` options through
+        (for example ``{"expand": True}`` to expand MX to SX, or
+        ``{"print_time": 1}``). Default ``None`` leaves the solver
+        configuration unchanged. If it contains an ``"ipopt"`` dict, that dict
+        is merged with ``ipopt_options`` and ``ipopt_options`` wins on
+        conflicts. The cached solver is rebuilt whenever ``ipopt_options`` or
+        ``nlpsol_options`` differ from the previous call.
         """
         if self._compiled is None:
             raise RuntimeError("build() must be called before optimize()")
@@ -639,6 +682,7 @@ class Ocp:
             initial_guess=initial_guess,
             tf_guess=tf_guess,
             sense=self._sense,
+            nlpsol_options=nlpsol_options,
         )
 
     def simulate(self, sol, t_grid=None, x0=None, plant=None, p=None, z0=None):

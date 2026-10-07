@@ -61,6 +61,7 @@ sol = ocp.solve(
     initial_guess=None,
     ipopt_options=None,
     tf_guess=1.0,
+    nlpsol_options=None,
 )
 ```
 
@@ -72,6 +73,7 @@ sol = ocp.solve(
 | `initial_guess` | fill (not a process trajectory) | `dict` of symbol → constant |
 | `ipopt_options` | `print_level` 0 (see [Troubleshooting](troubleshooting.md)) | IPOPT keys |
 | `tf_guess` | `1.0` | scale of \(T\) and of free switch times |
+| `nlpsol_options` | `None` | top-level CasADi `nlpsol` options, e.g. `{"expand": True}` |
 
 `solve` always starts IPOPT cold (`warm_start=False`). Mesh meaning:
 [Transcription](transcription.md). Constant guesses:
@@ -120,8 +122,16 @@ sol = ocp.optimize(
     ipopt_options=None,
     tf_guess=None,
     warm_start=True,
+    nlpsol_options=None,
 )
 ```
+
+`nlpsol_options` is a dict of top-level CasADi `nlpsol` options
+(`expand`, `print_time`, `jit`, ...). `None` keeps the default solver
+configuration (`print_time=0`, IPOPT `print_level=0`). An `"ipopt"` entry
+inside `nlpsol_options` is merged with `ipopt_options`; `ipopt_options`
+wins on conflicts. The cached solver is rebuilt when either dict changes
+between calls.
 
 Runs IPOPT on the compiled NLP. After the first successful call,
 `warm_start=True` (default) uses the previous primal as \(x_0\). Pass

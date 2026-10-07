@@ -227,3 +227,62 @@ def test_multiphase_set_constraints_requires_rebuild():
     ocp.build(control_intervals=4, polynomial_degree=3, tf_guess=1.0)
     with pytest.raises(NotImplementedError, match="single-phase"):
         ocp.set_constraints([(0.5, "==", eco_opt.t_0(sys_a.x[0]))])
+
+
+# -- nlpsol_options pass-through ------------------------------------------
+def _solve_di(**kw):
+    ocp, _ = _energy_ocp(1.0)
+    ocp.build(control_intervals=16, polynomial_degree=3, tf_guess=1.0)
+    return ocp, ocp.optimize(warm_start=False, **kw)
+
+
+def test_nlpsol_options_default_unchanged():
+    print("eco_opt imported from", eco_opt.__file__)
+    ocp, sol_a = _solve_di()
+    _, sol_b = _solve_di(nlpsol_options=None)
+    assert float(sol_a.objective) == float(sol_b.objective)
+    assert np.array_equal(np.asarray(sol_a.x), np.asarray(sol_b.x))
+    from eco_opt.ocp import _solver_opts
+    assert _solver_opts(None) == {"ipopt": {"print_level": 0}, "print_time": 0}
+
+
+def test_nlpsol_options_expand_matches_default():
+    _, sol_a = _solve_di()
+    ocp, sol_b = _solve_di(nlpsol_options={"expand": True})
+    assert ocp._compiled.solver.stats()["success"]
+    assert abs(float(sol_a.objective) - float(sol_b.objective)) < 1e-8
+    assert np.max(np.abs(np.asarray(sol_a.x) - np.asarray(sol_b.x))) < 1e-8
+
+
+def test_nlpsol_options_ipopt_merge_and_rebuild():
+    from eco_opt.ocp import _solver_opts
+    o = _solver_opts({"max_iter": 5, "tol": 1e-6},
+                     {"expand": True, "ipopt": {"max_iter": 99, "sb": "yes"}})
+    assert o["expand"] is True and o["print_time"] == 0
+    assert o["ipopt"] == {"max_iter": 5, "tol": 1e-6, "sb": "yes", "print_level": 0}
+    # nlpsol print_time / print_level overrides are honoured
+    o = _solver_opts(None, {"print_time": 1, "ipopt": {"print_level": 3}})
+    assert o["print_time"] == 1 and o["ipopt"]["print_level"] == 3
+    # inputs not mutated
+    nl = {"ipopt": {"tol": 1e-7}}
+    _solver_opts({"max_iter": 3}, nl)
+    assert nl == {"ipopt": {"tol": 1e-7}}
+
+    # both routes reach IPOPT: max_iter=1 via either route stops early
+    for kw in ({"ipopt_options": {"max_iter": 1}},
+               {"nlpsol_options": {"ipopt": {"max_iter": 1}}}):
+        ocp, _ = _solve_di(**kw)
+        assert ocp._compiled.solver.stats()["iter_count"] <= 1
+    # ipopt_options wins over nlpsol_options["ipopt"]
+    ocp, _ = _solve_di(ipopt_options={"max_iter": 1},
+                       nlpsol_options={"ipopt": {"max_iter": 1000}})
+    assert ocp._compiled.solver.stats()["iter_count"] <= 1
+
+    # solver is rebuilt when nlpsol_options change between calls
+    ocp, _ = _solve_di()
+    s1 = ocp._compiled.solver
+    ocp.optimize(nlpsol_options={"expand": True})
+    assert ocp._compiled.solver is not s1
+    s2 = ocp._compiled.solver
+    ocp.optimize(nlpsol_options={"expand": True})
+    assert ocp._compiled.solver is s2
