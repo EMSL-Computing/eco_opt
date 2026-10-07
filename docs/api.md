@@ -107,6 +107,7 @@ sol = ocp.solve(
     initial_guess=None,
     ipopt_options=None,
     tf_guess=1.0,
+    nlpsol_options=None,
 )
 ```
 
@@ -114,7 +115,9 @@ sol = ocp.solve(
 `collocation_points` is `"legendre"` or `"radau"`. `initial_guess`
 maps a symbolic component (`sys.x[i]`, `sys.u[i]`, …) to a
 **constant**. Extra IPOPT keys go in `ipopt_options`
-([Troubleshooting](troubleshooting.md#ipopt-options)).
+([Troubleshooting](troubleshooting.md#ipopt-options)). Top-level CasADi
+`nlpsol` options (for example `{"expand": True}`) go in `nlpsol_options`;
+see [Build and optimize](build-optimize.md#optimize).
 
 Bound and parameter sweeps on a frozen mesh:
 [Build and optimize](build-optimize.md).
@@ -139,6 +142,7 @@ sol_b = ocp.optimize(
     ipopt_options=None,
     tf_guess=None,
     warm_start=True,
+    nlpsol_options=None,
 )
 ```
 
