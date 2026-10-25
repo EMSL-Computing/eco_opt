@@ -219,6 +219,9 @@ Returned by `solve` / `optimize`.
 | `sol.sys` | `System` used in the transcription |
 | `sol.phases` | list of `PhaseTrajectory`; single-phase is `[self]` |
 | `sol.switch_times` | junction times (empty if one phase) |
+| `sol.costate` | shadow prices \(\lambda = \partial J/\partial x\) at the collocation points, shape `(N*d, nx)`; `None` for multi-phase |
+| `sol.costate_time` | collocation-point times, length \(N d\) |
+| `sol.hamiltonian` | \(H = L + \lambda^\top f\) at the same points |
 
 Methods:
 
