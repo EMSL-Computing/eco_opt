@@ -82,9 +82,21 @@ H = sol.hamiltonian        # (N*d,), H = L + lambda' f
 
 In the microbial-growth example the costate of substrate rises as
 \(\lambda(t) = \lambda_T e^{\gamma (t - T)}\): substrate becomes
-more valuable as it runs out. `tests/test_costate.py` checks this
-against the closed form, and a two-state model against a
-finite-difference \(\partial J^*/\partial x_0\).
+more valuable as it runs out. The optimal uptake follows from the
+price, \(u = -\beta + \sqrt{e_{max}\beta(r+\beta)(\mu + 1/\lambda)}\),
+so a rising \(\lambda\) means slowing uptake.
+
+![Shadow price of substrate, the uptake it implies, and the Hamiltonian: eco_opt versus analytical](assets/examples/microbial_growth/microbial_growth_costate.png)
+
+```bash
+cd examples/microbial_growth
+python plot_microbial_growth.py   # writes figs/microbial_growth_costate.png
+```
+
+`tests/test_costate.py` checks the costate against the closed form
+(both point sets), a linear-quadratic and a terminal-cost problem, and
+a two-state model against a finite-difference
+\(\partial J^*/\partial x_0\).
 
 ## Matplotlib: states
 

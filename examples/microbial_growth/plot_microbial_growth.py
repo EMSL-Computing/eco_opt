@@ -7,7 +7,8 @@ Run from the repository root::
 
 Output: figs/microbial_growth_states_control.png,
         figs/microbial_growth_phase_portrait.png,
-        figs/microbial_growth_vs_analytical.png
+        figs/microbial_growth_vs_analytical.png,
+        figs/microbial_growth_costate.png
 """
 import os
 
@@ -73,6 +74,7 @@ def main():
     print("Wrote:", p1)
     print("Wrote:", p2)
     write_vs_analytical_figure(sol)
+    write_costate_figure(sol)
 
 
 def write_vs_analytical_figure(sol):
@@ -154,6 +156,58 @@ def write_vs_analytical_figure(sol):
     fig.savefig(path, dpi=150)
     plt.close(fig)
     print("Wrote:", path, f"(analytical T={T_an:.4f}, J={J_an:.4f})")
+    return path
+
+
+def write_costate_figure(sol):
+    """Shadow price, the uptake it implies, and the Hamiltonian."""
+    os.makedirs(FIG_DIR, exist_ok=True)
+    t_lam = sol.costate_time
+    lam = sol.costate[:, 0]
+    t_an = np.linspace(0.0, float(sol.tf), 400)
+    lam_an = mg.analytical_costate(t_an, float(sol.tf))
+
+    analytical_color = "#222222"
+    state_color = "#0072B2"
+    control_color = "#D55E00"
+    secondary_color = "#009E73"
+    fig, axes = plt.subplots(1, 3, figsize=(8.7, 3.0))
+
+    ax = axes[0]
+    ax.plot(t_an, lam_an, color=analytical_color, lw=1.5, label="analytical")
+    ax.plot(t_lam, lam, color=state_color, lw=3, linestyle=":", label="eco_opt")
+    ax.set_xlabel("time")
+    ax.set_ylabel(r"shadow price $\lambda_C$")
+    ax.set_title("(a) Shadow price")
+    ax.legend(frameon=False, loc="upper left", handlelength=1.6)
+
+    ax = axes[1]
+    ax.step(
+        sol.time_intervals[:-1], sol.u[:, 0], where="post",
+        color=analytical_color, lw=1.5, label=r"solved $u$",
+    )
+    ax.plot(
+        t_lam, mg.uptake_from_costate(lam), color=control_color, lw=3,
+        linestyle=":", label=r"$u$ from $\lambda_C$",
+    )
+    ax.set_xlabel("time")
+    ax.set_ylabel("uptake $u$")
+    ax.set_title("(b) Control from price")
+    ax.legend(frameon=False, loc="upper right", handlelength=1.6)
+
+    ax = axes[2]
+    ax.plot(t_lam, sol.hamiltonian, color=secondary_color, lw=1.5)
+    ax.axhline(0.0, color="0.4", lw=0.7, ls=":")
+    ax.set_ylim(-1e-3, 1e-3)
+    ax.set_xlabel("time")
+    ax.set_ylabel("Hamiltonian $H$")
+    ax.set_title("(c) $H = 0$ (free $T$)")
+
+    fig.tight_layout()
+    path = os.path.abspath(os.path.join(FIG_DIR, "microbial_growth_costate.png"))
+    fig.savefig(path, dpi=150)
+    plt.close(fig)
+    print("Wrote:", path)
     return path
 
 
