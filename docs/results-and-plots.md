@@ -51,6 +51,41 @@ Parameters: `sol.p`. Algebraics: `sol.z`, shape `(N+1, nz)`.
 Multi-phase: `sol.phases[i]` is a `PhaseTrajectory` with the same
 array names; `sol.switch_times` are the junctions.
 
+## Shadow prices (costates)
+
+Single-phase solutions also return the costate \(\lambda(t)\), the
+marginal value of each state: how much \(J\) would change per extra
+unit of that state at time \(t\), if the rest of the trajectory were
+re-optimized. It is recovered from the NLP multipliers of the
+collocation equations, so no costate equations are derived by hand.
+
+```python
+lam = sol.costate          # (N*d, nx), lambda = dJ/dx, declared sense
+t_lam = sol.costate_time   # (N*d,), collocation-point times
+H = sol.hamiltonian        # (N*d,), H = L + lambda' f
+```
+
+- The sign follows the declared objective. For `ocp.max(...)`, a
+  positive \(\lambda_i\) means one more unit of state \(i\) raises
+  \(J\); for `ocp.min(...)`, a positive \(\lambda_i\) means it raises
+  the cost.
+- Values sit on the collocation points, not on `sol.time`. Use
+  `np.interp(sol.time, t_lam, lam[:, i])` if another grid is needed.
+- `sol.hamiltonian` is a convergence check: for dynamics and running
+  payoff without explicit time dependence, \(H\) is constant along an
+  optimum, and \(H = 0\) when the final time is free.
+- Accuracy follows the mesh. A costate that oscillates between
+  collocation points usually signals an active state constraint or a
+  mesh that is too coarse.
+- Multi-phase results set `costate`, `costate_time`, and
+  `hamiltonian` to `None`.
+
+In the microbial-growth example the costate of substrate rises as
+\(\lambda(t) = \lambda_T e^{\gamma (t - T)}\): substrate becomes
+more valuable as it runs out. `tests/test_costate.py` checks this
+against the closed form, and a two-state model against a
+finite-difference \(\partial J^*/\partial x_0\).
+
 ## Matplotlib: states
 
 ```python

@@ -55,6 +55,19 @@ class OcpResults:
     """Holds a solved NLP plus enough symbolic bookkeeping to reconstruct
     state/control trajectories and evaluate arbitrary signal expressions
     (``sys.y.rocket.velocity`` etc.) on the resulting grid.
+
+    Single-phase solutions also carry shadow prices recovered from the NLP
+    multipliers of the collocation equations:
+
+    * ``costate`` (N*d, nx): costate ``lam = dJ/dx`` at the collocation
+      points, in the sense of the declared objective. For ``max``, a
+      positive value is the gain in ``J`` per extra unit of that state.
+    * ``costate_time`` (N*d,): the collocation-point times.
+    * ``hamiltonian`` (N*d,): ``H = L + lam' f`` at the same points; for an
+      autonomous problem it is constant along an optimum, and zero when
+      the final time is free.
+
+    Multi-phase results set these to ``None``.
     """
 
     def __init__(
@@ -76,6 +89,8 @@ class OcpResults:
         objective_sense: Optional[str],
         Z_all=None,
         Zc_all=None,
+        costate=None,
+        hamiltonian_fn=None,
     ):
         self.sys = sys
         self.stats = stats
@@ -182,6 +197,26 @@ class OcpResults:
             self.z = np.array(z_vals)  # shape (N+1, nz) at interval boundaries
         else:
             self.z = np.zeros((N + 1, 0))
+
+        # Shadow prices (costates) and Hamiltonian at the collocation points.
+        self.costate_time = None
+        self.costate = None
+        self.hamiltonian = None
+        if costate is not None:
+            t_c = [t0_val + (k + self.tau[j + 1]) * h for k in range(N) for j in range(d)]
+            self.costate_time = np.array(t_c)
+            self.costate = np.asarray(costate)
+            if hamiltonian_fn is not None:
+                H = []
+                n = 0
+                for k in range(N):
+                    for j in range(d):
+                        z_kj = zc_vals[k][j] if (use_z and zc_vals[k]) else np.zeros(nz)
+                        H.append(float(hamiltonian_fn(
+                            t_c[n], xc_vals[k][j], u_vals[k], z_kj, p_val, self.costate[n]
+                        )))
+                        n += 1
+                self.hamiltonian = np.array(H)
         self.phases = [self]
         self.switch_times = np.zeros(0)
 
@@ -235,6 +270,9 @@ class OcpResults:
             obj.z = getattr(last, "z", np.zeros((last.x.shape[0], 0)))
         obj.time_nodes = obj.time
         obj.x_nodes = obj.x
+        obj.costate_time = None
+        obj.costate = None
+        obj.hamiltonian = None
         obj.u_intervals = obj.u
         return obj
 
