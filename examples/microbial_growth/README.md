@@ -35,7 +35,12 @@ python -m pytest ../../tests/test_microbial_growth.py -q
 
 Collocation is checked against an independent PMP trajectory
 (`analytical_solution`; figure `figs/microbial_growth_vs_analytical.png`)
-and against resource exhaustion / box bounds. $T^*\approx 1.518$ and
+and against resource exhaustion / box bounds. The shadow price of
+substrate, `sol.costate`, matches the closed form
+$\lambda(t)=\lambda_T e^{\gamma(t-T)}$ (`analytical_costate`); the
+uptake implied by that price (`uptake_from_costate`) matches the
+solved control, and $H\approx 0$ for the free final time
+(`figs/microbial_growth_costate.png`). $T^*\approx 1.518$ and
 $J^*\approx 0.1518$ are also regression-tracked.
 
 ## Open loop vs closed loop

@@ -39,12 +39,8 @@ def test_microbial_costate_matches_pontryagin(points):
     assert sol.costate_time.shape == (200 * 5,)
 
     # lam(t) = lam_T exp(gamma (t - T)), with lam_T from H(T) = 0.
-    a = mg.EMAX * mg.BETA
-    u_T = mg.R + np.sqrt(mg.R ** 2 + mg.R * mg.BETA)
-    g_u = a * (mg.R + mg.BETA) / (u_T + mg.BETA) ** 2
-    lam_T = g_u / (1.0 - mg.MU * g_u)
-    lam_an = lam_T * np.exp(mg.GAMMA * (sol.costate_time - sol.tf))
-    assert np.max(np.abs(sol.costate[:, 0] - lam_an)) < 1e-3 * lam_T
+    lam_an = mg.analytical_costate(sol.costate_time, sol.tf)
+    assert np.max(np.abs(sol.costate[:, 0] - lam_an)) < 1e-3 * lam_an[-1]
 
     # Free final time and autonomous dynamics: H = 0 along the optimum.
     assert np.max(np.abs(sol.hamiltonian)) < 1e-3 * sol.objective
