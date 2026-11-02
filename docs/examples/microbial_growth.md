@@ -1,7 +1,7 @@
 # Microbial growth (`microbial_growth`)
 
 **Question.** How should substrate uptake vary, and when should it stop,
-if cumulative growth is maximised while a finite resource is exhausted?
+if cumulative growth is maximized while a finite resource is exhausted?
 
 The complete first script and the eco_opt–analytical figure:
 [First solve](../first-solve.md).
@@ -38,7 +38,7 @@ not a control.
 C(0)=1,\qquad 0\le C(t)\le 1,\qquad 0\le u(t)\le 10,\qquad T\ge 0.
 \]
 
-**Horizon.** Free. The optimiser chooses when continued uptake is no
+**Horizon.** Free. The optimizer chooses when continued uptake is no
 longer worthwhile.
 
 ## What was done

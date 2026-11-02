@@ -89,7 +89,7 @@ python -m pytest ../../tests/test_cohen_king_roughgarden.py -q
 
 ## References
 
-Cohen (1971), maximising terminal seed yield. King and Roughgarden
+Cohen (1971), maximizing terminal seed yield. King and Roughgarden
 (1982), graded allocation with a log running payoff.
 
 !!! warning "Not validated against published figures"

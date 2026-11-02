@@ -1,6 +1,6 @@
 # Goddard, dimensional (`goddard_benchmark`)
 
-**Question.** What thrust history maximises final altitude of a
+**Question.** What thrust history maximizes final altitude of a
 vertical rocket when burnout time is free?
 
 This is a **transcription check**, not an ecological model.

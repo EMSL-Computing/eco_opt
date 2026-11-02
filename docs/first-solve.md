@@ -1,6 +1,6 @@
 # First solve
 
-Finite-substrate microbial growth: maximise cumulative growth while a
+Finite-substrate microbial growth: maximize cumulative growth while a
 resource pool is exhausted. The horizon \(T\) is free. The script below
 is complete. Formulation, closed loop, and further figures:
 [Microbial growth](examples/microbial_growth.md).

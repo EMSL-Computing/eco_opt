@@ -8,7 +8,7 @@ Cite this software by name and version (`eco_opt` 0.1).
 
 Also cite:
 
-- **Yop** for the modelling workflow
+- **Yop** for the modeling workflow
   ([yoptimization.com](https://www.yoptimization.com); Leek, 2016)
 - **CasADi** (Andersson et al., 2019)
 - **IPOPT** (Wächter and Biegler, 2006)

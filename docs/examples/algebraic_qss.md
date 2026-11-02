@@ -82,7 +82,7 @@ and is solved only as a DAE; \(M\ge 0\) selects the physical root.
 If a pool is fast enough that you would never integrate it in a
 forward model (you would set growth = death and move on), it should
 not become a stiff ODE just because you posed an OCP. An algebraic
-state is that modelling choice, made visible to collocation. The linear
+state is that modeling choice, made visible to collocation. The linear
 pair (ODE vs DAE) is how you **trust** the implementation: same
 hypothesis, two writings, same \(u^*(t)\).
 

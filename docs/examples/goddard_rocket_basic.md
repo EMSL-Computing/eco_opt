@@ -6,7 +6,7 @@ Transcription check, not ecology.
 
 ## Formulation
 
-Maximise final altitude, free \(T\). Constants \(m_0=1\), \(m_f=0.6\),
+Maximize final altitude, free \(T\). Constants \(m_0=1\), \(m_f=0.6\),
 \(h_0=1\), \(g_0=1\), \(D_0=310\), \(c=0.5\), \(\beta=500\),
 \(T_{\max}=3.5\). Distinct from the dimensional archive in
 `goddard_benchmark`.

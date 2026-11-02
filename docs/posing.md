@@ -10,7 +10,7 @@ not choose the hypothesis.
 |---|---|---|---|
 | Time | \(t\) | `sys.t` | Independent variable |
 | State | \(\mathbf{x}(t)\) | `sys.x` | A quantity that is integrated; requires an initial condition |
-| Control | \(\mathbf{u}(t)\) | `sys.u` | A quantity the optimiser may vary in time |
+| Control | \(\mathbf{u}(t)\) | `sys.u` | A quantity the optimizer may vary in time |
 | Parameter | \(\mathbf{p}\) | `sys.p` | Constant during one solve; may be retuned in a sweep |
 | Algebraic | \(\mathbf{z}(t)\) | `sys.z` | Unknown on \(g=0\), not an ODE (quasi-steady closure) |
 | Forcing | \(w(t)\) | inside \(f\) | Known function of time (weather, a prescribed input) |
@@ -62,10 +62,10 @@ list may mix both (greenhouse: harvest at \(T\) minus heating).
 `max` / `min` replace the whole criterion, so mixed \(J\) is one list.
 
 ```python
-ocp.max([growth])                        # maximise ∫ G dt
-ocp.min([irrigation])                    # minimise ∫ u dt
-ocp.max(eco_opt.t_f(rocket.height))      # maximise h(T)
-ocp.max(eco_opt.t_f(seed))               # maximise x₂(T)
+ocp.max([growth])                        # maximize ∫ G dt
+ocp.min([irrigation])                    # minimize ∫ u dt
+ocp.max(eco_opt.t_f(rocket.height))      # maximize h(T)
+ocp.max(eco_opt.t_f(seed))               # maximize x₂(T)
 ocp.min([eco_opt.t_f(-P5 * crop), P4 * heat])  # Mayer + Lagrange
 ```
 
@@ -147,7 +147,7 @@ Direct collocation and the numerical stack:
   [CasADi](https://doi.org/10.1007/s11081-018-9419-0).
 - Wächter and Biegler (2006),
   [IPOPT](https://doi.org/10.1007/s10107-004-0559-y).
-- Leek (2016), [Yop](https://www.yoptimization.com) — modelling
+- Leek (2016), [Yop](https://www.yoptimization.com) — modeling
   workflow that `eco_opt` follows in Python.
 
 An ecological transcription of the same kind:

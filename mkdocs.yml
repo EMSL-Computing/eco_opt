@@ -7,15 +7,32 @@ exclude_docs: |
 theme:
   name: material
   palette:
-    primary: teal
-    accent: teal
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
   features:
+    - navigation.tabs
     - navigation.sections
     - navigation.footer
     - navigation.top
+    - search.suggest
+    - search.highlight
     - content.code.copy
 markdown_extensions:
   - admonition
+  - attr_list
+  - md_in_html
   - tables
   - toc:
       permalink: true
@@ -28,16 +45,19 @@ extra_javascript:
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 nav:
   - Home: index.md
-  - Install: install.md
-  - First solve: first-solve.md
-  - Results and plots: results-and-plots.md
-  - Posing a problem: posing.md
-  - CasADi expressions: casadi-expressions.md
-  - Transcription: transcription.md
-  - Constraints and time: constraints-and-time.md
-  - Guesses, mesh, scaling: guesses-mesh-scaling.md
-  - Build and optimize: build-optimize.md
-  - Troubleshooting: troubleshooting.md
+  - Getting started:
+      - Install: install.md
+      - First solve: first-solve.md
+      - Results and plots: results-and-plots.md
+      - Shadow prices: shadow-prices.md
+  - User guide:
+      - Posing a problem: posing.md
+      - CasADi expressions: casadi-expressions.md
+      - Transcription: transcription.md
+      - Constraints and time: constraints-and-time.md
+      - Guesses, mesh, scaling: guesses-mesh-scaling.md
+      - Build and optimize: build-optimize.md
+      - Troubleshooting: troubleshooting.md
   - Examples:
       - Overview: examples/index.md
       - Ecological models:
@@ -66,5 +86,6 @@ nav:
           - Double integrator (Wang): examples/xuezhong_wang.md
       - Numerical features:
           - Quasi-steady microbes: examples/algebraic_qss.md
-  - API: api.md
-  - Cite: cite.md
+  - Reference:
+      - API: api.md
+      - Cite: cite.md

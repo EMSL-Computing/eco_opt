@@ -63,7 +63,7 @@ gives \(J^*=0.1628\).
 
 ## Interpretation
 
-A time-invariant oxidation rate hides the lag. The hypothesis “maximise
+A time-invariant oxidation rate hides the lag. The hypothesis “maximize
 growth net of oxidative cost over a fixed incubation” is enough to
 produce delayed ligninolysis. That lag is a prediction of the
 hypothesis, not an extra switch put into \(f\).

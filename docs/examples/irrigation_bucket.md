@@ -29,7 +29,7 @@ The OCP forecast uses \(P\equiv 0\). Closed loop can apply rain to the
 ## What was done
 
 The OCP is always the **dry forecast**: \(P\equiv 0\), sinusoidal ET,
-minimise irrigation, keep \(S\) between field-capacity-style bounds.
+minimize irrigation, keep \(S\) between field-capacity-style bounds.
 That tape is the grower’s plan written on day 0.
 
 Four integrations:

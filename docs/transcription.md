@@ -12,9 +12,9 @@ a quadrature of those pieces. Decision variables are the control on
 each interval, the state at the knots and collocation nodes, the
 horizon if \(T\) is free, and any parameters.
 
-The parameterisation represents \(u\) as a step on each interval. A
+The parameterization represents \(u\) as a step on each interval. A
 plot that interpolates `sol.u` as a continuous curve misrepresents
-the discretisation. `matplotlib.pyplot.stairs` or
+the discretization. `matplotlib.pyplot.stairs` or
 `step(..., where="post")` matches the transcription. Snippets:
 [Results and plots](results-and-plots.md).
 `sol.time` is the coarse knot grid (interval boundaries). Interior
@@ -55,7 +55,7 @@ A typical first mesh for a new model is 20–40 intervals and degree 3.
 [bang_free_tf](examples/bang_free_tf.md).
 
 Mesh refinement can change \(J\) by a small amount. That change is
-discretisation error, not a change of mechanism.
+discretization error, not a change of mechanism.
 
 ## What may appear in \(f\)
 
@@ -106,4 +106,4 @@ single-phase only.
 Direct collocation: Betts, *Practical Methods for Optimal Control*;
 Biegler, *Nonlinear Programming* (SIAM, 2010); Rao (2009). CasADi:
 Andersson et al. (2019). IPOPT: Wächter and Biegler (2006). The
-modelling workflow: [Yop](https://www.yoptimization.com) (Leek, 2016).
+modeling workflow: [Yop](https://www.yoptimization.com) (Leek, 2016).

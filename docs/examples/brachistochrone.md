@@ -1,6 +1,6 @@
 # Brachistochrone (`brachistochrone`)
 
-**Question.** Which wire from the origin to a lower point minimises
+**Question.** Which wire from the origin to a lower point minimizes
 travel time under gravity?
 
 ## Formulation
@@ -11,7 +11,7 @@ path angle (or equivalent). Gravity \(g\), no friction.
 **Objective.** \(\min T\). **Horizon.** Free.
 
 Endpoint \((x_f,y_f)=(\pi,2)\) in the scaled units of the example.
-The minimiser is a cycloid with \(T^*=\pi\).
+The minimizer is a cycloid with \(T^*=\pi\).
 
 ## What was done
 

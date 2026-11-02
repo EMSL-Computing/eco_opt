@@ -54,7 +54,7 @@ and cuts leaf-C accumulation. \(J^*=499.5\,\mathrm{g\,C\,m^{-2}}\) at
 ## Interpretation
 
 Two belowground investments are not a single “exudation rate.” The
-hypothesis “maximise leaf growth over the season, with N from roots or
+hypothesis “maximize leaf growth over the season, with N from roots or
 from exudation-stimulated mineralisation” produces an early exudation
 phase and a later root-growth phase, and a larger belowground C
 commitment when mineral N is scarce. That is a schedule implied by \(J\)

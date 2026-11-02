@@ -10,7 +10,7 @@ the criterion $J$ are declared; CasADi collocation and IPOPT produce
 $u^*(\cdot)$.
 
 Python implementation of the [Yop](https://www.yoptimization.com)
-modelling workflow (Leek, 2016).
+modeling workflow (Leek, 2016).
 
 Complete first script: [First solve](docs/first-solve.md)
 (microbial growth). Goddard and other OCPs:

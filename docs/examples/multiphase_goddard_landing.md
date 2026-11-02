@@ -1,13 +1,13 @@
 # Goddard landing (`multiphase_goddard_landing`)
 
-**Question.** After maximising altitude, can a second phase land the
+**Question.** After maximizing altitude, can a second phase land the
 same rocket (\(h=v=0\)) with a free switch and free total time?
 
 Transcription check, not ecology.
 
 ## Formulation
 
-**Phase 1.** Same Goddard ascent ODE; maximise altitude; free switch.
+**Phase 1.** Same Goddard ascent ODE; maximize altitude; free switch.
 
 **Phase 2.** Same ODE; reach \(h=0\), \(v=0\); free \(T\).
 

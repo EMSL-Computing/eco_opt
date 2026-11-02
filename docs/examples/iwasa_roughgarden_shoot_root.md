@@ -21,7 +21,7 @@ G=\min(\alpha S,\beta R),
 with \(G\) split among shoot, root, and fruit according to the
 controls. Fruit is a sink (no return to \(G\)).
 
-**Objective.** Maximise fruit at the end of a **fixed** season,
+**Objective.** Maximize fruit at the end of a **fixed** season,
 \(J=F(T)\).
 
 **Constraints.** Allocations in the unit simplex; non-negative organs;
@@ -44,7 +44,7 @@ balance time, fruit-switch time, and \(F(T)\) match the numerics.
 ## Interpretation
 
 Splitting the vegetative body into shoot and root is not a cosmetic
-extra state. The hypothesis “maximise terminal fruit with Liebig
+extra state. The hypothesis “maximize terminal fruit with Liebig
 production” forces a balanced-growth phase that Cohen’s one-compartment
 plant never needs.
 
