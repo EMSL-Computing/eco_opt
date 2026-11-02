@@ -1,0 +1,4 @@
+figures/
+*.npz
+__pycache__/
+*.pyc
