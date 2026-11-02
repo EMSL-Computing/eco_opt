@@ -21,6 +21,7 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+from matplotlib.path import Path as MplPath
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from style import (  # noqa: E402
@@ -80,41 +81,46 @@ def solve(ocp, sys_, ro):
 
 
 def draw_schematic(ax):
-    ax.set_xlim(-0.03, 1.24)
-    ax.set_ylim(-0.50, 1.42)
+    ax.set_xlim(-0.02, 1.30)
+    ax.set_ylim(-0.38, 1.38)
     ax.axis("off")
     grey = "0.35"
 
     def pool(x, y, w, h, text, color):
         ax.add_patch(FancyBboxPatch((x, y), w, h, fc="white", ec=color, lw=1.0,
                                     boxstyle="round,pad=0.0,rounding_size=0.035"))
-        ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=6.5,
-                linespacing=1.15)
+        ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=7,
+                linespacing=1.2)
 
     def arrow(p, q, color, rad=0.0, lw=0.9):
         ax.add_patch(FancyArrowPatch(p, q, arrowstyle="-|>", mutation_scale=8,
                                      connectionstyle=f"arc3,rad={rad}", color=color, lw=lw))
 
+    def curve(p, c, q, color, lw=0.9):
+        # Quadratic Bezier in data coordinates, so the bulge does not depend on the axes aspect.
+        path = MplPath([p, c, q], [MplPath.MOVETO, MplPath.CURVE3, MplPath.CURVE3])
+        ax.add_patch(FancyArrowPatch(path=path, arrowstyle="-|>", mutation_scale=8,
+                                     color=color, lw=lw))
+
     def label(x, y, text, color=grey, **kw):
         ax.text(x, y, text, fontsize=6.5, color=color, **kw)
 
-    pool(0.00, 0.59, 0.40, 0.40, "non-aromatic\n$C_H$", STATE_COLOR)
-    pool(0.00, 0.04, 0.40, 0.40, "aromatic\n$C_O$", STATE_LIGHT)
-    pool(0.66, 0.40, 0.34, 0.28, "microbes", grey)
-    arrow((0.41, 0.78), (0.65, 0.59), grey)
-    label(0.45, 0.80, "hydrolysis", ha="left", va="bottom")
-    arrow((0.41, 0.24), (0.65, 0.47), CONTROL_COLOR, lw=1.5)
-    label(0.40, 0.23, "ligninolysis " + r"$v_O C_O$", CONTROL_COLOR,
-          ha="left", va="top")
-    # Recycling is drawn outside the uptake paths, with explicit arrowheads.
-    arrow((0.82, 0.69), (0.20, 1.00), grey, rad=0.38)
-    label(0.54, 1.27, r"$(1-\mu_O)G$", ha="center", va="bottom")
-    arrow((0.82, 0.39), (0.20, 0.03), grey, rad=-0.38)
-    label(0.72, -0.16, r"necromass $\mu_O G$", ha="center", va="top")
-    arrow((1.01, 0.52), (1.21, 0.52), grey)
-    label(1.11, 0.60, r"CO$_2$", ha="center", va="bottom")
-    ax.text(0.57, -0.43, r"maximize $J=\int_0^{T}G\,dt$, $T$ fixed",
-            ha="center", va="center", fontsize=7)
+    pool(0.00, 0.72, 0.50, 0.36, "non-aromatic\n$C_H$", STATE_COLOR)
+    pool(0.00, 0.00, 0.50, 0.36, "aromatic\n$C_O$", STATE_LIGHT)
+    pool(0.80, 0.39, 0.34, 0.27, "microbes", grey)
+    # Uptake: hydrolysis labelled above its arrow, ligninolysis below its arrow.
+    arrow((0.51, 0.86), (0.79, 0.61), grey)
+    label(0.56, 0.86, "hydrolysis", ha="left", va="bottom")
+    arrow((0.51, 0.20), (0.79, 0.45), CONTROL_COLOR, lw=1.5)
+    label(0.53, 0.17, "ligninolysis\n" + r"$v_O C_O$", CONTROL_COLOR,
+          ha="left", va="top", linespacing=1.2)
+    # Recycling routed around the outside of the pools.
+    curve((1.10, 0.67), (1.15, 1.35), (0.20, 1.10), grey)
+    label(0.70, 1.22, r"$(1-\mu_O)G$", ha="center", va="bottom")
+    curve((1.10, 0.38), (1.15, -0.42), (0.20, -0.01), grey)
+    label(0.70, -0.21, r"necromass $\mu_O G$", ha="center", va="top")
+    arrow((1.15, 0.525), (1.29, 0.525), grey)
+    label(1.22, 0.60, r"CO$_2$", ha="center", va="bottom")
 
 
 def main():
@@ -138,8 +144,9 @@ def main():
                        for k in keys}
             np.savez(args.plot_data, taus=taus, **records)
 
-    fig = plt.figure(figsize=(TEXT_W, 3.75))
-    gs = fig.add_gridspec(2, 3, wspace=0.5, hspace=0.6, width_ratios=[1.6, 1, 1])
+    fig = plt.figure(figsize=(TEXT_W, 4.05))
+    gs = fig.add_gridspec(2, 3, wspace=0.5, hspace=0.6, width_ratios=[2.0, 1, 1],
+                          height_ratios=[1.45, 1])
     ax = {k: fig.add_subplot(gs[i, j]) for k, (i, j) in
           zip("abcdef", [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2)])}
 

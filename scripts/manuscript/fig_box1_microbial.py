@@ -46,38 +46,38 @@ def uptake_from_price(lam):
 
 
 def draw_schematic(ax):
-    ax.set_xlim(-0.03, 1.03)
-    ax.set_ylim(0.08, 1.02)
+    ax.set_xlim(-0.04, 1.16)
+    ax.set_ylim(-0.02, 1.04)
     ax.axis("off")
     grey = "0.35"
 
     def pool(x, y, w, h, text, color):
         ax.add_patch(FancyBboxPatch((x, y), w, h, fc="white", ec=color, lw=1.0,
-                                    boxstyle="round,pad=0.0,rounding_size=0.05"))
-        ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=7.5,
-                linespacing=1.1)
+                                    boxstyle="round,pad=0.0,rounding_size=0.04"))
+        ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=7,
+                linespacing=1.2)
 
     def arrow(p, q, color, rad=0.0, lw=0.9):
         ax.add_patch(FancyArrowPatch(p, q, arrowstyle="-|>", mutation_scale=8,
                                      connectionstyle=f"arc3,rad={rad}", color=color, lw=lw))
 
     def label(x, y, text, color=grey, **kw):
-        ax.text(x, y, text, fontsize=7, color=color, **kw)
+        ax.text(x, y, text, fontsize=6.5, color=color, **kw)
 
-    pool(-0.01, 0.38, 0.32, 0.30, "substrate\n$C$", STATE_COLOR)
-    pool(0.69, 0.38, 0.32, 0.30, "microbes\n$B$", grey)
-    # uptake (the investment) and recycling
-    arrow((0.32, 0.57), (0.68, 0.57), CONTROL_COLOR, lw=1.5)
-    label(0.50, 0.60, "uptake $u$", CONTROL_COLOR, ha="center", va="bottom")
-    arrow((0.68, 0.48), (0.32, 0.48), grey)
-    label(0.50, 0.45, r"recycling $\mu G$", ha="center", va="top")
+    pool(0.00, 0.34, 0.38, 0.36, "substrate\n$C$", STATE_COLOR)
+    pool(0.74, 0.34, 0.38, 0.36, "microbes\n$B$", grey)
+    # uptake (the investment) labelled above, recycling labelled below the pools
+    arrow((0.39, 0.60), (0.73, 0.60), CONTROL_COLOR, lw=1.5)
+    label(0.56, 0.665, "uptake $u$", CONTROL_COLOR, ha="center", va="bottom")
+    arrow((0.73, 0.44), (0.39, 0.44), grey)
+    label(0.56, 0.325, r"recycling $\mu G$", ha="center", va="top")
     # respiration, loss, growth
-    arrow((0.85, 0.69), (0.85, 0.86), grey)
-    label(0.85, 0.88, r"CO$_2$", ha="center", va="bottom")
-    arrow((0.15, 0.37), (0.15, 0.24), grey)
-    label(0.15, 0.22, r"loss $\gamma C$", ha="center", va="top")
-    arrow((0.85, 0.37), (0.85, 0.24), PAYOFF_COLOR)
-    label(0.85, 0.22, "growth $G(u)$", PAYOFF_COLOR, ha="center", va="top")
+    arrow((0.93, 0.71), (0.93, 0.88), grey)
+    label(0.93, 0.90, r"CO$_2$", ha="center", va="bottom")
+    arrow((0.19, 0.33), (0.19, 0.16), grey)
+    label(0.19, 0.14, r"loss $\gamma C$", ha="center", va="top")
+    arrow((0.93, 0.33), (0.93, 0.16), PAYOFF_COLOR)
+    label(0.93, 0.14, "growth $G(u)$", PAYOFF_COLOR, ha="center", va="top")
 
 
 def main():
@@ -93,8 +93,9 @@ def main():
 
     J_star = float(sol.objective)
 
-    fig = plt.figure(figsize=(TEXT_W, 2.6))
-    gs = fig.add_gridspec(2, 3, wspace=0.5, hspace=0.6, width_ratios=[1.6, 1, 1])
+    fig = plt.figure(figsize=(TEXT_W, 2.9))
+    gs = fig.add_gridspec(2, 3, wspace=0.5, hspace=0.6, width_ratios=[2.0, 1, 1],
+                          height_ratios=[1.3, 1])
     ax = {k: fig.add_subplot(gs[i, j]) for k, (i, j) in
           zip("abcdef", [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2)])}
 

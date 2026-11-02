@@ -1,7 +1,6 @@
 """Coordinated allocation in the published plant--soil model.
 
-(a) Coupled processes and the two controls, with the growth objective
-separate from the schematic. (b) Belowground C supply relative to net
+(a) Coupled processes and the two controls. (b) Belowground C supply relative to net
 assimilation. (c) Exudation fraction. (d) Leaf C accumulation.
 
 Model and scenarios adapted from Chakrawal, Mooney and Colombi (2026).
@@ -60,7 +59,7 @@ def analyse(sol):
 def draw_schematic(ax):
     """Arrange the resource pathways without crossing arrows or overlaid text."""
     ax.set_xlim(-0.03, 1.07)
-    ax.set_ylim(-0.30, 1.03)
+    ax.set_ylim(-0.02, 1.03)
     ax.axis("off")
     grey = "0.35"
 
@@ -102,10 +101,6 @@ def draw_schematic(ax):
     arrow((0.80, 0.185), (0.26, 0.185), STATE_COLOR)
     label(0.53, 0.225, "net N mineralization", STATE_COLOR, ha="center", va="bottom")
 
-    # The objective has its own strip below the complete process diagram.
-    ax.plot([0.04, 1.02], [-0.035, -0.035], color="0.82", lw=0.6)
-    ax.text(0.53, -0.19, r"Objective   maximize cumulative leaf growth $J=\int_0^{120}G_L\,dt$",
-            ha="center", va="center", fontsize=7.5, color=PAYOFF_COLOR)
 
 
 def main():
