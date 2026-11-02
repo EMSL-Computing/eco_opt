@@ -7,4 +7,6 @@ dist/
 .venv/
 site/
 work/
-scripts/
+# Keep manuscript research scripts, but ignore other local utilities.
+/scripts/*
+!/scripts/manuscript/

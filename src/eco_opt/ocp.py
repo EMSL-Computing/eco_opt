@@ -122,6 +122,10 @@ class _BoundIndex:
         self.g_initial = []
         self.g_path = []
         self.g_final = []
+        # Rows of the collocation defects, g_defect[k][j] (nx rows each), and
+        # of the interval-continuity equations, g_continuity[k] (nx rows).
+        self.g_defect = []
+        self.g_continuity = []
 
 
 class _CompiledNlp:
@@ -310,6 +314,8 @@ class _CompiledNlp:
         self.w_last = np.array(sol["x"]).ravel()
         return OcpResults(
             sys=self.sys,
+            costate=self._costate(sol, sense),
+            hamiltonian_fn=self.hamiltonian_fn,
             sol=sol,
             stats=stats,
             N=self.N,
@@ -327,6 +333,24 @@ class _CompiledNlp:
             w=self.w_sym,
             objective_sense=sense,
         )
+
+    def _costate(self, sol, sense):
+        """Costate at the collocation points from the defect multipliers.
+
+        For Gauss-type collocation the multiplier of the defect at point j,
+        divided by its quadrature weight, approximates the costate there.
+        The sign gives lam = dJ/dx for the objective as declared, so for
+        ``max`` a positive value means one more unit of that state raises J.
+        Returns an array of shape (N*d, nx).
+        """
+        lam_g = np.array(sol["lam_g"]).ravel()
+        sign = -1.0 if sense == "max" else 1.0
+        rows = []
+        for k in range(self.N):
+            for j in range(self.d):
+                r = self.idx.g_defect[k][j]
+                rows.append(sign * lam_g[r] / self.quad_weights[j])
+        return np.array(rows).reshape(self.N * self.d, self.sys.nx)
 
     def _apply_guess_dict(self, initial_guess):
         sys = self.sys
@@ -819,6 +843,15 @@ class Ocp:
             lagrange_fn = cs.Function(
                 "L", [sys.t, sys.x, sys.u, sys.z, sys.p], [sum(lagrange_terms)]
             )
+        # Hamiltonian H = L + lam' f in the sense of the user's objective
+        # (lam = dJ/dx), evaluated on the solution to check optimality.
+        lam_sym = cs.MX.sym("lam", nx)
+        running = sum(lagrange_terms) if has_lagrange else cs.MX(0)
+        hamiltonian_fn = cs.Function(
+            "H",
+            [sys.t, sys.x, sys.u, sys.z, sys.p, lam_sym],
+            [running + cs.dot(lam_sym, sys.dx)],
+        )
 
         w = []
         w0 = []
@@ -960,6 +993,7 @@ class Ocp:
             for pi, pc in enumerate(path_constraints):
                 val = eval_expr_at(pc.expr, tk, Xk, Uk, Zk)
                 idx.g_path[pi].extend(push_g(val, pc.lb, pc.ub))
+            defect_rows = []
             for j in range(d):
                 xp = C[0, j + 1] * Xk
                 for r in range(d):
@@ -969,7 +1003,7 @@ class Ocp:
                 Zcj = Zkj[j] if nz else z_empty
                 fj = f(t_cj, Xkj[j], Uk, Zcj, Pk)
                 defect = h_interval * fj - xp
-                push_g(defect, 0.0, 0.0)
+                defect_rows.append(push_g(defect, 0.0, 0.0))
                 if nz:
                     push_g(alg(t_cj, Xkj[j], Uk, Zcj, Pk), 0.0, 0.0)
 
@@ -997,7 +1031,8 @@ class Ocp:
                 if is_last:
                     idx.xf[i] = ki
 
-            push_g(Xk_end - Xk_next, 0.0, 0.0)
+            idx.g_defect.append(defect_rows)
+            idx.g_continuity.append(push_g(Xk_end - Xk_next, 0.0, 0.0))
 
             Xk = Xk_next
             X_all.append(Xk)
@@ -1073,6 +1108,8 @@ class Ocp:
             initial_constraints=initial_constraints,
             final_constraints=final_constraints,
             idx=idx,
+            quad_weights=cc.B[1:].copy(),
+            hamiltonian_fn=hamiltonian_fn,
             x_guess=x_guess,
             u_guess=u_guess,
             p_guess=p_guess,

@@ -81,6 +81,25 @@ def solve(control_intervals=200, polynomial_degree=5, tf_guess=2.0):
     return sol, sys
 
 
+def analytical_costate(t, T):
+    """Shadow price of substrate, lambda(t) = lambda_T exp(gamma (t - T)).
+
+    ``lambda_T`` follows from H(T) = 0 at resource exhaustion (baseline
+    ``k=0`` parameters).
+    """
+    a = EMAX * BETA
+    ut = R + np.sqrt(R ** 2 + R * BETA)
+    g_u = a * (R + BETA) / (ut + BETA) ** 2
+    lam_t = g_u / (1.0 - MU * g_u)
+    return lam_t * np.exp(GAMMA * (np.asarray(t) - T))
+
+
+def uptake_from_costate(lam):
+    """Uptake that maximizes the Hamiltonian for a given shadow price."""
+    a = EMAX * BETA
+    return -BETA + np.sqrt(a * (R + BETA) * (MU + 1.0 / np.asarray(lam)))
+
+
 def analytical_solution(ds=1e-4):
     """Independent PMP trajectory for the baseline ``k=0`` parameters.
 
