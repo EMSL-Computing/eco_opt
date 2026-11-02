@@ -1,14 +1,17 @@
 """Shadow prices (costates) and Hamiltonian recovered from the NLP multipliers.
 
 Checked against closed-form costates (microbial growth, Manzoni et al. 2023;
-a linear-quadratic problem; a Mayer-only problem) and against a
-finite-difference sensitivity dJ*/dx0 for a two-state model.
+one- and two-state linear-quadratic problems; a Mayer-only problem) and
+against finite-difference sensitivities dJ*/dx for a two-state model, both
+at t = 0 and, by re-solving the remaining horizon (Bellman's principle), at
+interior times.
 """
 import os
 import sys as _sys
 
 import numpy as np
 import pytest
+from scipy.integrate import solve_ivp
 
 import eco_opt
 from eco_opt import Namespace
@@ -71,6 +74,48 @@ def test_lq_min_costate_and_constant_hamiltonian(points):
     assert np.max(np.abs(sol.hamiltonian - 0.5 / np.cosh(1.0) ** 2)) < 1e-4
 
 
+def _double_integrator(t, x, u):
+    return [x[1], u[0]], Namespace(x1=x[0], x2=x[1], u=u[0])
+
+
+@pytest.mark.parametrize("points", ["legendre", "radau"])
+def test_two_state_lq_costate_matches_riccati(points):
+    # min int_0^1 (x1^2 + u^2)/2, x1' = x2, x2' = u, free final state:
+    # lam(t) = P(t) x(t), with -P' = A'P + PA - PBB'P + Q and P(1) = 0.
+    s = eco_opt.System(states=2, controls=1, model=_double_integrator)
+    ocp = eco_opt.Ocp()
+    ocp.min([0.5 * (s.y.x1 ** 2 + s.y.u ** 2)])
+    ocp.st(
+        system=s,
+        constraints=[
+            (0, "==", eco_opt.t_0(s.t)),
+            (1, "==", eco_opt.t_f(s.t)),
+            (1, "==", eco_opt.t_0(s.y.x1)),
+            (0, "==", eco_opt.t_0(s.y.x2)),
+        ],
+    )
+    sol = ocp.solve(control_intervals=50, polynomial_degree=4, collocation_points=points)
+    assert sol.success
+
+    A = np.array([[0.0, 1.0], [0.0, 0.0]])
+    B = np.array([[0.0], [1.0]])
+    Q = np.diag([1.0, 0.0])
+
+    def riccati(t, p):
+        P = p.reshape(2, 2)
+        return -(A.T @ P + P @ A - P @ B @ B.T @ P + Q).ravel()
+
+    def closed_loop(t, x):
+        return (A - B @ B.T @ P_of(t)) @ x
+
+    ric = solve_ivp(riccati, (1.0, 0.0), np.zeros(4), dense_output=True, rtol=1e-11, atol=1e-13)
+    P_of = lambda t: ric.sol(t).reshape(2, 2)
+    traj = solve_ivp(closed_loop, (0.0, 1.0), [1.0, 0.0], dense_output=True,
+                     rtol=1e-11, atol=1e-13)
+    lam_an = np.array([P_of(t) @ traj.sol(t) for t in sol.costate_time])
+    assert np.max(np.abs(sol.costate - lam_an)) < 1e-4 * np.max(np.abs(lam_an))
+
+
 def test_mayer_only_costate_is_terminal_gradient():
     s = eco_opt.System(states=1, controls=1, model=_lq_model)
     ocp = eco_opt.Ocp()
@@ -118,6 +163,41 @@ def test_two_state_costate_matches_finite_difference_sensitivity():
 
     # Autonomous, fixed final time: H is constant along the optimum.
     assert np.ptp(base.hamiltonian) < 1e-6
+
+
+def test_two_state_costate_matches_tail_sensitivity_at_interior_times():
+    # Bellman: lam(t_k) = dV/dx at x*(t_k), where V solves the remaining
+    # horizon [t_k, T] (shifted to start at 0; the model is autonomous).
+    ld = _load("opt_lignin", "lignin_decomposition")
+    N, d = 60, 4
+    ocp, _ = ld.compile_ocp(control_intervals=N, polynomial_degree=d)
+    opts = {"max_iter": 3000, "tol": 1e-12}
+    base = ocp.optimize(ipopt_options=opts)
+    assert base.success
+
+    for k in (15, 45):
+        tk, (CT, Co) = base.time[k], base.x[k]
+        tail, ty = ld.compile_ocp(
+            TT=ld.TT_DEFAULT - tk, control_intervals=N - k, polynomial_degree=d
+        )
+
+        def V_at(CT, Co):
+            tail.set_constraints(
+                [(CT, "==", eco_opt.t_0(ty.y.CT)), (Co, "==", eco_opt.t_0(ty.y.Co))]
+            )
+            out = tail.optimize(ipopt_options=opts)
+            assert out.success
+            return out.objective
+
+        eps = 1e-4 * CT
+        fd = np.array(
+            [
+                (V_at(CT + eps, Co) - V_at(CT - eps, Co)) / (2 * eps),
+                (V_at(CT, Co + eps) - V_at(CT, Co - eps)) / (2 * eps),
+            ]
+        )
+        lam = [np.interp(tk, base.costate_time, base.costate[:, j]) for j in range(2)]
+        assert np.allclose(lam, fd, rtol=1e-3)
 
 
 def test_multiphase_results_have_no_costate():

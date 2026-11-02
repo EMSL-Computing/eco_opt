@@ -8,4 +8,6 @@ dist/
 site/
 work/
 eco_opt_anonymous.zip
-scripts/
+# Keep manuscript research scripts, but ignore other local utilities.
+/scripts/*
+!/scripts/manuscript/
