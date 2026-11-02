@@ -7,7 +7,6 @@ dist/
 .venv/
 site/
 work/
-eco_opt_anonymous.zip
 # Keep manuscript research scripts, but ignore other local utilities.
 /scripts/*
 !/scripts/manuscript/
