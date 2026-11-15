@@ -102,6 +102,8 @@ def main() -> None:
     meta["version"] = version
     meta["publication_date"] = dt.date.today().isoformat()
     meta.pop("doi", None)
+    # The legacy API reports BSD-2-Clause as "bsd-2-clause-netbsd"; always send the SPDX id.
+    meta["license"] = "bsd-2-clause"
     dep = call("PUT", f"{API}/deposit/depositions/{dep['id']}", {"metadata": meta})
 
     name = f"eco_opt-{version}.zip"
