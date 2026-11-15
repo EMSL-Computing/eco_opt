@@ -120,10 +120,14 @@ Questions: [arjun.chakrawal@pnnl.gov](mailto:arjun.chakrawal@pnnl.gov).
 ## Citation
 
 Chakrawal, A., Schwarz, E., Mudunuru, M. K., Leek, V., and Colombi, T.
-(2026). The eco_opt package: From process models to optimal strategies.
-Manuscript in preparation.
+(2026). Optimal control for modeling biological regulation in soil and
+plant systems. Manuscript in preparation.
 
-Cite the software as `eco_opt` 0.1. See [Cite](docs/cite.md) and [`CITATION.cff`](CITATION.cff).
+Cite the software as `eco_opt` with its version and Zenodo DOI. Version 0.1
+is [10.5281/zenodo.24239945](https://doi.org/10.5281/zenodo.24239945).
+[10.5281/zenodo.24239944](https://doi.org/10.5281/zenodo.24239944) covers all
+versions and resolves to the latest. See [Cite](docs/cite.md) and
+[`CITATION.cff`](CITATION.cff).
 
 ## Acknowledgments
 
