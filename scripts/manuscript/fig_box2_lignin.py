@@ -3,8 +3,10 @@
 (a) model schematic; (b) optimal oxidative investment v_O(t) at two costs
 r_O; (c) remaining non-aromatic and aromatic
 carbon; (d) shadow prices of non-aromatic and aromatic carbon; (e)
-marginal return to initiating ligninolysis, dH/dv_O at v_O = 0, whose sign
+marginal return from initiating ligninolysis, dH/dv_O at v_O = 0, whose sign
 change marks the onset of investment; (f) onset (lag) time across r_O.
+Thin gray lines mark the lags tau_1 and tau_2 of the two scenarios in b, e
+and f.
 
 Model and parameters from Chakrawal, Lindahl and Manzoni (2024).
 Requires eco_opt with costates (``sol.costate``).
@@ -32,7 +34,7 @@ from models import lignin as ld  # noqa: E402
 
 apply_style()
 
-RO_LOW, RO_HIGH = 25.0, 50.0
+RO_LOW, RO_HIGH = 25.0, 100.0
 RO_SWEEP = np.array([5.0, 8.0, 12.0, 16.0, 20.0, 25.0, 35.0, 50.0, 75.0, 100.0])
 N_INTERVALS = 100
 IPOPT = {"max_iter": 3000, "tol": 1e-10}
@@ -123,6 +125,19 @@ def draw_schematic(ax):
     label(1.22, 0.60, r"CO$_2$", ha="center", va="bottom")
 
 
+LAG_COLOR = "0.6"
+LAG_LW = 0.5
+
+
+def mark_lags(ax, tau_low, tau_high):
+    """Mark the lags of the two scenarios with thin vertical lines."""
+    for i, (tau, ha, dx) in enumerate(((tau_low, "right", -25), (tau_high, "left", 25)),
+                                      start=1):
+        ax.axvline(tau, color=LAG_COLOR, lw=LAG_LW, zorder=0)
+        ax.text(tau + dx, 1.0, rf"$\tau_{i}$", transform=ax.get_xaxis_transform(),
+                fontsize=6, color="0.3", ha=ha, va="bottom")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--plot-data", type=Path,
@@ -158,10 +173,9 @@ def main():
     for rec, ls in ((low, LS_LOW), (high, LS_HIGH)):
         a_.step(rec["t_u"][:-1], 1e3 * rec["vo"], where="post", color=CONTROL_COLOR,
                 ls=ls, lw=LW)
-    a_.annotate(r"$\tau$", xy=(low["tau"], 0), xytext=(low["tau"] - 260, 0.35),
-                fontsize=7, arrowprops=dict(arrowstyle="-", lw=0.5, color="0.4"))
     a_.set_xlim(0, ld.TT_DEFAULT)
     a_.set_ylim(0, 2.3)
+    mark_lags(a_, low["tau"], high["tau"])
     a_.set_xlabel("time (d)")
     a_.set_ylabel(r"ligninolytic rate $v_O$ ($10^{-3}$ d$^{-1}$)")
     panel_label(a_, "b")
@@ -192,19 +206,20 @@ def main():
     a_.set_ylabel("shadow price (per unit C)")
     panel_label(a_, "d")
 
-    # (e) marginal return to initiating ligninolysis
+    # (e) marginal return from initiating ligninolysis
     a_ = ax["e"]
     a_.axhline(0, color="0.6", lw=0.6)
     for rec, ls in ((low, LS_LOW), (high, LS_HIGH)):
         a_.plot(rec["t_lam"], 1e3 * rec["dH0"], color=PAYOFF_COLOR, ls=ls, lw=LW)
-    a_.text(0.03, 0.97, r"$>0$: invest", transform=a_.transAxes, ha="left", va="top",
+    a_.text(0.97, 0.97, r"$>0$: invest", transform=a_.transAxes, ha="right", va="top",
             fontsize=6, color="0.4")
     a_.text(0.97, 0.04, r"$<0$: wait", transform=a_.transAxes, ha="right", va="bottom",
             fontsize=6, color="0.4")
     a_.set_xlim(0, ld.TT_DEFAULT)
-    a_.set_ylim(None, 7)
+    a_.set_ylim(None, 20)
+    mark_lags(a_, low["tau"], high["tau"])
     a_.set_xlabel("time (d)")
-    a_.set_ylabel("marginal return to\ninitiation ($10^{-3}$)")
+    a_.set_ylabel("marginal return from\ninitiation ($10^{-3}$)")
     panel_label(a_, "e")
 
     # (f) onset of investment across costs
@@ -213,6 +228,12 @@ def main():
     for ro, rec in ((RO_LOW, low), (RO_HIGH, high)):
         a_.plot(ro, rec["tau"], "o", ms=5, mfc="none", mec="0.2", mew=0.8)
     a_.set_xscale("log")
+    x0 = a_.get_xlim()[0]
+    for i, (ro, rec) in enumerate(((RO_LOW, low), (RO_HIGH, high)), start=1):
+        a_.plot([x0, ro], [rec["tau"], rec["tau"]], color=LAG_COLOR, lw=LAG_LW, zorder=0)
+        a_.text(x0 * 1.12, rec["tau"], rf"$\tau_{i}$", fontsize=6, color="0.3",
+                ha="left", va="bottom")
+    a_.set_xlim(left=x0)
     a_.set_xlabel(r"cost of ligninolysis $r_O$ (d)")
     a_.set_ylabel(r"lag of ligninolysis $\tau$ (d)")
     panel_label(a_, "f")
@@ -224,7 +245,7 @@ def main():
     save(fig, "fig_box2_lignin")
 
     # Numbers quoted in caption.md and results.md.
-    for name, rec in (("r_O=25", low), ("r_O=50", high)):
+    for name, rec in ((f"r_O={RO_LOW:.0f}", low), (f"r_O={RO_HIGH:.0f}", high)):
         s = np.sign(rec["dH0"])
         cross = rec["t_lam"][np.where(np.diff(s) != 0)[0]]
         print(f"{name}: J* = {rec['J']:.5f}, tau (5% rule) = {rec['tau']:.0f} d, "

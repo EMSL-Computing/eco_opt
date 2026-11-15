@@ -1,7 +1,7 @@
 """Coordinated allocation in the published plant--soil model.
 
 (a) Coupled processes and the two controls. (b) Belowground C supply relative to net
-assimilation. (c) Exudation fraction. (d) Leaf C accumulation.
+assimilation. (c) Exudation fraction. (d) Leaf C accumulation. (e) Mineral N stock.
 
 Model and scenarios adapted from Chakrawal, Mooney and Colombi (2026).
 The numerical formulation is unchanged; this figure uses two optimal
@@ -28,7 +28,7 @@ from models import plant_soil as ro
 
 apply_style()
 P = ro.PARAMS
-N_HIGH, N_LOW = 20.0, 10.0
+N_HIGH, N_LOW = 40.0, 10.0
 N_INTERVALS = 100
 LS = {N_HIGH: "-", N_LOW: (0, (1.2, 1.2))}
 LW = 1.5
@@ -53,7 +53,8 @@ def analyse(sol):
     assimilation = np.array([float(NET_ASSIMILATION(x, u))
                              for x, u in zip(states, sol.u)])
     return {"t": sol.time, "tu": tu, "S_frac": sol.u[:, 0] / assimilation,
-            "f": sol.u[:, 1], "leafC": sol.x[:, 0], "J": float(sol.objective)}
+            "f": sol.u[:, 1], "leafC": sol.x[:, 0], "inorgN": sol.x[:, 8],
+            "J": float(sol.objective)}
 
 
 def draw_schematic(ax):
@@ -111,7 +112,7 @@ def main():
     if args.plot_data is not None and args.plot_data.exists():
         with np.load(args.plot_data) as data:
             recs = {N0: {key: data[f"{N0}_{key}"] for key in
-                          ("t", "tu", "S_frac", "f", "leafC", "J")}
+                          ("t", "tu", "S_frac", "f", "leafC", "inorgN", "J")}
                     for N0 in (N_HIGH, N_LOW)}
     else:
         recs = {N0: analyse(solve(N0)) for N0 in (N_HIGH, N_LOW)}
@@ -120,9 +121,9 @@ def main():
                                       for N0, rec in recs.items()
                                       for key, value in rec.items()})
     fig = plt.figure(figsize=(TEXT_W, 3.35))
-    gs = fig.add_gridspec(2, 3, wspace=0.68, hspace=0.35, height_ratios=[1.35, 1])
+    gs = fig.add_gridspec(2, 4, wspace=0.95, hspace=0.35, height_ratios=[1.35, 1])
     ax = {"a": fig.add_subplot(gs[0, :])}
-    ax.update({k: fig.add_subplot(gs[1, j]) for j, k in enumerate("bcd")})
+    ax.update({k: fig.add_subplot(gs[1, j]) for j, k in enumerate("bcde")})
     draw_schematic(ax["a"])
     panel_label(ax["a"], "a", x=0.02, y=0.98)
 
@@ -149,6 +150,13 @@ def main():
            ylabel=r"leaf C (g C m$^{-2}$)")
     panel_label(a_, "d")
 
+    a_ = ax["e"]
+    for N0, rec in recs.items():
+        a_.plot(rec["t"], rec["inorgN"], color=STATE_COLOR, ls=LS[N0], lw=LW)
+    a_.set(xlim=(0, 120), ylim=(0, None), xlabel="time (d)",
+           ylabel=r"mineral N (g N m$^{-2}$)")
+    panel_label(a_, "e")
+
     shared_legend(fig, [
         (rf"initial N: {N_HIGH:.0f} g N m$^{{-2}}$", dict(color="0.2", lw=LW, ls=LS[N_HIGH])),
         (rf"initial N: {N_LOW:.0f} g N m$^{{-2}}$", dict(color="0.2", lw=LW, ls=LS[N_LOW])),
@@ -156,7 +164,8 @@ def main():
     ], y=0.95)
     save(fig, "fig_box3_root")
     for N0, rec in recs.items():
-        print(f"N0={N0:.0f}: J*={rec['J']:.2f} g C m-2; leaf C(T)={rec['leafC'][-1]:.2f}")
+        print(f"N0={N0:.0f}: J*={rec['J']:.2f} g C m-2; leaf C(T)={rec['leafC'][-1]:.2f}; "
+              f"mineral N min={rec['inorgN'].min():.3f}, end={rec['inorgN'][-1]:.3f}")
 
 
 if __name__ == "__main__":

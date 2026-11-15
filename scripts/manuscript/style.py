@@ -75,7 +75,7 @@ def apply_style(*, large: bool = False) -> None:
         "axes.titlesize": 7.5,
         "axes.titleweight": "normal",
         "axes.titlelocation": "left",
-        "axes.labelsize": 7.5,
+        "axes.labelsize": 6.5,
         "xtick.labelsize": 6.5,
         "ytick.labelsize": 6.5,
         "legend.fontsize": 6.5,
