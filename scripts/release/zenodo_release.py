@@ -65,6 +65,9 @@ def checks(version: str) -> str:
     cff = re.search(r'^version:\s*"?([^"\n]+)"?', (ROOT / "CITATION.cff").read_text(), re.M).group(1)
     if cff != version:
         sys.exit(f"CITATION.cff version {cff} differs from pyproject version {version}.")
+    init = re.search(r'^__version__\s*=\s*"([^"]+)"', (ROOT / "src" / "eco_opt" / "__init__.py").read_text(), re.M).group(1)
+    if init != version:
+        sys.exit(f"eco_opt.__version__ {init} differs from pyproject version {version}.")
     tag = f"v{version}"
     if tag not in git("tag", "--list", tag).split():
         sys.exit(f"Tag {tag} does not exist.")

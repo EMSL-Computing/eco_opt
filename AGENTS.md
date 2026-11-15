@@ -67,14 +67,16 @@ internals.
 Every change pushed to `main` must be released and archived on Zenodo.
 Do not leave changes on `main` without a matching Zenodo version.
 
-1. Bump `version` in `pyproject.toml` and `CITATION.cff` (patch for fixes,
-   minor for features).
+1. Bump the version in `pyproject.toml`, `CITATION.cff` and
+   `src/eco_opt/__init__.py` (patch for fixes, minor for features).
 2. Commit, then tag `v<version>`, and push both the branch and the tag.
 3. Run `python scripts/release/zenodo_release.py`. It refuses to run unless
    the tree is clean, `HEAD` is the pushed tag, and the version is new. It
    uploads `git archive` of the tag as a new version of the Zenodo record.
-4. Commit the updated `scripts/release/zenodo.json`. Add the new version DOI
-   to `docs/cite.md` and `CITATION.cff`.
+4. Commit the updated `scripts/release/zenodo.json` and push it. This
+   bookkeeping commit is the only change exempt from the rule; it is included
+   in the next release. Repository files cite only the concept DOI
+   10.5281/zenodo.24239944, so no other file needs the new version DOI.
 5. If a manuscript cites a specific version, update its DOI there too.
 
 The Zenodo token stays outside the repository (`~/.config/zenodo/api.env`).

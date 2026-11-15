@@ -4,12 +4,12 @@ Inventor: Arjun Chakrawal, Environmental Molecular Sciences
 Laboratory, Pacific Northwest National Laboratory, Richland,
 Washington 99354, United States.
 
-Cite this software by name, version and Zenodo DOI. Each release is
-archived on Zenodo:
-
-- `eco_opt` 0.1: [10.5281/zenodo.24239945](https://doi.org/10.5281/zenodo.24239945)
-- All versions (resolves to the latest):
-  [10.5281/zenodo.24239944](https://doi.org/10.5281/zenodo.24239944)
+Cite this software by name, version and Zenodo DOI. Every release is
+archived on Zenodo under
+[10.5281/zenodo.24239944](https://doi.org/10.5281/zenodo.24239944), which
+covers all versions and resolves to the latest. The Zenodo record lists the
+DOI of each version; version 0.1 is
+[10.5281/zenodo.24239945](https://doi.org/10.5281/zenodo.24239945).
 
 Also cite:
 
