@@ -10,4 +10,3 @@ work/
 # Keep manuscript research scripts, but ignore other local utilities.
 /scripts/*
 !/scripts/manuscript/
-!/scripts/release/

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "eco_opt"
-version = "0.1.1"
+version = "0.1"
 description = "Optimal control for process-based models (CasADi). Python implementation of the Yop modelling workflow."
 readme = "README.md"
 requires-python = ">=3.9"
