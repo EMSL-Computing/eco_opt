@@ -90,7 +90,7 @@ def draw_schematic(ax):
     arrow((0.195, 0.62), (0.195, 0.77), STATE_COLOR)
     label(0.215, 0.695, "N for assimilation", STATE_COLOR, ha="left", va="center")
     arrow((0.26, 0.525), (0.50, 0.525), CONTROL_COLOR, lw=1.5)
-    label(0.38, 0.55, r"exudation $f e_RS$", CONTROL_COLOR, ha="center", va="bottom")
+    label(0.38, 0.55, r"exudation $\alpha e_RS$", CONTROL_COLOR, ha="center", va="bottom")
 
     # Acquisition through roots and microbial processing close the feedback.
     arrow((0.15, 0.28), (0.15, 0.43), STATE_COLOR)
@@ -140,7 +140,7 @@ def main():
     for N0, rec in recs.items():
         a_.step(rec["tu"], rec["f"], where="post", color=CONTROL_COLOR, ls=LS[N0], lw=LW)
     a_.set(xlim=(0, 120), ylim=(0, 0.62), xlabel="time (d)",
-           ylabel="exudation fraction $f$")
+           ylabel=r"exudation fraction $\alpha$")
     panel_label(a_, "c")
 
     a_ = ax["d"]
@@ -160,7 +160,7 @@ def main():
     shared_legend(fig, [
         (rf"initial N: {N_HIGH:.0f} g N m$^{{-2}}$", dict(color="0.2", lw=LW, ls=LS[N_HIGH])),
         (rf"initial N: {N_LOW:.0f} g N m$^{{-2}}$", dict(color="0.2", lw=LW, ls=LS[N_LOW])),
-        ("bounds on $f$", dict(color=BOUND_COLOR, lw=0.8, ls=RULE_LS)),
+        (r"bounds on $\alpha$", dict(color=BOUND_COLOR, lw=0.8, ls=RULE_LS)),
     ], y=0.95)
     save(fig, "fig_box3_root")
     for N0, rec in recs.items():
