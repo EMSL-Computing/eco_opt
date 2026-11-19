@@ -108,8 +108,8 @@ def main():
     a_.step(t_u[:-1], u_opt, where="post", color=CONTROL_COLOR, lw=OPT_LW, ls=OPT_LS)
     a_.set_ylim(0, 0.8)
     a_.set_xlim(0, 2.0)
-    a_.set_xlabel("time")
-    a_.set_ylabel("uptake $u$")
+    a_.set_xlabel("time (y)")
+    a_.set_ylabel(r"uptake $u$ (g C y$^{-1}$)")
     panel_label(a_, "b")
 
     # (c) substrate
@@ -118,7 +118,7 @@ def main():
     a_.plot(sol.time, sol.x[:, 0], color=STATE_COLOR, lw=OPT_LW, ls=OPT_LS, label="optimum")
     a_.set_xlim(0, 2.0)
     a_.set_ylim(0, 1.02)
-    a_.set_xlabel("time")
+    a_.set_xlabel("time (y)")
     a_.set_ylabel(r"substrate $C/C_0$")
     panel_label(a_, "c")
 
@@ -128,7 +128,7 @@ def main():
     a_.plot(t_cf, costate_closed_form(t_cf, T), color=REF_COLOR, lw=REF_LW)
     a_.plot(t_lam, lam, color=PRICE_COLOR, lw=OPT_LW, ls=OPT_LS)
     a_.set_xlim(0, 2.0)
-    a_.set_xlabel("time")
+    a_.set_xlabel("time (y)")
     a_.set_ylabel(r"shadow price $\lambda_C$")
     panel_label(a_, "d")
 
@@ -145,7 +145,7 @@ def main():
     a_.annotate("$t=T$", xy=(lam[-1], u_opt[-1]), xytext=(lam[-1] - 0.01, u_opt[-1] + 0.14),
                 fontsize=6, arrowprops=dict(arrowstyle="-", lw=0.5, color="0.4"))
     a_.set_xlabel(r"shadow price $\lambda_C$")
-    a_.set_ylabel("uptake $u$")
+    a_.set_ylabel(r"uptake $u$ (g C y$^{-1}$)")
     panel_label(a_, "e")
 
     # (f) cumulative growth
@@ -156,8 +156,8 @@ def main():
     a_.plot(t_u, J_opt, color=PAYOFF_COLOR, lw=OPT_LW, ls=OPT_LS)
     a_.set_xlim(0, 2.0)
     a_.set_ylim(0, 0.17)
-    a_.set_xlabel("time")
-    a_.set_ylabel("cumulative growth $J$")
+    a_.set_xlabel("time (y)")
+    a_.set_ylabel(r"cumulative growth $J$ (g C)")
     panel_label(a_, "f")
 
     dark = "0.2"
