@@ -219,7 +219,7 @@ def main():
     a_.set_ylim(None, 20)
     mark_lags(a_, low["tau"], high["tau"])
     a_.set_xlabel("time (d)")
-    a_.set_ylabel(r"$\partial H/\partial v_O$ at $v_O=0$ ($10^{-3}$)")
+    a_.set_ylabel(r"$\partial H/\partial v_O$ at $v_O=0$ ($10^{-3}$ g C)")
     panel_label(a_, "e")
 
     # (f) onset of investment across costs

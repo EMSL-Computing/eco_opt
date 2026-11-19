@@ -142,7 +142,7 @@ def main():
     a_.plot(lam[::40], u_opt[k][::40], "o", ms=2.6, mfc=CONTROL_COLOR, mec="none")
     a_.annotate("$t=0$", xy=(lam[0], u_opt[0]), xytext=(lam[0] - 0.024, u_opt[0] - 0.19),
                 fontsize=6, arrowprops=dict(arrowstyle="-", lw=0.5, color="0.4"))
-    a_.annotate("$t=T$", xy=(lam[-1], u_opt[-1]), xytext=(lam[-1] - 0.01, u_opt[-1] + 0.14),
+    a_.annotate("$t=t_f$", xy=(lam[-1], u_opt[-1]), xytext=(lam[-1] - 0.01, u_opt[-1] + 0.14),
                 fontsize=6, arrowprops=dict(arrowstyle="-", lw=0.5, color="0.4"))
     a_.set_xlabel(r"shadow price $\lambda_C$")
     a_.set_ylabel(r"uptake $u$ (g C y$^{-1}$)")
