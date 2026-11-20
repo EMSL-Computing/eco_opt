@@ -121,7 +121,7 @@ Questions: [arjun.chakrawal@pnnl.gov](mailto:arjun.chakrawal@pnnl.gov).
 
 Chakrawal, A., Schwarz, E., Mudunuru, M. K., Leek, V., and Colombi, T.
 (2026). Optimal control for modeling biological regulation in soil and
-plant systems. Manuscript in preparation.
+plant systems. Submitted to Soil Biology & Biochemistry.
 
 Cite the software as `eco_opt` 0.1. See [Cite](docs/cite.md) and [`CITATION.cff`](CITATION.cff).
 
